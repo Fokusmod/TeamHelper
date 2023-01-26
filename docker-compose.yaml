@@ -1,0 +1,17 @@
+version: '3'
+services:
+  postgres:
+    image: 'postgres:13'
+    container_name: 'vendor-postgres'
+    ports:
+      - "5440:5432"
+    environment:
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=postgres'
+      - 'POSTGRES_HOST_AUTH_METHOD=trust'
+      - 'POSTGRES_DB=Vendor'
+  redis:
+    image: "redis:latest"
+    container_name: "vendor-redis"
+    ports:
+      - "6390:6379"
