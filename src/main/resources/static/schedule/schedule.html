@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
+    <link rel="stylesheet" href="../index.css">
+    <link rel="stylesheet" href="schedule/schedule.css">
+</head>
+<body>
+<div id="schedule" class="content-container">
+    <div class="settings-container">
+        <button class="team-button">{{teams[0].title}}</button>
+        <button class="team-button">{{teams[1].title}}</button>
+        <button class="team-button">{{teams[2].title}}</button>
+        <button class="team-button">{{teams[3].title}}</button>
+        <button class="team-button">{{teams[4].title}}</button>
+    </div>
+    <div class="content">
+        <div class="week">
+            <div class="week-info">
+                <div class="dayWeek">Понедельник</div>
+                <div class="dayTime">date</div>
+            </div>
+
+            <div class="week-info">
+                <div class="dayWeek">Вторник</div>
+                <div class="dayTime">date</div>
+            </div>
+
+
+            <div class="week-info">
+                <div class="dayWeek">Среда</div>
+                <div class="dayTime">date</div>
+            </div>
+
+
+            <div class="week-info">
+                <div class="dayWeek">Четверг</div>
+                <div class="dayTime">date</div>
+            </div>
+
+
+            <div class="week-info">
+                <div class="dayWeek">Пятница</div>
+                <div class="dayTime">date</div>
+            </div>
+
+
+            <div class="week-info">
+                <div class="dayWeek">Суббота</div>
+                <div class="dayTime">date</div>
+            </div>
+
+
+            <div class="week-info">
+                <div class="dayWeek">Воскресенье</div>
+                <div class="dayTime">date</div>
+            </div>
+        </div>
+        <div class="events">
+            <div id="Monday" style="margin-left: 10px">
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+            </div>
+            <div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+            </div>
+            <div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+            </div>
+            <div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+            </div>
+            <div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+            </div>
+            <div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+            </div>
+            <div style="margin-right: 10px">
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+                <div class="event"></div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</body>
+</html>

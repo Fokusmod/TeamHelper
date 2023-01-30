@@ -1,0 +1,50 @@
+.week {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 14%);
+    justify-content: space-between;
+    overflow: hidden;
+    background-color: black;
+    color: #fff9f9;
+    height: 10%;
+
+}
+.events::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+.dayWeek{
+    background-color: red;
+    height: 30px;
+    vertical-align: center;
+}
+.week-info {
+    margin-top: 10px;
+    height: 15%;
+    text-align: center;
+}
+.events {
+    height: 75%;
+    width: 100%;
+    background-color: #e6eeaf;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 13.5%);
+    justify-content: space-between;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+}
+.dayTime {
+    background-color: blue;
+    height: 30px;
+    font-weight: bold;
+}
+
+.event {
+    margin-top: 5px;
+    margin-bottom: 15px;
+    margin-right: 5px;
+    height: 100px;
+    width: 100%;
+    background-color: mediumpurple;
+}
+
