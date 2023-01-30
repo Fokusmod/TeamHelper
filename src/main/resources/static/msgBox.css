@@ -1,0 +1,36 @@
+.msgBox {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 450px;
+            background: #f1f1f1;
+            border: 2px solid #292828;
+
+            box-shadow: 30px 20px 50px #d1d5d8;
+        }
+
+        .msgBox_p {
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 30px;
+            letter-spacing: 0.04em;
+            opacity: 0.8;
+            padding: 10px 20px;
+            color: #333;
+             text-align: center;
+        }
+
+        .msgBox_button {
+            background: none;
+            border: none;
+            position: absolute;
+            top: 0;
+            right: 10px;
+            color: #aaa;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 30px;
+            letter-spacing: 0.04em;
+            opacity: 0.8;
+        }
