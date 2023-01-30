@@ -11,19 +11,19 @@ import ru.geekbrains.WowVendorTeamHelper.model.EndpointsResolver;
 
 public class BlizzardApiConfiguration {
 
-    @Value("${oauth2:userAuthorizationUri}")
+    @Value("${oauth2.userAuthorizationUri}")
     private String userAuthorizationUri;
 
-    @Value("${oauth2:accessTokenUri}")
+    @Value("${oauth2.accessTokenUri}")
     private String accessTokenUri;
 
-    @Value("${oauth2:tokenName}")
+    @Value("${oauth2.tokenName}")
     private String tokenName;
 
-    @Value("${oauth2:clientId}")
+    @Value("${oauth2.clientId}")
     private String clientId;
 
-    @Value("${oauth2:clientSecret}")
+    @Value("${oauth2.clientSecret}")
     private String clientSecret;
 
 
