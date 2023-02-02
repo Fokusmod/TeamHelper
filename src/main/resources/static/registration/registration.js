@@ -1,4 +1,4 @@
-angular.module('app', []).controller('registrationController', function ($scope, $http) {
+angular.module('index-app', []).controller('registrationController', function ($scope, $http) {
 const contextPath = 'http://localhost:8080/users';
 
     $scope.registration = function () {

@@ -15,10 +15,10 @@
             font-weight: bold;
             line-height: 30px;
             letter-spacing: 0.04em;
-            opacity: 0.8;
+            opacity: 1;
             padding: 10px 20px;
             color: #333;
-             text-align: center;
+            text-align: center;
         }
 
         .msgBox_button {
