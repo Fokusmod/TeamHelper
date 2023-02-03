@@ -7,4 +7,5 @@ import ru.geekbrains.WowVendorTeamHelper.model.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
+    Role findByTitle(String role_user);
 }
