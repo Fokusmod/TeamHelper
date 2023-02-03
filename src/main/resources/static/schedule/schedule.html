@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="schedule/schedule.css">
 </head>
 <body>
-<div id="schedule" class="content-container">
+<div id="schedule" class="content-container" ng-show="isUserLoggedIn()">
     <div class="settings-container">
         <button class="team-button">{{teams[0].title}}</button>
         <button class="team-button">{{teams[1].title}}</button>
