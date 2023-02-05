@@ -18,6 +18,10 @@
          templateUrl: 'authorization/authorization.html',
          controller: 'authorizationController'
          })
+         .when('/admin', {
+         templateUrl: 'admin/admin.html',
+         controller: 'adminController'
+         })
         .otherwise({
             redirectTo: '/schedule'
         });

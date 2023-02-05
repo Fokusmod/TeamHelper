@@ -5,18 +5,15 @@ const contextPath = 'http://localhost:3100';
             .then(function successCallback(response) {
                 if (response.data.token) {
                 $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
-                console.log($scope.user.username);
-                console.log(response.data.token);
-
                 $localStorage.springWebUser = {username: $scope.user.username, token: response.data.token};
                 $scope.user.username = null;
                 $scope.user.password = null;
 
                 window.location.replace('http://localhost:3100/index.html?#!/schedule');
-                } else {
-                $scope.displayMessage('Sorry, your registration application has not yet been approved.');
                 }
             }, function errorCallback(response) {
+
+            $scope.displayMessage(response.data.message);
             });
     };
 
