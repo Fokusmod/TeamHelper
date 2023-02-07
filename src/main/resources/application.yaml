@@ -27,12 +27,14 @@ spring:
       ddl-auto: none
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://192.168.1.87:5440/postgres
+    url: jdbc:postgresql://localhost:5440/postgres
     username: postgres
     password: postgres
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
     contexts: dev
-
+logging:
+  level:
+    org.springframework.transaction: DEBUG
 

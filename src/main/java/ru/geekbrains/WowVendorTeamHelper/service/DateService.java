@@ -1,25 +1,49 @@
 package ru.geekbrains.WowVendorTeamHelper.service;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.AppError;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.TeamNotFoundException;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Service
 public class DateService {
 
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd MMM @ HH:mm ", Locale.ENGLISH);
     private final DateTimeFormatter scheduleDate = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.getDefault());
-    private final DateTimeFormatter formatToDataBase = DateTimeFormatter.ofPattern("dd-MM-yy HH:mm", Locale.ENGLISH);
+    private final DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd.M.yy", Locale.ENGLISH);
+    private final DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH);
     private final ZoneId mskZone = ZoneId.of("Europe/Moscow");
     private final ZoneId cetZone = ZoneId.of("CET");
+
+    public boolean checkDateFormat(String text) {
+
+        try {
+            LocalDate.parse(text,formatDate);
+        } catch (DateTimeException exception){
+            System.out.println("Date");
+            System.out.println(exception);
+           return false;
+        }
+        return true;
+    }
+    public boolean checkTimeFormat(String text) {
+        try {
+            LocalTime.parse(text,formatTime);
+        } catch (DateTimeException exception){
+            System.out.println(exception);
+            System.out.println("Time");
+            return false;
+        }
+        return true;
+    }
 
     public List<String> getTimeMscAndCET() {
 //      формат  (Sat 28 Jan @ 21:00 CET)
@@ -34,16 +58,10 @@ public class DateService {
     public List<String> getCurrentWeek() {
         String currentDate;
         List<String> currentDayWeek = new ArrayList<>();
-        LocalDate previousMonday = LocalDate.now(mskZone).with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
+        LocalDate previousTuesday = LocalDate.now(mskZone).plusDays(1).with(TemporalAdjusters.previous(DayOfWeek.TUESDAY));
         for (int i = 0; i < 7; i++) {
-            currentDate = previousMonday.plusDays(i).format(scheduleDate);
+            currentDate = previousTuesday.plusDays(i).format(scheduleDate);
             currentDayWeek.add(currentDate);
-
-
-            String date = "2017-03-08 12:30";
-            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            LocalDateTime dateTime = LocalDateTime.parse(date, format);
-            System.out.println(dateTime);
 
         }
         return currentDayWeek;
@@ -52,8 +70,8 @@ public class DateService {
     public List<String> getNextWeek(int count) {
         String weekDay;
         List<String> nextDayWeek = new ArrayList<>();
-        LocalDate previousMonday = LocalDate.now(mskZone).with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
-        LocalDate mondayOnNextWeek = previousMonday.plusWeeks(count).with(DayOfWeek.MONDAY);
+        LocalDate previousTuesday = LocalDate.now(mskZone).with(TemporalAdjusters.previous(DayOfWeek.TUESDAY));
+        LocalDate mondayOnNextWeek = previousTuesday.plusWeeks(count).with(DayOfWeek.TUESDAY);
         for (int i = 0; i < 7; i++) {
             weekDay = mondayOnNextWeek.plusDays(i).format(scheduleDate);
             nextDayWeek.add(weekDay);
@@ -64,8 +82,8 @@ public class DateService {
     public List<String> getPrevWeek(int count) {
         String weekDay;
         List<String> prevDayWeek = new ArrayList<>();
-        LocalDate previousMonday = LocalDate.now(mskZone).with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
-        LocalDate mondayOnPreviousWeek = previousMonday.minusWeeks(count).with(DayOfWeek.MONDAY);
+        LocalDate previousTuesday = LocalDate.now(mskZone).with(TemporalAdjusters.previous(DayOfWeek.TUESDAY));
+        LocalDate mondayOnPreviousWeek = previousTuesday.minusWeeks(count).with(DayOfWeek.TUESDAY);
         for (int i = 0; i < 7; i++) {
             weekDay = mondayOnPreviousWeek.plusDays(i).format(scheduleDate);
             prevDayWeek.add(weekDay);

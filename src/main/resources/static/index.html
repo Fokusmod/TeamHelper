@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Главная страница</title>
-    <link rel="stylesheet" href="index.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
+    <link rel="stylesheet" href="style1.css">
 </head>
 <body ng-app="index-app" ng-controller="indexController">
-<DIV class="main-container">
+
+<div class="main-container">
     <div class="user-panel">UserPane</div>
     <div class="panel-container">
         <a href="#!/clientList">
@@ -18,19 +19,18 @@
             </div>
         </a>
         <a href="#!/schedule">
-            <div class="panel-item-container" >
+            <div class="panel-item-container">
                 <div class="panel-item-title">Расписание</div>
             </div>
         </a>
         <a href="#!/schedule">
-            <div class="panel-item-container" >
+            <div class="panel-item-container">
                 <div class="panel-item-title">Админка</div>
             </div>
         </a>
-
     </div>
-    <div class="vertical-separator"></div>
-</DIV>
+
+</div>
 
 <ng-view></ng-view>
 <script src="index.js"></script>
@@ -38,3 +38,5 @@
 <script src="schedule/schedule.js"></script>
 
 </body>
+<footer class="footer">WowVendorTeamHelper</footer>
+
