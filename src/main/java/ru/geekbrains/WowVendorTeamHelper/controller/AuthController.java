@@ -28,8 +28,9 @@ public class AuthController {
             return new ResponseEntity<>(
                     new RegistrationException("Sorry, but such user already exists"), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Your application for registration is under consideration," +
-                " wait for confirmation", HttpStatus.OK);
+        return new ResponseEntity<>(
+                new RegistrationException("Your application for registration is under consideration," +
+                " wait for confirmation"), HttpStatus.OK);
     }
 
 

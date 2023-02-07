@@ -18,6 +18,7 @@ import ru.geekbrains.WowVendorTeamHelper.dto.JwtRequest;
 import ru.geekbrains.WowVendorTeamHelper.dto.JwtResponse;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.AppError;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
+import ru.geekbrains.WowVendorTeamHelper.model.Privilege;
 import ru.geekbrains.WowVendorTeamHelper.model.Role;
 import ru.geekbrains.WowVendorTeamHelper.model.User;
 import ru.geekbrains.WowVendorTeamHelper.repository.RoleRepository;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PrivilegeService privilegeService;
     private final PasswordEncoder bCryptPasswordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
@@ -55,8 +57,6 @@ public class UserService implements UserDetailsService {
     public boolean addUser(User user) {
 
         if (!userRepository.findByUsername(user.getUsername()).isPresent()) {
-            user.setUsername(user.getUsername());
-            user.setEmail(user.getEmail());
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             user.setRoles(Arrays.asList(roleRepository.findByTitle("ROLE_USER")));
             user.setStatus("not_approved");
@@ -70,7 +70,7 @@ public class UserService implements UserDetailsService {
 
     public boolean userApproved(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("Unable to find user with id: " + userId));;
+                new ResourceNotFoundException("Unable to find user with id: " + userId));
 
         user.setStatus("approved");
         userRepository.save(user);
@@ -80,7 +80,7 @@ public class UserService implements UserDetailsService {
     public ResponseEntity<?> authenticationUser(JwtRequest authRequest) {
         Optional<User> user = userRepository.findByUsername(authRequest.getUsername());
         if (user.get().getStatus().equals("not_approved")) {
-            return new ResponseEntity(String.format("User registration has not been confirmed"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity(new AppError(HttpStatus.FORBIDDEN.value(), "User registration has not been confirmed"), HttpStatus.FORBIDDEN);
         }
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
@@ -88,12 +88,16 @@ public class UserService implements UserDetailsService {
             return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(), "Incorrect username or password"), HttpStatus.UNAUTHORIZED);
         }
         UserDetails userDetails = loadUserByUsername(authRequest.getUsername());
-        String token = jwtTokenUtil.generateToken(userDetails);
+        String token = jwtTokenUtil.generateToken(userDetails, user.get().getPrivileges());
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
     public List<User> findUsersByStatus(String status) {
         return userRepository.findAllByStatus(status);
+    }
+
+    public List<User> findUsersByPrivilege(String privilege) {
+        return userRepository.findAllByPrivilege(privilege);
     }
 
     public List<User> findUsersByRole(String role) {
@@ -102,8 +106,23 @@ public class UserService implements UserDetailsService {
         return userRepository.findAllByRole(roleFormatted);
     }
 
-
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    @Transactional
+    public User addPrivilegeToUser(Long userId, Long privilegeId) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ResourceNotFoundException("Unable to find user with id: " + userId));
+        user.getPrivileges().add(privilegeService.findById(privilegeId));
+        return user;
+    }
+
+    @Transactional
+    public boolean deletePrivilegeFromUser(Long userId, Long privilegeId) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ResourceNotFoundException("Unable to find user with id: " + userId));
+        user.getPrivileges().remove(privilegeService.findById(privilegeId));
+        return true;
     }
 }

@@ -15,6 +15,12 @@ public class UserController {
 
     private final UserService userService;
 
+
+    @GetMapping()
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
     @GetMapping("/status")
     public List<User> findUsersByStatus(@RequestParam String status) {
         return userService.findUsersByStatus(status);
@@ -25,8 +31,18 @@ public class UserController {
         return userService.findUsersByRole(role);
     }
 
-    @GetMapping()
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    @GetMapping("/privilege")
+    public List<User> findUsersByPrivilege(@RequestParam String privilege) {
+        return userService.findUsersByPrivilege(privilege);
+    }
+
+    @PostMapping("/{userId}/privilege/{privilegeId}")
+    public User addPrivilegeToUser(@PathVariable Long userId, @PathVariable Long privilegeId) {
+        return userService.addPrivilegeToUser(userId, privilegeId);
+    }
+
+    @DeleteMapping("/{userId}/privilege/{privilegeId}")
+    public boolean deletePrivilegeFromUser(@PathVariable Long userId, @PathVariable Long privilegeId) {
+        return userService.deletePrivilegeFromUser(userId, privilegeId);
     }
 }
