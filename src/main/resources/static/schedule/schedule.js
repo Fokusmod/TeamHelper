@@ -1,5 +1,12 @@
-angular.module('index-app').controller('scheduleController', function ($scope, $http, $location) {
-
+angular.module('index-app').controller('scheduleController', function ($scope, $http, $location, $localStorage, $rootScope) {
+     $rootScope.isUserLoggedIn = function () {
+        if ($localStorage.springWebUser) {
+            return true;
+        } else {
+            $location.path('/authorization');
+            return false;
+        }
+     };
 
     $scope.getTeamsForSettings = function () {
         $http.get("http://localhost:3100/teams/all")

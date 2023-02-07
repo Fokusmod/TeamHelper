@@ -1,17 +1,21 @@
-angular.module('app', []).controller('authorizationController', function ($scope, $http) {
-const contextPath = 'http://localhost:8080/users';
-
+angular.module('index-app').controller('authorizationController', function ($scope, $http, $localStorage, $rootScope) {
+const contextPath = 'http://localhost:3100';
     $scope.authorization = function () {
-            $http.post(contextPath + '/auth', $scope.userForm).
-            then(function (response) {
-            if (response.data) {
-                $scope.displayMessage('welcome!');
-            } else {
-                $scope.displayMessage('Sorry, your registration application has not yet been approved.');
-            }
+        $http.post(contextPath + '/auth', $scope.user)
+            .then(function successCallback(response) {
+                if (response.data.token) {
+                $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
+                $localStorage.springWebUser = {username: $scope.user.username, token: response.data.token};
+                $scope.user.username = null;
+                $scope.user.password = null;
 
+                window.location.replace('http://localhost:3100/index.html?#!/schedule');
+                }
+            }, function errorCallback(response) {
+
+            $scope.displayMessage(response.data.message);
             });
-    }
+    };
 
     $scope.displayMessage = function (msgText) {
         var html = document.querySelector('html');

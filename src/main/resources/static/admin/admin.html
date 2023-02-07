@@ -1,0 +1,88 @@
+
+<div class="content-container" ng-show="isUserLoggedIn()" >
+    <div class="background_admin">
+        <div class="top_admin">
+            <div class="title_admin">Admin page</div>
+            <div class="horizontal-separator"></div>
+            <div class="table_title">Not approved users</div>
+            <table id="users_1">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Crated at</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Approve</th>
+                </tr>
+                <tbody>
+                <tr ng-repeat="u in notApprovedUsersList">
+                    <td>{{u.id}}</td>
+                    <td>{{u.username}}</td>
+                    <td>{{u.email}}</td>
+                    <td>{{u.createdAt}}</td>
+                    <td>
+                        <table>
+                            <tr ng-repeat="r in u.roles">
+                                <td>{{r.title}} </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>{{u.status}}</td>
+                    <td>
+                        <button ng-click="approveUser(u.id)">Approve</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="horizontal-separator"></div>
+            <a class="showBlock_link" href="" ng-click="showBlock = ! showBlock">Show user list</a>
+            <div ng-show="showBlock">
+                <table id="users_2">
+                    <tr>
+                        <th>ID</th>
+                        <th>username</th>
+                        <th>password</th>
+                        <th>email</th>
+                        <th>activationCode</th>
+                        <th>crated at</th>
+                        <th>updated at</th>
+                        <th>role</th>
+                        <th>change role</th>
+                        <th>status</th>
+                        <th>delete</th>
+
+                    </tr>
+                    <tbody>
+                    <tr ng-repeat="u in usersList">
+                        <td>{{u.id}}</td>
+                        <td>{{u.username}}</td>
+                        <td>{{u.password}}</td>
+                        <td>{{u.email}}</td>
+                        <td>{{u.activationCode}}</td>
+                        <td>{{u.createdAt}}</td>
+                        <td>{{u.updatedAt}}</td>
+                        <td>
+                            <table>
+                                <tr ng-repeat="r in u.roles">
+                                    <td>{{r.title}} </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td><button ng-click="changeRole(u.id)">change</button></td>
+                        <td>{{u.status}}</td>
+                        <td><button ng-click="deleteUser(u.id)">delete</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="statistics_blocks">
+                <div class="slack_block">requests number to slack</div>
+
+                <div class="blizzard_block">requests number to blizzard</div>
+            </div>
+        </div>
+        <div class="footer">WowVendorTeamHelper</div>
+    </div>
+
+</div>

@@ -1,15 +1,21 @@
 angular.module('app', []).controller('registrationController', function ($scope, $http) {
-const contextPath = 'http://localhost:8080/users';
+const contextPath = 'http://localhost:3100';
 
     $scope.registration = function () {
-        $http.post(contextPath + '/add', $scope.userForm)
-        .then(function (response) {
+        $http.post(contextPath + '/registration', $scope.user)
+            .then(function successCallback(response) {
+                $scope.displayMessage(response.data.message);
 
-        });
-    }
-// tany@mail.ru tany 101
+            }, function errorCallback(response) {
+                $scope.displayMessage(response.data.message);
+            });
+    };
 
-    $scope.displayMessage = function () {
+    $scope.goToAuthorization = function () {
+         window.location.replace('http://localhost:3100/index.html');
+    };
+
+    $scope.displayMessage = function (msgText) {
         var html = document.querySelector('html');
         var panel = document.createElement('div');
         panel.setAttribute('class', 'msgBox');
@@ -17,7 +23,7 @@ const contextPath = 'http://localhost:8080/users';
 
         var msg = document.createElement('p');
         msg.setAttribute('class', 'msgBox_p');
-        msg.textContent = 'Your application for registration has been sent for consideration. Please wait for an email response';
+        msg.textContent = msgText;
         panel.appendChild(msg);
 
         var closeBtn = document.createElement('button');
