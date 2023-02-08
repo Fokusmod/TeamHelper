@@ -34,5 +34,7 @@ spring:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
     contexts: dev
-
+logging:
+  level:
+    org.springframework.transaction: DEBUG
 

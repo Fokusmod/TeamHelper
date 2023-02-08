@@ -31,3 +31,42 @@ create table users_roles
     foreign key (user_id) references users (id),
     foreign key (role_id) references roles (id)
 );
+
+
+--changeset WowVendorTeamHelper:wow_events_types
+
+ create table wow_events_types
+ (
+     id                bigserial primary key,
+     title varchar(10) not null
+ );
+
+--changeset WowVendorHelper:wow_teams_regions
+
+ create table wow_teams_regions
+ (
+     id                bigserial primary key,
+     title varchar(10) not null
+ );
+
+
+--changeset WowVendorTeamHelper:create_tables_teams
+
+
+ create table teams
+ (
+     id                bigserial primary key,
+     title varchar(100) not null,
+     region_id bigint references wow_teams_regions(id)
+ );
+
+--changeset WowVendorTeamHelper:create_tables_events
+
+ create table wow_events
+ (
+     id                bigserial primary key,
+     type_id bigint references wow_events_types(id),
+     team_id bigint references teams(id),
+     event_date varchar(25) not null,
+     started_at varchar(100) not null
+ );

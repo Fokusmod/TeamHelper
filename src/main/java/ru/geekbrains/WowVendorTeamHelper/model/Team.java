@@ -19,4 +19,11 @@ public class Team {
     @Column(name = "title")
     private String title;
 
+    @OneToOne
+    @JoinColumn(name = "region_id", referencedColumnName = "id")
+    private WowTeamRegion teamRegion;
+
 }
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "address_id", referencedColumnName = "id")
+//    private Address address;
