@@ -51,4 +51,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
+    @ManyToMany
+    @JoinTable(name = "users_privileges",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "privilege_id"))
+    private Collection<Privilege> privileges;
+
 }
