@@ -88,7 +88,7 @@ public class UserService implements UserDetailsService {
             return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(), "Incorrect username or password"), HttpStatus.UNAUTHORIZED);
         }
         UserDetails userDetails = loadUserByUsername(authRequest.getUsername());
-        String token = jwtTokenUtil.generateToken(userDetails, user.get().getPrivileges());
+        String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
     }
 

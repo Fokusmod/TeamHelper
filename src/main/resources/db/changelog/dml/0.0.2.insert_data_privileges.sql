@@ -3,7 +3,7 @@
 --changeset WowVendorTeamHelper:insert_data
 
 
-insert into roles (title)
+insert into privileges (title)
 values ('eu-team'),
        ('eu-rv-teav'),
        ('us-rv-team'),
@@ -14,5 +14,5 @@ values ('eu-team'),
        ('us-pr-team');
 
 
-insert into users_privileges (user_id, role_id)
+insert into users_privileges (user_id, privilege_id)
 VALUES (1, 1);
