@@ -3,7 +3,7 @@ package ru.geekbrains.WowVendorTeamHelper.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.geekbrains.WowVendorTeamHelper.dto.TeamDTO;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.TeamNotFoundException;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.Team;
 import ru.geekbrains.WowVendorTeamHelper.repository.TeamRepository;
 
@@ -34,7 +34,7 @@ public class TeamService {
         if (team.isPresent()){
             return team.get();
         } else {
-            throw new TeamNotFoundException("Team " + title + " not found");
+            throw new ResourceNotFoundException("Team " + title + " not found");
         }
     }
 

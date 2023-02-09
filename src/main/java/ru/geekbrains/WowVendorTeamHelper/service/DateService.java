@@ -1,12 +1,6 @@
 package ru.geekbrains.WowVendorTeamHelper.service;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.AppError;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.TeamNotFoundException;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
