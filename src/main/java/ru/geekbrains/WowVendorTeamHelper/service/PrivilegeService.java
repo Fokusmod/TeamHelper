@@ -24,7 +24,7 @@ public class PrivilegeService {
 
     public Privilege findById(Long privilegeId) {
         return privilegeRepository.findById(privilegeId).orElseThrow(() ->
-                new ResourceNotFoundException("Unable to find privilege with id: " + privilegeId));
+                new ResourceNotFoundException("Не найдено привилегии с id: " + privilegeId));
     }
 
     public List<Privilege> getAllPrivilege() {

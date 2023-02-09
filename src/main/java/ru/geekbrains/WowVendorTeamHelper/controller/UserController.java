@@ -45,4 +45,9 @@ public class UserController {
     public boolean deletePrivilegeFromUser(@PathVariable Long userId, @PathVariable Long privilegeId) {
         return userService.deletePrivilegeFromUser(userId, privilegeId);
     }
+
+    @PostMapping("/{userId}/status/{statusId}")
+    public boolean userApproved(@PathVariable Long userId, @PathVariable Long statusId) {
+        return userService.userApproved(userId, statusId);
+    }
 }

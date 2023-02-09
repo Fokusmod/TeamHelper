@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.WowVendorTeamHelper.dto.JwtRequest;
 import ru.geekbrains.WowVendorTeamHelper.dto.JwtResponse;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.AppError;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.RegistrationException;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
-import ru.geekbrains.WowVendorTeamHelper.model.Privilege;
 import ru.geekbrains.WowVendorTeamHelper.model.Role;
 import ru.geekbrains.WowVendorTeamHelper.model.User;
 import ru.geekbrains.WowVendorTeamHelper.repository.RoleRepository;
@@ -34,6 +34,8 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PrivilegeService privilegeService;
+
+    private final StatusService statusService;
     private final PasswordEncoder bCryptPasswordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
@@ -54,38 +56,37 @@ public class UserService implements UserDetailsService {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getTitle())).collect(Collectors.toList());
     }
 
-    public boolean addUser(User user) {
+    public User addUser(User user) {
 
-        if (!userRepository.findByUsername(user.getUsername()).isPresent()) {
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            user.setRoles(Arrays.asList(roleRepository.findByTitle("ROLE_USER")));
-            user.setStatus("not_approved");
-            user.setActivationCode(user.getUsername() + "_" + UUID.randomUUID());
-            userRepository.save(user);
-            return true;
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new RegistrationException("Извините, но такой пользователь уже зарегестрирован");
         }
-
-        return false;
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setRoles(Arrays.asList(roleRepository.findByTitle("ROLE_USER")));
+        user.setStatus(statusService.findByTitle("not_approved"));
+        user.setActivationCode(user.getUsername() + "_" + UUID.randomUUID());
+        return userRepository.save(user);
     }
 
-    public boolean userApproved(Long userId) {
+    public boolean userApproved(Long userId, Long statusId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("Unable to find user with id: " + userId));
+                new ResourceNotFoundException("Не найдено пользователя с id: " + userId));
 
-        user.setStatus("approved");
+        user.setStatus(statusService.findById(statusId));
         userRepository.save(user);
         return true;
     }
 
     public ResponseEntity<?> authenticationUser(JwtRequest authRequest) {
-        Optional<User> user = userRepository.findByUsername(authRequest.getUsername());
-        if (user.get().getStatus().equals("not_approved")) {
-            return new ResponseEntity(new AppError(HttpStatus.FORBIDDEN.value(), "User registration has not been confirmed"), HttpStatus.FORBIDDEN);
+        User user = userRepository.findByUsername(authRequest.getUsername()).orElseThrow(() ->
+                new ResourceNotFoundException("Не найдено пользователя с именем: " + authRequest.getUsername()));
+        if (user.getStatus().equals("not_approved")) {
+            return new ResponseEntity(new AppError(HttpStatus.FORBIDDEN.value(), "Регистрация пользователя не была подтверждена"), HttpStatus.FORBIDDEN);
         }
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(), "Incorrect username or password"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(), "Некорректные логин и пароль"), HttpStatus.UNAUTHORIZED);
         }
         UserDetails userDetails = loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
@@ -113,7 +114,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public User addPrivilegeToUser(Long userId, Long privilegeId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("Unable to find user with id: " + userId));
+                new ResourceNotFoundException("Не найдено пользователя с id: " + userId));
         user.getPrivileges().add(privilegeService.findById(privilegeId));
         return user;
     }
@@ -121,7 +122,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public boolean deletePrivilegeFromUser(Long userId, Long privilegeId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("Unable to find user with id: " + userId));
+                new ResourceNotFoundException("Не найдено пользователя с id: " + userId));
         user.getPrivileges().remove(privilegeService.findById(privilegeId));
         return true;
     }

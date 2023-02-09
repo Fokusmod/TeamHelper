@@ -22,21 +22,10 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registration(
+    public User registration(
             @RequestBody User user) {
-        if (!userService.addUser(user)) {
-            return new ResponseEntity<>(
-                    new RegistrationException("Sorry, but such user already exists"), HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(
-                new RegistrationException("Your application for registration is under consideration," +
-                " wait for confirmation"), HttpStatus.OK);
-    }
+        return userService.addUser(user);
 
-
-    @PostMapping("/user_approved/{id}")
-    public boolean userApproved(@PathVariable Long id) {
-        return userService.userApproved(id);
     }
     
 }

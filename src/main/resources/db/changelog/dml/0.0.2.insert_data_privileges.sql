@@ -5,7 +5,7 @@
 
 insert into privileges (title)
 values ('eu-team'),
-       ('eu-rv-teav'),
+       ('eu-rv-team'),
        ('us-rv-team'),
        ('us-dt-team,'),
        ('us-nt1-team'),
