@@ -1,6 +1,7 @@
 package ru.geekbrains.WowVendorTeamHelper.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +19,6 @@ import ru.geekbrains.WowVendorTeamHelper.dto.JwtRequest;
 import ru.geekbrains.WowVendorTeamHelper.dto.JwtResponse;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.AppError;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
-import ru.geekbrains.WowVendorTeamHelper.model.Privilege;
 import ru.geekbrains.WowVendorTeamHelper.model.Role;
 import ru.geekbrains.WowVendorTeamHelper.model.User;
 import ru.geekbrains.WowVendorTeamHelper.repository.RoleRepository;
@@ -28,6 +28,7 @@ import ru.geekbrains.WowVendorTeamHelper.utils.JwtTokenUtil;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
@@ -79,8 +80,12 @@ public class UserService implements UserDetailsService {
 
     public ResponseEntity<?> authenticationUser(JwtRequest authRequest) {
         Optional<User> user = userRepository.findByUsername(authRequest.getUsername());
+        if(user.isEmpty()){
+            log.error("A user with the name was not found" + authRequest.getUsername());
+            throw new UsernameNotFoundException("A user with the name was not found" + authRequest.getUsername());
+        }
         if (user.get().getStatus().equals("not_approved")) {
-            return new ResponseEntity(new AppError(HttpStatus.FORBIDDEN.value(), "User registration has not been confirmed"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(new AppError(HttpStatus.FORBIDDEN.value(), "User registration has not been confirmed"), HttpStatus.FORBIDDEN);
         }
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
@@ -89,6 +94,7 @@ public class UserService implements UserDetailsService {
         }
         UserDetails userDetails = loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
+        log.info("The user with the name has been authorized: " + authRequest.getUsername());
         return ResponseEntity.ok(new JwtResponse(token));
     }
 

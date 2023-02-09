@@ -1,6 +1,7 @@
 package ru.geekbrains.WowVendorTeamHelper.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.WowVendorTeamHelper.dto.RequestEvents;
@@ -9,11 +10,9 @@ import ru.geekbrains.WowVendorTeamHelper.model.WowEvent;
 import ru.geekbrains.WowVendorTeamHelper.model.WowEventType;
 import ru.geekbrains.WowVendorTeamHelper.repository.WowEventRepository;
 
-import java.lang.reflect.Type;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WowEventService {
@@ -42,6 +41,7 @@ public class WowEventService {
 
     public void changeById(Long id, List<RequestEvents> list) {
         if (isRussianLiterals(list)) {
+            log.error("Request events contains Russian literals");
             throw new RuntimeException("Request events contains Russian literals");
         }
         if (check(list)) {
@@ -59,6 +59,7 @@ public class WowEventService {
                 }
             }
         } else {
+            log.error("Bad create eventList");
             throw new RuntimeException("Bad create eventList");
         }
 
@@ -68,6 +69,7 @@ public class WowEventService {
     @Transactional
     public void createEvents(List<RequestEvents> requestEvents) {
         if (isRussianLiterals(requestEvents)) {
+            log.error("Request events contains Russian literals");
             throw new RuntimeException("Request events contains Russian literals");
         }
         if (check(requestEvents)) {
@@ -83,6 +85,7 @@ public class WowEventService {
                 wowEventRepository.save(wowEvent);
             }
         } else {
+            log.error("Bad create eventList");
             throw new RuntimeException("Bad create eventList");
         }
     }
@@ -120,15 +123,15 @@ public class WowEventService {
             String date = event.getDate();
             String[] time = event.getTime().split(" ");
             if (!dateService.checkDateFormat(date)) {
-                System.out.println(dateService.checkDateFormat(date));
+                log.info("Check date format:" + dateService.checkDateFormat(date));
                 return false;
             }
             if (!dateService.checkTimeFormat(time[0])) {
-                System.out.println(dateService.checkTimeFormat(time[0]));
+                log.info("Check time format:" + dateService.checkTimeFormat(time[0]));
                 return false;
             }
             if (!dateService.checkTimeFormat(time[3])) {
-                System.out.println(dateService.checkTimeFormat(time[3]));
+                log.info("Check time format:" + dateService.checkTimeFormat(time[3]));
                 return false;
             }
         }
