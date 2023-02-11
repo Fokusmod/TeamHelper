@@ -34,9 +34,6 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "status")
-    private String status;
-
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -57,4 +54,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "privilege_id"))
     private Collection<Privilege> privileges;
 
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private Status status;
 }

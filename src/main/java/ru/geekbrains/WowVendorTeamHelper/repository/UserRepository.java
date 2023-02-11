@@ -13,6 +13,8 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
 
+    @Query(value = "select * from users as u " +
+            "right join users_statuses as us on u.id = us.user_id where us.status_id = (select id from statuses where title = :status)", nativeQuery = true)
     List<User> findAllByStatus(String status);
 
     @Query(value = "select * from users as u " +
