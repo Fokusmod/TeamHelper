@@ -2,13 +2,16 @@ package ru.geekbrains.WowVendorTeamHelper.service;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.WowEventType;
 import ru.geekbrains.WowVendorTeamHelper.repository.WowEventTypeRepository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WowEventTypeService {
@@ -25,7 +28,8 @@ public class WowEventTypeService {
         if (wowEventType.isPresent()) {
             return wowEventType.get();
         } else {
-            throw new RuntimeException("Event type " + title + " not found");
+            log.error("Тип события " + title + " не найден.");
+            throw new ResourceNotFoundException("Тип события " + title + " не найден.");
         }
     }
 

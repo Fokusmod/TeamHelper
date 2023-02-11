@@ -1,6 +1,7 @@
 package ru.geekbrains.WowVendorTeamHelper.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +29,7 @@ import ru.geekbrains.WowVendorTeamHelper.utils.JwtTokenUtil;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
@@ -52,7 +54,9 @@ public class UserService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         User user = findByUsername(username);
+
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
 
@@ -75,8 +79,7 @@ public class UserService implements UserDetailsService {
 
     public boolean userApproved(Long userId, Long statusId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("Не найдено пользователя с id: " + userId));
-
+                new ResourceNotFoundException("Не удается найти пользователя с идентификатором: " + userId));
         user.setStatus(statusService.findById(statusId));
         userRepository.save(user);
         return true;
@@ -95,6 +98,7 @@ public class UserService implements UserDetailsService {
         }
         UserDetails userDetails = loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
+        log.info("Пользователь с таким именем был авторизован: " + authRequest.getUsername());
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
