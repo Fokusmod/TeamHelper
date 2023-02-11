@@ -4,7 +4,7 @@ const contextPath = 'http://localhost:3100';
     $scope.registration = function () {
         $http.post(contextPath + '/registration', $scope.user)
             .then(function successCallback(response) {
-                $scope.displayMessage(response.data.message);
+              $scope.displayMessage(response.data.username + ", ваша заявка на регистрацию находится на рассмотрении, ждите подтверждения");
 
             }, function errorCallback(response) {
                 $scope.displayMessage(response.data.message);
