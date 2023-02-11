@@ -1,6 +1,7 @@
 package ru.geekbrains.WowVendorTeamHelper.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +19,6 @@ import ru.geekbrains.WowVendorTeamHelper.dto.JwtRequest;
 import ru.geekbrains.WowVendorTeamHelper.dto.JwtResponse;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.AppError;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
-import ru.geekbrains.WowVendorTeamHelper.model.Privilege;
 import ru.geekbrains.WowVendorTeamHelper.model.Role;
 import ru.geekbrains.WowVendorTeamHelper.model.User;
 import ru.geekbrains.WowVendorTeamHelper.repository.RoleRepository;
@@ -28,6 +28,7 @@ import ru.geekbrains.WowVendorTeamHelper.utils.JwtTokenUtil;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
@@ -46,7 +47,7 @@ public class UserService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
+        User user = findByUsername(username).orElseThrow(() -> new ResourceNotFoundException(String.format("Пользователь '%s' не найден.", username)));
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
 
@@ -70,7 +71,7 @@ public class UserService implements UserDetailsService {
 
     public boolean userApproved(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("Unable to find user with id: " + userId));
+                new ResourceNotFoundException("Не удается найти пользователя с идентификатором: " + userId));
 
         user.setStatus("approved");
         userRepository.save(user);
@@ -79,13 +80,12 @@ public class UserService implements UserDetailsService {
 
     public ResponseEntity<?> authenticationUser(JwtRequest authRequest) {
         Optional<User> user = userRepository.findByUsername(authRequest.getUsername());
-        if (user.isEmpty()) {
-            return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(),
-                    "Пользователь с таким логином " + authRequest.getUsername() + " не существует."), HttpStatus.NOT_FOUND);
+        if(user.isEmpty()){
+            log.error("Пользователь с таким именем не был найден." + authRequest.getUsername());
+            throw new ResourceNotFoundException("Пользователь с таким именем не был найден." + authRequest.getUsername());
         }
-        user.get().setStatus("approved");//временная заглушка //TODO
         if (user.get().getStatus().equals("not_approved")) {
-            return new ResponseEntity<>(new AppError(HttpStatus.FORBIDDEN.value(), "Ваша заявка на регистрацию не была одобрена. Пожалуйста ожидайте."), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(new AppError(HttpStatus.FORBIDDEN.value(), "Регистрация пользователя не была подтверждена."), HttpStatus.FORBIDDEN);
         }
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
@@ -94,6 +94,7 @@ public class UserService implements UserDetailsService {
         }
         UserDetails userDetails = loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
+        log.info("Пользователь с таким именем был авторизован: " + authRequest.getUsername());
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
@@ -118,7 +119,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public User addPrivilegeToUser(Long userId, Long privilegeId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("Unable to find user with id: " + userId));
+                new ResourceNotFoundException("Не удается найти пользователя с идентификатором: " + userId));
         user.getPrivileges().add(privilegeService.findById(privilegeId));
         return user;
     }
@@ -126,7 +127,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public boolean deletePrivilegeFromUser(Long userId, Long privilegeId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("Unable to find user with id: " + userId));
+                new ResourceNotFoundException("Не удается найти пользователя с идентификатором: " + userId));
         user.getPrivileges().remove(privilegeService.findById(privilegeId));
         return true;
     }
