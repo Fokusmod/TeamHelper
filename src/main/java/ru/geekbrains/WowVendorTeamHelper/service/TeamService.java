@@ -36,6 +36,7 @@ public class TeamService {
         if (team.isPresent()){
             return team.get();
         } else {
+
             log.info("Команда " + title + " не найдена.");
             throw new ResourceNotFoundException("Команда " + title + " не найдена.");
         }

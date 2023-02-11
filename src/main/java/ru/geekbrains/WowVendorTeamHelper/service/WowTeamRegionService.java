@@ -36,6 +36,7 @@ public class WowTeamRegionService {
         } else {
             log.error("Регион " + title + " не найден.");
             throw new ResourceNotFoundException("Регион " + title + " не найден.");
+
         }
     }
 }
