@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.WowVendorTeamHelper.dto.JwtRequest;
 import ru.geekbrains.WowVendorTeamHelper.dto.JwtResponse;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.AppError;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.RegistrationException;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.Role;
 import ru.geekbrains.WowVendorTeamHelper.model.User;
@@ -39,6 +38,10 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder bCryptPasswordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
+    static final String NOTAPPROVED = "not_approved";
+    static final String APPROVED = "approved";
+    static final String ROLEUSER = "ROLE_USER";
+
 
 
     public Optional<User> findByUsername(String username) {
@@ -59,11 +62,11 @@ public class UserService implements UserDetailsService {
     public User createUser(User user) {
 
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new RegistrationException("Извините, но такой пользователь уже зарегестрирован");
+            throw new ResourceNotFoundException("Извините, но такой пользователь уже зарегестрирован");
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRoles(Arrays.asList(roleRepository.findByTitle("ROLE_USER")));
-        user.setStatus(statusService.findByTitle("not_approved"));
+        user.setRoles(Arrays.asList(roleRepository.findByTitle(ROLEUSER).orElseThrow()));
+        user.setStatus(statusService.findByTitle(NOTAPPROVED));
         user.setActivationCode(user.getUsername() + "_" + UUID.randomUUID());
         return userRepository.save(user);
     }
@@ -80,7 +83,7 @@ public class UserService implements UserDetailsService {
     public ResponseEntity<?> authenticationUser(JwtRequest authRequest) {
         User user = userRepository.findByUsername(authRequest.getUsername()).orElseThrow(() ->
                 new ResourceNotFoundException("Не найдено пользователя с логином: " + authRequest.getUsername()));
-        if (user.getStatus().equals("not_approved")) {
+        if (user.getStatus().equals(NOTAPPROVED)) {
             return new ResponseEntity(new AppError(HttpStatus.FORBIDDEN.value(), "Регистрация пользователя не была подтверждена"), HttpStatus.FORBIDDEN);
         }
         try {
