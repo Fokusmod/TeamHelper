@@ -15,7 +15,7 @@ public class StatusController {
     private final StatusService statusService;
 
     @GetMapping()
-    public List<Status> getAllPrivilege() {
+    public List<Status> getAllStatus() {
         return statusService.getAllStatus();
     }
 

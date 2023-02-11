@@ -33,7 +33,7 @@ public class StatusService {
 
     public Status findByTitle(String title) {
         return statusRepository.findByTitle(title).orElseThrow(() ->
-                new ResourceNotFoundException("Не найдено статуса с id: " + title));
+                new ResourceNotFoundException("Не найдено статуса с именем: " + title));
     }
 
     public Status getStatus(Long id, String title) {

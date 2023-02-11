@@ -56,7 +56,7 @@ public class UserService implements UserDetailsService {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getTitle())).collect(Collectors.toList());
     }
 
-    public User addUser(User user) {
+    public User createUser(User user) {
 
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new RegistrationException("Извините, но такой пользователь уже зарегестрирован");
@@ -79,14 +79,14 @@ public class UserService implements UserDetailsService {
 
     public ResponseEntity<?> authenticationUser(JwtRequest authRequest) {
         User user = userRepository.findByUsername(authRequest.getUsername()).orElseThrow(() ->
-                new ResourceNotFoundException("Не найдено пользователя с именем: " + authRequest.getUsername()));
+                new ResourceNotFoundException("Не найдено пользователя с логином: " + authRequest.getUsername()));
         if (user.getStatus().equals("not_approved")) {
             return new ResponseEntity(new AppError(HttpStatus.FORBIDDEN.value(), "Регистрация пользователя не была подтверждена"), HttpStatus.FORBIDDEN);
         }
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(), "Некорректные логин и пароль"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(), "Неправильный логин или пароль. Проверьте правильность учётных данных."), HttpStatus.UNAUTHORIZED);
         }
         UserDetails userDetails = loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
