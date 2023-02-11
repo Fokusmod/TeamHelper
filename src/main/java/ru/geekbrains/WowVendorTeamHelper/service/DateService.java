@@ -1,5 +1,7 @@
 package ru.geekbrains.WowVendorTeamHelper.service;
 
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
@@ -7,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
+@Slf4j
 @Service
 public class DateService {
 
@@ -22,8 +25,7 @@ public class DateService {
         try {
             LocalDate.parse(text,formatDate);
         } catch (DateTimeException exception){
-            System.out.println("Date");
-            System.out.println(exception);
+            log.error("Дата ", exception.getMessage());
            return false;
         }
         return true;
@@ -32,8 +34,7 @@ public class DateService {
         try {
             LocalTime.parse(text,formatTime);
         } catch (DateTimeException exception){
-            System.out.println(exception);
-            System.out.println("Time");
+            log.error("Время ", exception.getMessage());
             return false;
         }
         return true;

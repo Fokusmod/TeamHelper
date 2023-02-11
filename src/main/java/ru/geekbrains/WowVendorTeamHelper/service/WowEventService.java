@@ -1,6 +1,7 @@
 package ru.geekbrains.WowVendorTeamHelper.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.WowVendorTeamHelper.dto.RequestEvents;
@@ -9,11 +10,9 @@ import ru.geekbrains.WowVendorTeamHelper.model.WowEvent;
 import ru.geekbrains.WowVendorTeamHelper.model.WowEventType;
 import ru.geekbrains.WowVendorTeamHelper.repository.WowEventRepository;
 
-import java.lang.reflect.Type;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WowEventService {
@@ -42,7 +41,8 @@ public class WowEventService {
 
     public void changeById(Long id, List<RequestEvents> list) {
         if (isRussianLiterals(list)) {
-            throw new RuntimeException("Request events contains Russian literals");
+            log.error("changeRequest contains Russian literals.");
+            throw new RuntimeException("changeRequest contains Russian literals.");
         }
         if (check(list)) {
             Optional<WowEvent> request = wowEventRepository.findById(id);
@@ -59,7 +59,8 @@ public class WowEventService {
                 }
             }
         } else {
-            throw new RuntimeException("Bad create eventList");
+            log.error("Неудачное создание списка событий.");
+            throw new RuntimeException("Неудачное создание списка событий.");
         }
 
 
@@ -68,7 +69,8 @@ public class WowEventService {
     @Transactional
     public void createEvents(List<RequestEvents> requestEvents) {
         if (isRussianLiterals(requestEvents)) {
-            throw new RuntimeException("Request events contains Russian literals");
+            log.error("createRequest contains Russian literals.");
+            throw new RuntimeException("createRequest contains Russian literals.");
         }
         if (check(requestEvents)) {
             List<RequestEvents> checkedRequestEvents = checkDoubles(requestEvents);
@@ -83,7 +85,8 @@ public class WowEventService {
                 wowEventRepository.save(wowEvent);
             }
         } else {
-            throw new RuntimeException("Bad create eventList");
+            log.error("Неудачное создание списка событий.");
+            throw new RuntimeException("Неудачное создание списка событий.");
         }
     }
 
@@ -120,15 +123,15 @@ public class WowEventService {
             String date = event.getDate();
             String[] time = event.getTime().split(" ");
             if (!dateService.checkDateFormat(date)) {
-                System.out.println(dateService.checkDateFormat(date));
+                log.info("Проверка формата даты:" + dateService.checkDateFormat(date));
                 return false;
             }
             if (!dateService.checkTimeFormat(time[0])) {
-                System.out.println(dateService.checkTimeFormat(time[0]));
+                log.info("Проверка формата времени:" + dateService.checkTimeFormat(time[0]));
                 return false;
             }
             if (!dateService.checkTimeFormat(time[3])) {
-                System.out.println(dateService.checkTimeFormat(time[3]));
+                log.info("Проверка формата времени:" + dateService.checkTimeFormat(time[3]));
                 return false;
             }
         }
