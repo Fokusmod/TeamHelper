@@ -79,8 +79,13 @@ public class UserService implements UserDetailsService {
 
     public ResponseEntity<?> authenticationUser(JwtRequest authRequest) {
         Optional<User> user = userRepository.findByUsername(authRequest.getUsername());
+        if (user.isEmpty()) {
+            return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(),
+                    "Пользователь с таким логином " + authRequest.getUsername() + " не существует."), HttpStatus.NOT_FOUND);
+        }
+        user.get().setStatus("approved");//временная заглушка //TODO
         if (user.get().getStatus().equals("not_approved")) {
-            return new ResponseEntity(new AppError(HttpStatus.FORBIDDEN.value(), "User registration has not been confirmed"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(new AppError(HttpStatus.FORBIDDEN.value(), "Ваша заявка на регистрацию не была одобрена. Пожалуйста ожидайте."), HttpStatus.FORBIDDEN);
         }
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));

@@ -17,3 +17,4 @@ create table users_privileges
     foreign key (user_id) references users (id),
     foreign key (privilege_id) references privileges (id)
 );
+

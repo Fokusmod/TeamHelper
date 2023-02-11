@@ -9,10 +9,7 @@ import ru.geekbrains.WowVendorTeamHelper.model.WowEvent;
 import ru.geekbrains.WowVendorTeamHelper.model.WowEventType;
 import ru.geekbrains.WowVendorTeamHelper.repository.WowEventRepository;
 
-import java.lang.reflect.Type;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +41,7 @@ public class WowEventService {
         if (isRussianLiterals(list)) {
             throw new RuntimeException("Request events contains Russian literals");
         }
-        if (check(list)) {
+        if (checkDateAndTimeFormat(list)) {
             Optional<WowEvent> request = wowEventRepository.findById(id);
             if (request.isPresent()) {
                 WowEvent wowEvent = request.get();
@@ -70,8 +67,8 @@ public class WowEventService {
         if (isRussianLiterals(requestEvents)) {
             throw new RuntimeException("Request events contains Russian literals");
         }
-        if (check(requestEvents)) {
-            List<RequestEvents> checkedRequestEvents = checkDoubles(requestEvents);
+        if (checkDateAndTimeFormat(requestEvents)) {
+            List<RequestEvents> checkedRequestEvents = checkDuplicates(requestEvents);
             for (RequestEvents request : checkedRequestEvents) {
                 WowEvent wowEvent = new WowEvent();
                 wowEvent.setEventDate(request.getDate());
@@ -115,7 +112,7 @@ public class WowEventService {
     //Метод проверки даты и времени
     // Дата - [19:00 МСК / 17:00 CET]
     // Время [18.01.23]
-    private boolean check(List<RequestEvents> requestEvents) {
+    private boolean checkDateAndTimeFormat(List<RequestEvents> requestEvents) {
         for (RequestEvents event : requestEvents) {
             String date = event.getDate();
             String[] time = event.getTime().split(" ");
@@ -135,7 +132,7 @@ public class WowEventService {
         return true;
     }
 
-    private List<RequestEvents> checkDoubles(List<RequestEvents> requestEvents) {
+    private List<RequestEvents> checkDuplicates(List<RequestEvents> requestEvents) {
         LinkedHashSet<RequestEvents> linkedHashSet = new LinkedHashSet<>(requestEvents);
         List<RequestEvents> list = new ArrayList<>(linkedHashSet);
         List<WowEvent> wowEventList = wowEventRepository.findAll();

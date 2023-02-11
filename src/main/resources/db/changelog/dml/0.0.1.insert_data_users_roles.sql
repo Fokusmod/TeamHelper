@@ -41,4 +41,3 @@ values ('Undefined'),
        ('VOI HC'),
        ('VOI NM');
 
-

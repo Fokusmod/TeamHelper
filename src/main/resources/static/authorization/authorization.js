@@ -1,6 +1,7 @@
 angular.module('index-app').controller('authorizationController', function ($scope, $http, $localStorage, $rootScope) {
 const contextPath = 'http://localhost:3100';
     $scope.authorization = function () {
+        console.log($scope.user)
         $http.post(contextPath + '/auth', $scope.user)
             .then(function successCallback(response) {
                 if (response.data.token) {
