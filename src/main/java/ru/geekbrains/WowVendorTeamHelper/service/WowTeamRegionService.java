@@ -1,11 +1,9 @@
 package ru.geekbrains.WowVendorTeamHelper.service;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.TeamNotFoundException;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.WowTeamRegionNotFoundException;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.WowTeamRegion;
 import ru.geekbrains.WowVendorTeamHelper.repository.WowTeamRegionRepository;
 
@@ -37,7 +35,7 @@ public class WowTeamRegionService {
             log.info("Регион " + title + " удален.");
         } else {
             log.error("Регион " + title + " не найден.");
-            throw new WowTeamRegionNotFoundException("Регион " + title + " не найден.");
+            throw new ResourceNotFoundException("Регион " + title + " не найден.");
         }
     }
 }

@@ -21,13 +21,13 @@ public class PrivilegeService {
 
     public boolean deletePrivilege(Long id) {
         privilegeRepository.deleteById(id);
-        log.info("Removed privilege with id: " + id);
+        log.info("Удалена привилегия с идентификатором: " + id);
         return true;
     }
 
     public Privilege findById(Long privilegeId) {
         return privilegeRepository.findById(privilegeId).orElseThrow(() ->
-                new ResourceNotFoundException("Unable to find privilege with id: " + privilegeId));
+                new ResourceNotFoundException("Не удается найти привилегию с идентификатором: " + privilegeId));
     }
 
     public List<Privilege> getAllPrivilege() {

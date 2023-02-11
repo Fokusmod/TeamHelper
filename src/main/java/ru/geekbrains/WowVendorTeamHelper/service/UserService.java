@@ -47,7 +47,7 @@ public class UserService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
+        User user = findByUsername(username).orElseThrow(() -> new ResourceNotFoundException(String.format("Пользователь '%s' не найден.", username)));
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
 
@@ -71,7 +71,7 @@ public class UserService implements UserDetailsService {
 
     public boolean userApproved(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("Unable to find user with id: " + userId));
+                new ResourceNotFoundException("Не удается найти пользователя с идентификатором: " + userId));
 
         user.setStatus("approved");
         userRepository.save(user);
@@ -81,11 +81,11 @@ public class UserService implements UserDetailsService {
     public ResponseEntity<?> authenticationUser(JwtRequest authRequest) {
         Optional<User> user = userRepository.findByUsername(authRequest.getUsername());
         if(user.isEmpty()){
-            log.error("A user with the name was not found" + authRequest.getUsername());
-            throw new UsernameNotFoundException("A user with the name was not found" + authRequest.getUsername());
+            log.error("Пользователь с таким именем не был найден." + authRequest.getUsername());
+            throw new ResourceNotFoundException("Пользователь с таким именем не был найден." + authRequest.getUsername());
         }
         if (user.get().getStatus().equals("not_approved")) {
-            return new ResponseEntity<>(new AppError(HttpStatus.FORBIDDEN.value(), "User registration has not been confirmed"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(new AppError(HttpStatus.FORBIDDEN.value(), "Регистрация пользователя не была подтверждена."), HttpStatus.FORBIDDEN);
         }
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
@@ -94,7 +94,7 @@ public class UserService implements UserDetailsService {
         }
         UserDetails userDetails = loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
-        log.info("The user with the name has been authorized: " + authRequest.getUsername());
+        log.info("Пользователь с таким именем был авторизован: " + authRequest.getUsername());
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
@@ -119,7 +119,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public User addPrivilegeToUser(Long userId, Long privilegeId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("Unable to find user with id: " + userId));
+                new ResourceNotFoundException("Не удается найти пользователя с идентификатором: " + userId));
         user.getPrivileges().add(privilegeService.findById(privilegeId));
         return user;
     }
@@ -127,7 +127,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public boolean deletePrivilegeFromUser(Long userId, Long privilegeId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("Unable to find user with id: " + userId));
+                new ResourceNotFoundException("Не удается найти пользователя с идентификатором: " + userId));
         user.getPrivileges().remove(privilegeService.findById(privilegeId));
         return true;
     }

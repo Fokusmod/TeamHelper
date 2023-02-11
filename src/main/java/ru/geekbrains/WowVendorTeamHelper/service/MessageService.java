@@ -41,7 +41,7 @@ public class MessageService {
                 .text(messageEvent.getText())
                 .build();
         app.getClient().chatPostMessage(chatPostMessageRequest);
-        log.info("postMessageInChannel - send message in "+ testChannel);
+        log.info("опубликовано сообщение в канале - сообщение отправилено в "+ testChannel);
         ConversationsHistoryRequest conversationsHistoryRequest = ConversationsHistoryRequest
                 .builder()
                 .channel(testChannel)
@@ -58,7 +58,7 @@ public class MessageService {
 
     //Получение сообщений из канала со списком клиентов
     public void getMessageMethod(MessageEvent messageEvent) {
-        log.info("GetMessageMethod - Get new message event");
+        log.info("Метод GetMessage - Получение нового события сообщения.");
         MyMessage message = new MyMessage();
         message.setText(messageEvent.getText());
         message.setTs(messageEvent.getTs());
@@ -67,7 +67,7 @@ public class MessageService {
         try {
             postMessageInChannel(messageEvent);
         } catch (IOException | SlackApiException e) {
-            log.error("Error when sending a message.", e);
+            log.error("Ошибка при отправке сообщения.", e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -89,7 +89,7 @@ public class MessageService {
                 myMessage.setText(messageChangedEvent.getMessage().getText());
                 repository.save(myMessage);
             } catch (IOException | SlackApiException e) {
-                log.error("Error when changing a message in the channel.", e);
+                log.error("Ошибка при изменении сообщения в канале.", e.getMessage());
                 throw new RuntimeException(e);
             }
         }
@@ -111,6 +111,7 @@ public class MessageService {
                 app.getClient().chatDelete(chatDeleteRequest);
                 repository.delete(myMessage);
             } catch (IOException | SlackApiException e) {
+                log.error("Ошибка при удалении сообщения.", e.getMessage());
                 throw new RuntimeException(e);
             }
         }

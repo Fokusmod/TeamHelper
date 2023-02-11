@@ -23,7 +23,7 @@ public class DateService {
         try {
             LocalDate.parse(text,formatDate);
         } catch (DateTimeException exception){
-            log.error("Date", exception);
+            log.error("Дата ", exception.getMessage());
            return false;
         }
         return true;
@@ -32,7 +32,7 @@ public class DateService {
         try {
             LocalTime.parse(text,formatTime);
         } catch (DateTimeException exception){
-            log.error("Time", exception);
+            log.error("Время ", exception.getMessage());
             return false;
         }
         return true;

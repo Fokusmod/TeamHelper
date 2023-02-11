@@ -41,8 +41,8 @@ public class WowEventService {
 
     public void changeById(Long id, List<RequestEvents> list) {
         if (isRussianLiterals(list)) {
-            log.error("Request events contains Russian literals");
-            throw new RuntimeException("Request events contains Russian literals");
+            log.error("changeRequest contains Russian literals.");
+            throw new RuntimeException("changeRequest contains Russian literals.");
         }
         if (check(list)) {
             Optional<WowEvent> request = wowEventRepository.findById(id);
@@ -59,8 +59,8 @@ public class WowEventService {
                 }
             }
         } else {
-            log.error("Bad create eventList");
-            throw new RuntimeException("Bad create eventList");
+            log.error("Неудачное создание списка событий.");
+            throw new RuntimeException("Неудачное создание списка событий.");
         }
 
 
@@ -69,8 +69,8 @@ public class WowEventService {
     @Transactional
     public void createEvents(List<RequestEvents> requestEvents) {
         if (isRussianLiterals(requestEvents)) {
-            log.error("Request events contains Russian literals");
-            throw new RuntimeException("Request events contains Russian literals");
+            log.error("createRequest contains Russian literals.");
+            throw new RuntimeException("createRequest contains Russian literals.");
         }
         if (check(requestEvents)) {
             List<RequestEvents> checkedRequestEvents = checkDoubles(requestEvents);
@@ -85,8 +85,8 @@ public class WowEventService {
                 wowEventRepository.save(wowEvent);
             }
         } else {
-            log.error("Bad create eventList");
-            throw new RuntimeException("Bad create eventList");
+            log.error("Неудачное создание списка событий.");
+            throw new RuntimeException("Неудачное создание списка событий.");
         }
     }
 
@@ -123,15 +123,15 @@ public class WowEventService {
             String date = event.getDate();
             String[] time = event.getTime().split(" ");
             if (!dateService.checkDateFormat(date)) {
-                log.info("Check date format:" + dateService.checkDateFormat(date));
+                log.info("Проверка формата даты:" + dateService.checkDateFormat(date));
                 return false;
             }
             if (!dateService.checkTimeFormat(time[0])) {
-                log.info("Check time format:" + dateService.checkTimeFormat(time[0]));
+                log.info("Проверка формата времени:" + dateService.checkTimeFormat(time[0]));
                 return false;
             }
             if (!dateService.checkTimeFormat(time[3])) {
-                log.info("Check time format:" + dateService.checkTimeFormat(time[3]));
+                log.info("Проверка формата времени:" + dateService.checkTimeFormat(time[3]));
                 return false;
             }
         }
