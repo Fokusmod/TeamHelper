@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.WowVendorTeamHelper.dto.JwtRequest;
-import ru.geekbrains.WowVendorTeamHelper.model.User;
+import ru.geekbrains.WowVendorTeamHelper.dto.UserDto;
 import ru.geekbrains.WowVendorTeamHelper.service.UserService;
 
 
@@ -20,10 +20,8 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public User registration(
-            @RequestBody User user) {
-        return userService.createUser(user);
-
+    public UserDto registration(
+            @RequestBody UserDto userDto) {
+        return userService.createUser(userDto);
     }
-    
 }

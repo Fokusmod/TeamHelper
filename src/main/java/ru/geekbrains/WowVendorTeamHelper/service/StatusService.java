@@ -2,6 +2,7 @@ package ru.geekbrains.WowVendorTeamHelper.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.geekbrains.WowVendorTeamHelper.dto.StatusDto;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.Status;
 import ru.geekbrains.WowVendorTeamHelper.repository.StatusRepository;
@@ -13,7 +14,9 @@ import java.util.List;
 public class StatusService {
     private final StatusRepository statusRepository;
 
-    public Status saveOrUpdateStatus(Status status) {
+    public Status saveOrUpdateStatus(StatusDto statusDto) {
+        Status status = new Status();
+        status.setTitle(statusDto.getTitle());
         return statusRepository.save(status);
     }
 

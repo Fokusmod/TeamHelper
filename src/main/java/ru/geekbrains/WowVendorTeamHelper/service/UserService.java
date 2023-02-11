@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.WowVendorTeamHelper.dto.JwtRequest;
 import ru.geekbrains.WowVendorTeamHelper.dto.JwtResponse;
+import ru.geekbrains.WowVendorTeamHelper.dto.UserDto;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.AppError;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.Role;
@@ -44,14 +45,14 @@ public class UserService implements UserDetailsService {
 
 
 
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
     }
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
+        User user = findByUsername(username);
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
 
@@ -59,16 +60,17 @@ public class UserService implements UserDetailsService {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getTitle())).collect(Collectors.toList());
     }
 
-    public User createUser(User user) {
+    public UserDto createUser(UserDto userDto) {
 
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+        if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
             throw new ResourceNotFoundException("Извините, но такой пользователь уже зарегестрирован");
         }
+        User user = new User();
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setRoles(Arrays.asList(roleRepository.findByTitle(ROLEUSER).orElseThrow()));
         user.setStatus(statusService.findByTitle(NOTAPPROVED));
         user.setActivationCode(user.getUsername() + "_" + UUID.randomUUID());
-        return userRepository.save(user);
+        return new UserDto(userRepository.save(user));
     }
 
     public boolean userApproved(Long userId, Long statusId) {
@@ -96,30 +98,30 @@ public class UserService implements UserDetailsService {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
-    public List<User> findUsersByStatus(String status) {
-        return userRepository.findAllByStatus(status);
+    public List<UserDto> findUsersByStatus(String status) {
+        return userRepository.findAllByStatus(status).stream().map(UserDto::new).collect(Collectors.toList());
     }
 
-    public List<User> findUsersByPrivilege(String privilege) {
-        return userRepository.findAllByPrivilege(privilege);
+    public List<UserDto> findUsersByPrivilege(String privilege) {
+        return userRepository.findAllByPrivilege(privilege).stream().map(UserDto::new).collect(Collectors.toList());
     }
 
-    public List<User> findUsersByRole(String role) {
+    public List<UserDto> findUsersByRole(String role) {
         String roleFormatted = "ROLE_" + role.toUpperCase();
         System.out.println(roleFormatted);
-        return userRepository.findAllByRole(roleFormatted);
+        return userRepository.findAllByRole(roleFormatted).stream().map(UserDto::new).collect(Collectors.toList());
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDto> getAllUsers() {
+        return userRepository.findAll().stream().map(UserDto::new).collect(Collectors.toList());
     }
 
     @Transactional
-    public User addPrivilegeToUser(Long userId, Long privilegeId) {
+    public UserDto addPrivilegeToUser(Long userId, Long privilegeId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new ResourceNotFoundException("Не найдено пользователя с id: " + userId));
         user.getPrivileges().add(privilegeService.findById(privilegeId));
-        return user;
+        return new UserDto(user);
     }
 
     @Transactional

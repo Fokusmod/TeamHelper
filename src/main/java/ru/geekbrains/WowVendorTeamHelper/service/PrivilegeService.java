@@ -2,6 +2,7 @@ package ru.geekbrains.WowVendorTeamHelper.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.geekbrains.WowVendorTeamHelper.dto.PrivilegeDto;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.Privilege;
 import ru.geekbrains.WowVendorTeamHelper.repository.PrivilegeRepository;
@@ -13,7 +14,9 @@ public class PrivilegeService {
 
     private final PrivilegeRepository privilegeRepository;
 
-    public Privilege saveOrUpdatePrivilege(Privilege privilege) {
+    public Privilege saveOrUpdatePrivilege(PrivilegeDto privilegeDto) {
+        Privilege privilege = new Privilege();
+        privilege.setTitle(privilegeDto.getTitle());
         return privilegeRepository.save(privilege);
     }
 
