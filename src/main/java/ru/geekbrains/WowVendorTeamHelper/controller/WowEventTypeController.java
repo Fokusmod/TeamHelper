@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.geekbrains.WowVendorTeamHelper.dto.WowEventTypeDTO;
-import ru.geekbrains.WowVendorTeamHelper.model.WowEventType;
-import ru.geekbrains.WowVendorTeamHelper.repository.WowEventTypeRepository;
 import ru.geekbrains.WowVendorTeamHelper.service.WowEventTypeService;
 
 import java.util.List;
