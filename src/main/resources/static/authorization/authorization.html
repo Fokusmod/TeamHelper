@@ -1,20 +1,19 @@
 
-    <div class="background" ng-controller="authorizationController" ng-show="!isUserLoggedIn()">
-        <div class="top">
-            <div class="title">Authorization</div>
-            <form class="form_block" ng-submit="authorization()">
-                <div class="input_form">
-                    <div class="input_form_text">Username</div>
-                    <input class="inputText" type="text" placeholder="Enter your Username" ng-model="user.username">
-                    <div class="input_form_text">Password</div>
-                    <input class="inputText" type="password" placeholder="Enter your Password" ng-model="user.password">
-                </div>
-
-                <div><button class="submit_button" type="submit" >Continue</button></div>
-            </form>
-            <br/>
-            <br/>
-            <a class="registration_link" href="../registration/registration.html">Registration</a>
-        </div>
-        <div class="footer">WowVendorTeamHelper</div>
+<div class="background" ng-controller="authorizationController" ng-show="!isUserLoggedIn()">
+    <div class="top">
+        <div class="title">Authorization</div>
+        <form class="form_block" ng-submit="authorization()">
+            <div class="input_form">
+                <div class="input_form_text">Username</div>
+                <input class="inputText" type="text" placeholder="Enter your Username" ng-model="user.username">
+                <div class="input_form_text">Password</div>
+                <input class="inputText" type="password" placeholder="Enter your Password" ng-model="user.password">
+            </div>
+            <div><button class="submit_button" type="submit" >Continue</button></div>
+        </form>
+        <div><a class="registration_link" href="../registration/registration.html">Registration</a></div>
     </div>
+    <div class="footer">
+        <div class="footer_text">WowVendorTeamHelper</div>
+    </div>
+</div>

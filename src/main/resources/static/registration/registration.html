@@ -19,28 +19,26 @@
 </head>
 
 <body>
-    <div class="background" ng-controller="registrationController">
-        <div class="top">
-            <div class="title">Registration</div>
-            <form class="form_block" ng-submit="registration()">
-                <div class="input_form">
-                    <div class="input_form_text">Username</div>
-                    <input class="inputText" type="text" placeholder="Enter your Username" ng-model="user.username">
-                    <div class="input_form_text">Email</div>
-                    <input class="inputText" type="email" placeholder="Enter your Email" ng-model="user.email">
-                    <div class="input_form_text">Password</div>
-                    <input class="inputText" type="password" placeholder="Enter your Password" ng-model="user.password">
-                </div>
-
-                <div><button class="submit_button" type="submit" onclick="this.form.reset();" >Continue</button></div>
-            </form>
-            <br/>
-            <br/>
-            <a class="registration_link" href="../index.html">Authorization</a>
-
-        </div>
-        <div class="footer">WowVendorTeamHelper</div>
+<div class="background" ng-controller="registrationController">
+    <div class="top">
+        <div class="title">Registration</div>
+        <form class="form_block" ng-submit="registration()">
+            <div class="input_form">
+                <div class="input_form_text">Username</div>
+                <input class="inputText" type="text" placeholder="Enter your Username" ng-model="user.username">
+                <div class="input_form_text">Email</div>
+                <input class="inputText" type="email" placeholder="Enter your Email" ng-model="user.email">
+                <div class="input_form_text">Password</div>
+                <input class="inputText" type="password" placeholder="Enter your Password" ng-model="user.password">
+            </div>
+            <div><button class="submit_button" type="submit" onclick="this.form.reset();" >Continue</button></div>
+        </form>
+        <div><a class="registration_link" href="../index.html">Authorization</a></div>
     </div>
+    <div class="footer">
+        <div class="footer_text">WowVendorTeamHelper</div>
+    </div>
+</div>
 </body>
 
 </html>
