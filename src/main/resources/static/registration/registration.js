@@ -20,7 +20,7 @@ angular.module('index-app').controller('registrationController', function ($scop
                         $rootScope.displayMessage("Успешная регистрация в приложении WowVendorTeamHelper. " +
                             "Для продолжения работы дождитесь одобрения заявки администратором", ok_color);
                     }
-                    $localStorage.createdUser = response.data;
+                    $rootScope.createdUser = response.data;
                     $location.path('/authorization');
                 }, function errorCallback(response) {
                     $rootScope.displayMessage(response.data.message);

@@ -11,7 +11,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +22,6 @@ import ru.geekbrains.WowVendorTeamHelper.exeptions.AppError;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.Role;
 import ru.geekbrains.WowVendorTeamHelper.model.User;
-import ru.geekbrains.WowVendorTeamHelper.repository.RoleRepository;
 import ru.geekbrains.WowVendorTeamHelper.repository.UserRepository;
 import ru.geekbrains.WowVendorTeamHelper.utils.JwtTokenUtil;
 
@@ -66,7 +64,7 @@ public class UserService implements UserDetailsService {
         if (findByEmail(request.getEmail()) != null) {
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пользователь с таким " +
                     "Е-mail " + request.getEmail() + " уже зарегистрирован."), HttpStatus.BAD_REQUEST);
-        } else if (findByUsername(request.getUsername())!=null) {
+        } else if (findByUsername(request.getUsername()) != null) {
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пользователь с таким " +
                     "Username " + request.getUsername() + " уже зарегистрирован."), HttpStatus.BAD_REQUEST);
         } else {
@@ -79,7 +77,7 @@ public class UserService implements UserDetailsService {
             newUser.setRoles(List.of(roleService.getRoleByTitle(ROLE_USER)));
             newUser.setPrivileges(List.of());
             UserDto userDto = new UserDto(userRepository.save(newUser));
-            return new ResponseEntity<>(userDto,HttpStatus.CREATED);
+            return new ResponseEntity<>(userDto, HttpStatus.CREATED);
         }
     }
 
@@ -92,19 +90,25 @@ public class UserService implements UserDetailsService {
     }
 
     public ResponseEntity<?> authenticationUser(JwtRequest authRequest) {
-        User user = userRepository.findByUsername(authRequest.getUsername()).orElseThrow(() ->
-                new ResourceNotFoundException("Не найдено пользователя с логином: " + authRequest.getUsername()));
+        User user;
+        if (findByEmail(authRequest.getLogin()) != null) {
+            user = findByEmail(authRequest.getLogin());
+        } else if (findByUsername(authRequest.getLogin()) != null) {
+            user = findByUsername(authRequest.getLogin());
+        } else {
+            throw new ResourceNotFoundException("Пользователя с таким логином " + authRequest.getLogin() + " не существует");
+        }
         if (user.getStatus().getTitle().equals(NOT_APPROVED)) {
-            return new ResponseEntity<>(new AppError(HttpStatus.FORBIDDEN.value(), "Авторизация прошла успешно, но аккаунт " + authRequest.getUsername() + " не был одобрен со стороны администрации."), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(new AppError(HttpStatus.FORBIDDEN.value(), "Авторизация прошла успешно, но аккаунт " + authRequest.getLogin() + " не был одобрен со стороны администрации."), HttpStatus.FORBIDDEN);
         }
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getLogin(), authRequest.getPassword()));
         } catch (BadCredentialsException e) {
             return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(), "Неправильный логин или пароль. Проверьте правильность учётных данных."), HttpStatus.UNAUTHORIZED);
         }
-        UserDetails userDetails = loadUserByUsername(authRequest.getUsername());
+        UserDetails userDetails = loadUserByUsername(user.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
-        log.info("Пользователь с таким именем был авторизован: " + authRequest.getUsername());
+        log.info("Пользователь с таким логином был авторизован: " + authRequest.getLogin());
         return ResponseEntity.ok(new JwtResponse(token));
     }
 

@@ -9,8 +9,8 @@ angular.module('index-app').controller('authorizationController', function ($sco
 
 
     $scope.afterRegistration = function () {
-        if ($localStorage.createdUser != null) {
-            document.getElementById("authLogin").value = $localStorage.createdUser.email;
+        if ($rootScope.createdUser != null) {
+            document.getElementById("authLogin").value = $rootScope.createdUser.email;
         }
     }
 
@@ -34,15 +34,14 @@ angular.module('index-app').controller('authorizationController', function ($sco
         if (result) {
             $http.post(contextPath + '/auth', $scope.user)
                 .then(function successCallback(response) {
+                    console.log($scope.user)
+                    console.log(response)
                     if (response.data.token) {
                         $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
-                        $localStorage.springWebUser = {username: $scope.user.username, token: response.data.token};
-                        $scope.user.username = null;
+                        $localStorage.springWebUser = {login: $scope.user.login, token: response.data.token};
+                        $scope.user.login = null;
                         $scope.user.password = null;
-                        if ($localStorage.springWebUser) {
-                            console.log("localStorage - true")
-                            $location.path("/schedule")
-                        }
+                        $location.path("/schedule")
                     }
                 }, function errorCallback(response) {
                     if (response.data.statusCode === 403) {

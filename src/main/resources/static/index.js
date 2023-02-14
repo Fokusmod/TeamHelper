@@ -33,20 +33,21 @@
 
     function run($rootScope, $http, $localStorage, $location) {
         if ($localStorage.springWebUser) {
-            try {
-                let jwt = $localStorage.springWebUser.token;
-                let payload = JSON.parse(atob(jwt.split('.')[1]));
-                let currentTime = parseInt(new Date().getTime() / 1000);
-                if (currentTime > payload.exp) {
-                    console.log("Token is expired!!!");
-                    delete $localStorage.springWebUser;
-                    $http.defaults.headers.common.Authorization = '';
-                }
-            } catch (e) {
-            }
             if ($localStorage.springWebUser) {
                 $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.springWebUser.token;
             }
+            // try {
+            //     let jwt = $localStorage.springWebUser.token;
+            //     let payload = JSON.parse(atob(jwt.split('.')[1]));
+            //     let currentTime = parseInt(new Date().getTime() / 1000);
+            //     if (currentTime > payload.exp) {
+            //         console.log("Token is expired!!!");
+            //         delete $localStorage.springWebUser;
+            //         $http.defaults.headers.common.Authorization = '';
+            //     }
+            // } catch (e) {
+            // }
+
         } else {
             $location.path('/authorization');
         }
@@ -68,16 +69,10 @@ angular.module('index-app').controller('indexController', function ($rootScope, 
     };
 
     $rootScope.isUserLoggedIn = function () {
+        console.log($localStorage.springWebUser)
         return !!$localStorage.springWebUser;
     };
 
-    $rootScope.isUser = function () {
-        if ($localStorage.springWebUser.username) {
-            return $localStorage.springWebUser.username;
-        } else {
-            return null;
-        }
-    };
 
 });
 
