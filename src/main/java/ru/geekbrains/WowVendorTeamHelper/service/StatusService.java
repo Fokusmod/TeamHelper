@@ -27,7 +27,7 @@ public class StatusService {
 
     public Status findById(Long statusId) {
         return statusRepository.findById(statusId).orElseThrow(() ->
-                new ResourceNotFoundException("Не найдено статуса с id: " + statusId));
+                new ResourceNotFoundException("Статус с идентификатором '" + statusId + "' не найден."));
     }
 
     public List<Status> getAllStatus() {
@@ -36,7 +36,7 @@ public class StatusService {
 
     public Status findByTitle(String title) {
         return statusRepository.findByTitle(title).orElseThrow(() ->
-                new ResourceNotFoundException("Не найдено статуса с именем: " + title));
+                new ResourceNotFoundException("Статус '" + title + "' не найден."));
     }
 
     public Status getStatus(Long id, String title) {

@@ -44,7 +44,7 @@ public class WowEventService {
             log.error("changeRequest contains Russian literals.");
             throw new RuntimeException("changeRequest contains Russian literals.");
         }
-        if (check(list)) {
+        if (checkDateFormat(list)) {
             Optional<WowEvent> request = wowEventRepository.findById(id);
             if (request.isPresent()) {
                 WowEvent wowEvent = request.get();
@@ -72,7 +72,7 @@ public class WowEventService {
             log.error("createRequest contains Russian literals.");
             throw new RuntimeException("createRequest contains Russian literals.");
         }
-        if (check(requestEvents)) {
+        if (checkDateFormat(requestEvents)) {
             List<RequestEvents> checkedRequestEvents = checkDoubles(requestEvents);
             for (RequestEvents request : checkedRequestEvents) {
                 WowEvent wowEvent = new WowEvent();
@@ -118,7 +118,7 @@ public class WowEventService {
     //Метод проверки даты и времени
     // Дата - [19:00 МСК / 17:00 CET]
     // Время [18.01.23]
-    private boolean check(List<RequestEvents> requestEvents) {
+    private boolean checkDateFormat(List<RequestEvents> requestEvents) {
         for (RequestEvents event : requestEvents) {
             String date = event.getDate();
             String[] time = event.getTime().split(" ");

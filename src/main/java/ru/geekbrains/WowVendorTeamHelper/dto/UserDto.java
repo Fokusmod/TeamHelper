@@ -1,6 +1,7 @@
 package ru.geekbrains.WowVendorTeamHelper.dto;
 
 import lombok.*;
+import ru.geekbrains.WowVendorTeamHelper.model.Privilege;
 import ru.geekbrains.WowVendorTeamHelper.model.User;
 
 import java.util.List;
@@ -22,6 +23,6 @@ public class UserDto {
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.status = user.getStatus().getTitle();
-        this.privileges = user.getPrivileges().stream().map(p -> p.getTitle()).collect(Collectors.toList());
+        this.privileges = user.getPrivileges().stream().map(Privilege::getTitle).collect(Collectors.toList());
     }
 }

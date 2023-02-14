@@ -1,36 +1,40 @@
 .msgBox {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 450px;
-            background: #f1f1f1;
-            border: 2px solid #292828;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /*z-index: 1;*/
+    background-color: #ffe6e6;
+    overflow: auto;
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.2s;
+    animation-name: animatetop;
+    animation-duration: 0.2s
+}
 
-            box-shadow: 30px 20px 50px #d1d5d8;
-        }
+@-webkit-keyframes animatetop {
+    from {top:5%; opacity:0}
+    to {top:10%; opacity:1}
+}
 
-        .msgBox_p {
-            font-size: 16px;
-            font-weight: bold;
-            line-height: 30px;
-            letter-spacing: 0.04em;
-            opacity: 1;
-            padding: 10px 20px;
-            color: #fe5050;
-            text-align: center;
-        }
+@keyframes animatetop {
+    from {top:5%; opacity:0}
+    to {top:10%; opacity:1}
+}
 
-        .msgBox_button {
-            background: none;
-            border: none;
-            position: absolute;
-            top: 0;
-            right: 10px;
-            color: #aaa;
-            font-size: 16px;
-            font-weight: bold;
-            line-height: 30px;
-            letter-spacing: 0.04em;
-            opacity: 0.8;
-        }
+.msgBox_p {
+    font-family: BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans",Ubuntu,Cantarell,"Helvetica Neue",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size: 16px;
+    line-height: 30px;
+    padding: 10px 20px;
+    color: #414141;
+    text-align: center;
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
