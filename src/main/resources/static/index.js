@@ -1,30 +1,34 @@
 (function () {
     angular
-    .module('index-app', ['ngRoute', 'ngStorage'])
-    .config(config)
-    .run(run);
+        .module('index-app', ['ngRoute', 'ngStorage'])
+        .config(config)
+        .run(run);
 
     function config($routeProvider) {
-    $routeProvider
-        .when('/clientList', {
-            templateUrl: 'clientList/clientList.html',
-            controller: 'clientListController'
-        })
-        .when('/schedule', {
-            templateUrl: 'schedule/schedule.html',
-            controller: 'scheduleController'
-        })
-         .when('/authorization', {
-         templateUrl: 'authorization/authorization.html',
-         controller: 'authorizationController'
-         })
-         .when('/admin', {
-         templateUrl: 'admin/admin.html',
-         controller: 'adminController'
-         })
-        .otherwise({
-            redirectTo: '/schedule'
-        });
+        $routeProvider
+            .when('/clientList', {
+                templateUrl: 'clientList/clientList.html',
+                controller: 'clientListController'
+            })
+            .when('/schedule', {
+                templateUrl: 'schedule/schedule.html',
+                controller: 'scheduleController'
+            })
+            .when('/authorization', {
+                templateUrl: 'authorization/authorization.html',
+                controller: 'authorizationController'
+            })
+            .when('/registration', {
+                templateUrl: 'registration/registration.html',
+                controller: 'registrationController'
+            })
+            .when('/admin', {
+                templateUrl: 'admin/admin.html',
+                controller: 'adminController'
+            })
+            .otherwise({
+                redirectTo: '/schedule'
+            });
     }
 
     function run($rootScope, $http, $localStorage, $location) {
@@ -53,32 +57,27 @@
 angular.module('index-app').controller('indexController', function ($rootScope, $scope, $http, $location, $localStorage) {
 
     $scope.tryToLogout = function () {
-            $scope.clearUser();
-            $scope.user = null;
-            $location.path('/authorization');
-        };
+        $scope.clearUser();
+        $scope.user = null;
+        $location.path('/authorization');
+    };
 
-        $scope.clearUser = function () {
-            delete $localStorage.springWebUser;
-            $http.defaults.headers.common.Authorization = '';
-        };
+    $scope.clearUser = function () {
+        delete $localStorage.springWebUser;
+        $http.defaults.headers.common.Authorization = '';
+    };
 
-        $rootScope.isUserLoggedIn = function () {
-            if ($localStorage.springWebUser) {
-                return true;
-            } else {
-            $location.path('/authorization');
-            return false;
-            }
-        };
+    $rootScope.isUserLoggedIn = function () {
+        return !!$localStorage.springWebUser;
+    };
 
-        $rootScope.isUser = function () {
-            if ($localStorage.springWebUser.username) {
-                return $localStorage.springWebUser.username;
-            } else {
-                return null;
-            }
-        };
+    $rootScope.isUser = function () {
+        if ($localStorage.springWebUser.username) {
+            return $localStorage.springWebUser.username;
+        } else {
+            return null;
+        }
+    };
 
 });
 
