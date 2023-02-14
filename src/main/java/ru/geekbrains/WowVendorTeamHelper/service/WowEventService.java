@@ -45,6 +45,7 @@ public class WowEventService {
             throw new RuntimeException("changeRequest contains Russian literals.");
         }
         if (checkDateAndTimeFormat(list)) {
+
             Optional<WowEvent> request = wowEventRepository.findById(id);
             if (request.isPresent()) {
                 WowEvent wowEvent = request.get();
@@ -74,6 +75,7 @@ public class WowEventService {
         }
         if (checkDateAndTimeFormat(requestEvents)) {
             List<RequestEvents> checkedRequestEvents = checkDuplicates(requestEvents);
+
             for (RequestEvents request : checkedRequestEvents) {
                 WowEvent wowEvent = new WowEvent();
                 wowEvent.setEventDate(request.getDate());
