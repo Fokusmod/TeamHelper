@@ -30,31 +30,31 @@ public class WowTeamRegionService {
         repository.save(wowTeamRegion);
     }
 
-    public WowTeamRegionDto deleteRegion(String title) {
-        Optional<WowTeamRegion> wowTeamRegion = repository.findByTitle(title);
+    public WowTeamRegionDto deleteRegion(Long id) {
+        Optional<WowTeamRegion> wowTeamRegion = repository.findById(id);
         if (wowTeamRegion.isPresent()) {
             WowTeamRegion region = wowTeamRegion.get();
             repository.delete(region);
-            log.info("Регион " + title + " удален.");
+            log.info("Регион: " + region.getTitle() + " удален.");
             return new WowTeamRegionDto(region);
         } else {
-            log.error("Регион " + title + " не найден.");
-            throw new ResourceNotFoundException("Регион " + title + " не найден.");
+            log.error("Регион c id: " + id + " не найден.");
+            throw new ResourceNotFoundException("Регион c id: " + id + " не найден.");
         }
     }
 
     @Transactional
-    public WowTeamRegionDto changeRegion(String oldTitle, String newTitle) {
-        Optional<WowTeamRegion> wowTeamRegion = repository.findByTitle(oldTitle);
+    public WowTeamRegionDto changeRegion(Long id, String newTitle) {
+        Optional<WowTeamRegion> wowTeamRegion = repository.findById(id);
         if (wowTeamRegion.isPresent()) {
             WowTeamRegion region = wowTeamRegion.get();
             region.setTitle(newTitle);
             repository.save(region);
-            log.info("Регион " + oldTitle + " изменен на " + newTitle);
+            log.info("Региону c id: " + id + " изменено название на - " + newTitle);
             return new WowTeamRegionDto(region);
         } else {
-            log.error("Регион " + oldTitle + " не найден.");
-            throw new ResourceNotFoundException("Регион " + oldTitle + " не найден.");
+            log.error("Регион c id: " + id + " не найден.");
+            throw new ResourceNotFoundException("Регион c id: " + id + " не найден.");
         }
     }
 }

@@ -35,15 +35,15 @@ public class TeamController {
         return regionService.getAllRegions().stream().map(WowTeamRegionDto::new).collect(Collectors.toList());
     }
 
-    @GetMapping("/wowRegions/change/{oldRegion}/on/{newRegion}")
-    public ResponseEntity<WowTeamRegionDto> changeRegion (@PathVariable String oldRegion, @PathVariable String newRegion) {
-        WowTeamRegionDto dto = regionService.changeRegion(oldRegion, newRegion);
+    @GetMapping("/wowRegions/change/change/{id}/{newRegion}")
+    public ResponseEntity<WowTeamRegionDto> changeRegion (@PathVariable Long id, @PathVariable String newRegion) {
+        WowTeamRegionDto dto = regionService.changeRegion(id, newRegion);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @GetMapping("/wowRegions/delete/{region}")
-    public ResponseEntity<WowTeamRegionDto> getTeamsRegions (@PathVariable String region) {
-        WowTeamRegionDto dto = regionService.deleteRegion(region);
+    @GetMapping("/wowRegions/delete/{id}")
+    public ResponseEntity<WowTeamRegionDto> getTeamsRegions (@PathVariable Long id) {
+        WowTeamRegionDto dto = regionService.deleteRegion(id);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
