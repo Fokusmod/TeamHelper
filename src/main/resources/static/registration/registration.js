@@ -1,7 +1,14 @@
 angular.module('index-app').controller('registrationController', function ($scope, $http, $localStorage, $rootScope, $location) {
 
-    const contextPath = 'http://localhost:3100';
+    //цвета фона для сообщений на фронт по умолчанию error_color
+    const error_color = "#ffe6e6";
+    const warn_color = "#fff6e0";
+    const ok_color = "#e8fcdb";
+
     const reg = /^([A-Za-z\d_\-.])+@([A-Za-z\d_\-.])+\.([A-Za-z]{2,4})$/;
+
+    const contextPath = 'http://localhost:3100';
+
 
     $scope.registration = function () {
         const result = validation();
@@ -9,13 +16,14 @@ angular.module('index-app').controller('registrationController', function ($scop
         if (result) {
             $http.post(contextPath + '/registration', $scope.user)
                 .then(function successCallback(response) {
-                    $rootScope.displayMessage("Пользователь был успешно создан, но для продолжения работы с " +
-                        "приложением Вы должны быть одобрены администратором.");
+                    if (response.data.statusCode === 200) {
+                        $rootScope.displayMessage("Успешная регистрация в приложении WowVendorTeamHelper. " +
+                            "Для продолжения работы дождитесь одобрения заявки администратором", ok_color);
+                    }
                     $localStorage.createdUser = response.data;
                     $location.path('/authorization');
                 }, function errorCallback(response) {
                     $rootScope.displayMessage(response.data.message);
-                    // $scope.user = undefined
                 });
         }
     };
