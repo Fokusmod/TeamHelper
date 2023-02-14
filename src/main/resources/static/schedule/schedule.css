@@ -1,50 +1,178 @@
-.week {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 14%);
-    justify-content: space-between;
-    overflow: hidden;
-    background-color: black;
-    color: #fff9f9;
-    height: 10%;
-
+html,
+body {
+    height:100%
 }
 .events::-webkit-scrollbar {
     width: 0;
     height: 0;
 }
-.dayWeek{
-    background-color: red;
-    height: 30px;
-    vertical-align: center;
-}
-.week-info {
-    margin-top: 10px;
-    height: 15%;
-    text-align: center;
-}
+
 .events {
-    height: 75%;
+    padding-top: 1%;
+    height: 80.5%;
     width: 100%;
     background-color: #e6eeaf;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 13.5%);
-    justify-content: space-between;
     overflow-y: auto;
     scroll-behavior: smooth;
     -ms-overflow-style: none;
 }
-.dayTime {
-    background-color: blue;
-    height: 30px;
-    font-weight: bold;
-}
-
 .event {
-    margin-top: 5px;
+    margin-top: 10px;
     margin-bottom: 15px;
     margin-right: 5px;
     height: 100px;
     width: 100%;
     background-color: mediumpurple;
+}
+.event:hover {
+    cursor: pointer;
+}
+.event-top-label {
+    padding: 0;
+    margin: auto;
+    height: 3%;
+    background-color: paleturquoise;
+}
+
+.addEventButton {
+    display: flex;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 30px;
+    width: 80%;
+    background-color: #00152a;
+    border-radius: 5px;
+    opacity: 0.5;
+    color: #fff9f9;
+}
+.addEventButton:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.schedule-form {
+    background-color: #d2a7a7;
+    display: none;
+    width: 40%;
+    min-height: 100px;
+    max-height: 500px;
+    overflow: auto;
+    text-align: center;
+    padding: 15px;
+    border: 3px solid #0000cc;
+    border-radius: 10px;
+    color: #0000cc;
+    position: absolute;
+    top: 25%;
+    right: 0;
+    left: 15%;
+    margin: auto;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    align-items: center;
+}
+.button {
+    text-align: center;
+    width: auto;
+    height: 30px;
+    background-color: #00152a;
+    color: white;
+   margin: auto;
+}
+
+.selector-scheduleList {
+    width: 100%;
+    height: 30px;
+    background-color: #00152a;
+    color: white;
+}
+.button:hover {
+    cursor: pointer;
+    background-color: #012b56;
+}
+
+.schedule-div {
+    text-align: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 25%);
+    height: 50px;
+    margin: 5px 5px 5px 5px;
+    background-color: #73b3f6;
+}
+.add-schedule-list{
+    text-align: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 25%);
+    height: 30px;
+    margin: 5px 5px 5px 5px;
+    background-color: #73b3f6;
+}
+.input-schedule {
+    background-color: #00152a;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 25px;
+    color: white;
+}
+label {
+    text-align: center;
+    margin: auto;
+}
+.control {
+    margin: 15px;
+}
+.input-text-schedule {
+    text-align: start;
+    width: 100%;
+    height: 150px;
+    resize: none;
+    font-size: 17px;
+}
+.input-text-schedule::placeholder {
+    font-size: 17px;
+    text-align: center;
+    margin-top: 0;
+}
+
+.event-label {
+    text-align: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 16.5%);
+    margin-left: auto;
+    margin-right: auto;
+    width: 60%;
+    height: 5%;
+}
+.event-content {
+    text-align: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 16.5%);
+    margin-bottom: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #aaaaaa;
+    width: 60%;
+    height: 5%;
+}
+.event-data {
+    margin: auto;
+}
+
+.event-date-input {
+    text-align: center;
+    width: 70px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.event-time-input {
+    text-align: center;
+    width: 150px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: auto;
+    margin-left: auto;
 }
 

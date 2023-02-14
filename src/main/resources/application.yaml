@@ -1,9 +1,9 @@
-oauth2:
-  userAuthorizationUri: "https://eu:battle:net/oauth/authorize"
-  accessTokenUri: "https://eu.battle.net/oauth/token"
-  tokenName: "access_token"
-  clientId: "28031be62ca84e78a9ea4fb18e818c4c"
-  clientSecret: "Y5KW9l5l34ybu8zUovSj22wb58SxS7Fj"
+#oauth2:
+#  userAuthorizationUri: "https://eu:battle:net/oauth/authorize"
+#  accessTokenUri: "https://eu.battle.net/oauth/token"
+#  tokenName: "access_token"
+#  clientId: "28031be62ca84e78a9ea4fb18e818c4c"
+#  clientSecret: "Y5KW9l5l34ybu8zUovSj22wb58SxS7Fj"
 
 # ??? ????????????? ?????????? ?????.
 
@@ -34,5 +34,7 @@ spring:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
     contexts: dev
-
+logging:
+  level:
+    org.springframework.transaction: DEBUG
 

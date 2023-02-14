@@ -11,6 +11,7 @@ import com.slack.api.model.event.MessageChangedEvent;
 import com.slack.api.model.event.MessageDeletedEvent;
 import com.slack.api.model.event.MessageEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.geekbrains.WowVendorTeamHelper.model.MyMessage;
 import ru.geekbrains.WowVendorTeamHelper.model.TeamChannelId;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MessageService {
@@ -40,7 +41,7 @@ public class MessageService {
                 .text(messageEvent.getText())
                 .build();
         app.getClient().chatPostMessage(chatPostMessageRequest);
-        System.out.println("postMessageInChannel - send message in " + testChannel);
+        log.info("опубликовано сообщение в канале - сообщение отправилено в "+ testChannel);
         ConversationsHistoryRequest conversationsHistoryRequest = ConversationsHistoryRequest
                 .builder()
                 .channel(testChannel)
@@ -57,7 +58,7 @@ public class MessageService {
 
     //Получение сообщений из канала со списком клиентов
     public void getMessageMethod(MessageEvent messageEvent) {
-        System.out.println("GetMessageMethod - Get new message event");
+        log.info("Метод GetMessage - Получение нового события сообщения.");
         MyMessage message = new MyMessage();
         message.setText(messageEvent.getText());
         message.setTs(messageEvent.getTs());
@@ -66,6 +67,7 @@ public class MessageService {
         try {
             postMessageInChannel(messageEvent);
         } catch (IOException | SlackApiException e) {
+            log.error("Ошибка при отправке сообщения.", e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -87,6 +89,7 @@ public class MessageService {
                 myMessage.setText(messageChangedEvent.getMessage().getText());
                 repository.save(myMessage);
             } catch (IOException | SlackApiException e) {
+                log.error("Ошибка при изменении сообщения в канале.", e.getMessage());
                 throw new RuntimeException(e);
             }
         }
@@ -108,6 +111,7 @@ public class MessageService {
                 app.getClient().chatDelete(chatDeleteRequest);
                 repository.delete(myMessage);
             } catch (IOException | SlackApiException e) {
+                log.error("Ошибка при удалении сообщения.", e.getMessage());
                 throw new RuntimeException(e);
             }
         }

@@ -14,45 +14,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-route.min.js"></script>
     <title>Registration</title>
     <link rel="stylesheet" href="../style1.css">
+    <link rel="stylesheet" href="../msgBox2.css">
     <script src="registration.js"></script>
-    <style>
-        .msgBox {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 450px;
-            background: #f1f1f1;
-            border: 2px solid #292828;
-
-            box-shadow: 30px 20px 50px #d1d5d8;
-        }
-
-        .msgBox_p {
-            font-size: 16px;
-            font-weight: bold;
-            line-height: 30px;
-            letter-spacing: 0.04em;
-            opacity: 0.8;
-            padding: 10px 20px;
-            color: #333;
-             text-align: center;
-        }
-
-        .msgBox_button {
-            background: none;
-            border: none;
-            position: absolute;
-            top: 0;
-            right: 10px;
-            color: #aaa;
-            font-size: 16px;
-            font-weight: bold;
-            line-height: 30px;
-            letter-spacing: 0.04em;
-            opacity: 0.8;
-        }
-    </style>
 </head>
 
 <body>
@@ -62,16 +25,18 @@
             <form class="form_block" ng-submit="registration()">
                 <div class="input_form">
                     <div class="input_form_text">Username</div>
-                    <input class="inputText" type="text" placeholder="Enter your Username" ng-model="userForm.username">
+                    <input class="inputText" type="text" placeholder="Enter your Username" ng-model="user.username">
                     <div class="input_form_text">Email</div>
-                    <input class="inputText" type="email" placeholder="Enter your Email" ng-model="userForm.email">
+                    <input class="inputText" type="email" placeholder="Enter your Email" ng-model="user.email">
                     <div class="input_form_text">Password</div>
-                    <input class="inputText" type="password" placeholder="Enter your Password" ng-model="userForm.password">
+                    <input class="inputText" type="password" placeholder="Enter your Password" ng-model="user.password">
                 </div>
 
-                <div><button class="submit_button" type="submit" ng-click="displayMessage()">Continue</button></div>
+                <div><button class="submit_button" type="submit" onclick="this.form.reset();" >Continue</button></div>
             </form>
-
+            <br/>
+            <br/>
+            <a class="registration_link" href="../index.html">Authorization</a>
 
         </div>
         <div class="footer">WowVendorTeamHelper</div>

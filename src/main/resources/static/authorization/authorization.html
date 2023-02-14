@@ -1,72 +1,16 @@
-<!DOCTYPE html>
-<html ng-app="app">
 
-<head>
-    <meta charset="utf-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous"></script>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.11/ngStorage.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-route.min.js"></script>
-    <title>Authorization</title>
-    <link rel="stylesheet" href="../style1.css">
-    <script src="authorization.js"></script>
-    <style>
-        .msgBox {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 450px;
-            background: #f1f1f1;
-            border: 2px solid #292828;
-            box-shadow: 30px 20px 50px #d1d5d8;
-        }
-
-        .msgBox_p {
-            font-size: 16px;
-            font-weight: bold;
-            line-height: 30px;
-            letter-spacing: 0.04em;
-            opacity: 0.8;
-            padding: 10px 20px;
-            color: #333;
-             text-align: center;
-        }
-
-        .msgBox_button {
-            background: none;
-            border: none;
-            position: absolute;
-            top: 0;
-            right: 10px;
-            color: #aaa;
-            font-size: 16px;
-            font-weight: bold;
-            line-height: 30px;
-            letter-spacing: 0.04em;
-            opacity: 0.8;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="background" ng-controller="authorizationController">
+    <div class="background" ng-controller="authorizationController" ng-show="!isUserLoggedIn()">
         <div class="top">
             <div class="title">Authorization</div>
             <form class="form_block" ng-submit="authorization()">
                 <div class="input_form">
                     <div class="input_form_text">Username</div>
-                    <input class="inputText" type="text" placeholder="Enter your Username" ng-model="userForm.username">
+                    <input class="inputText" type="text" placeholder="Enter your Username" ng-model="user.username">
                     <div class="input_form_text">Password</div>
-                    <input class="inputText" type="password" placeholder="Enter your Password" ng-model="userForm.password">
+                    <input class="inputText" type="password" placeholder="Enter your Password" ng-model="user.password">
                 </div>
 
-                <div><button class="submit_button" type="submit"  ng-click="displayMessage("Welcome!")">Continue</button></div>
+                <div><button class="submit_button" type="submit" >Continue</button></div>
             </form>
             <br/>
             <br/>
@@ -74,6 +18,3 @@
         </div>
         <div class="footer">WowVendorTeamHelper</div>
     </div>
-</body>
-
-</html>
