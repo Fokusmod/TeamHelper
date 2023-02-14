@@ -15,7 +15,12 @@
 </head>
 <body ng-app="index-app" ng-controller="indexController">
 <DIV class="main-container" ng-show="isUserLoggedIn()">
-    <div class="user-panel">UserPane</div>
+    <div>
+        <div class="user-panel">
+            <div> Username: {{usname}} </div>
+            <div> Role: </div>
+        </div>
+    </div>
     <div class="panel-container">
         <a href="#!/clientList">
             <div class="panel-item-container">
@@ -32,14 +37,14 @@
                 <div class="panel-item-title">Админка</div>
             </div>
         </a>
-        <a>
+        <a href="" ng-click="tryToLogout()">
             <div class="panel-item-container" >
-                <button class="btn btn-outline-secondary btn-sm" ng-click="tryToLogout()">Выйти</button>
+                <div class="panel-item-title">Выйти</div>
             </div>
         </a>
     </div>
-
-</div>
+    <div></div>
+</DIV>
 
 <ng-view></ng-view>
 

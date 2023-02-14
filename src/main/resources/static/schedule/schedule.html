@@ -12,13 +12,16 @@
 <body>
 <div id="schedule" class="content-container">
     <div class="settings-container">
-        <div class="settings-item ">
-            <label>Состав</label>
-            <select name="team-selected" id="team-selected" ng-model="selectedTeam"
-                    ng-options="team.title for team in teams"
-                    ng-change="filterByTeamAndType()" class="button">
-            </select>
+        <div>
+            <div class="settings-item ">
+                <label>Состав</label>
+                <select name="team-selected" id="team-selected" ng-model="selectedTeam"
+                        ng-options="team.title for team in teams"
+                        ng-change="filterByTeamAndType()" class="button">
+                </select>
+            </div>
         </div>
+
         <div class="settings-item">
             <label>События</label>
             <select name="type-selected" id="type-selected" ng-model="selectedType"
@@ -32,6 +35,7 @@
             <button class="button" ng-click="getTextForm()">Текстом</button>
         </div>
     </div>
+
     <div class="event-top-label">
         <div class="event-label">
             <div class="event-data">id</div>
@@ -57,45 +61,55 @@
     </div>
 
 
-    <div id="schedule-table-form" class="schedule-form">
-        <div class="schedule-div">
-            <label for="event-type">Тип события</label>
-            <label for="event-team">Команда</label>
-            <label for="event-date">Дата</label>
-            <label for="event-time">Время старта</label>
+    <div id="schedule-table-form" class="modal-wrapper">
+        <div class="schedule-form">
+            <div class="schedule-div">
+                <label for="event-type">Тип события</label>
+                <label for="event-team">Команда</label>
+                <label for="event-date">Дата</label>
+                <label for="event-time">Время старта</label>
+            </div>
+            <div id="event" class="add-schedule-list">
+                <select name="type-selected" id="event-type" ng-model="listSelectedType"
+                        ng-options="listType.title for listType in listEventType"
+                        class="selector-scheduleList">
+                </select>
+                <select name="type-selected" id="event-team" ng-model="listTeamSelected"
+                        ng-options="list.title for list in listTeams"
+                        class="selector-scheduleList">
+                </select>
+                <input id="event-date" class="input-schedule" type="text" placeholder="18.01.23">
+                <input id="event-time" class="input-schedule" type="text" placeholder="21:00 МСК / 19:00 CET">
+            </div>
+            <div id="button" class="addEventButton" ng-click="addEvent()">
+                <label>Еще</label>
+            </div>
+            <div class="control">
+                <button type="submit" class="button" ng-click="createScheduleList()">Добавить расписание</button>
+                <button class="button" ng-click="cancelScheduleList()">Отменить</button>
+            </div>
         </div>
-        <div id="event" class="add-schedule-list">
-            <select name="type-selected" id="event-type" ng-model="listSelectedType"
-                    ng-options="listType.title for listType in listEventType"
-                    class="selector-scheduleList">
-            </select>
-            <select name="type-selected" id="event-team" ng-model="listTeamSelected"
-                    ng-options="list.title for list in listTeams"
-                    class="selector-scheduleList">
-            </select>
-            <input id="event-date" class="input-schedule" type="text" placeholder="18.01.23">
-            <input id="event-time" class="input-schedule" type="text" placeholder="21:00 МСК / 19:00 CET">
-        </div>
-        <div id="button" class="addEventButton" ng-click="addEvent()">
-            <label>Еще</label>
-        </div>
-        <div class="control">
-            <button type="submit" class="button" ng-click="createScheduleList()">Добавить расписание</button>
-            <button class="button" ng-click="cancelScheduleList()">Отменить</button>
-        </div>
+        <div class="overlay"></div>
+
     </div>
 
 
-    <div id="schedule-text-form" class="schedule-form">
-        <label>Расписания</label>
-        <textarea id="text-events" class="input-text-schedule" placeholder="
+    <div id="schedule-text-form" class="modal-wrapper">
+        <div class="schedule-form">
+            <label_in_schedule_form>Расписание</label_in_schedule_form>
+            <textarea id="text-events" class="input-text-schedule" placeholder="
 1 Вариант1 Команда1 18.01.23 19:00 МСК / 17:00 CET
 2 Вариант2 Команда2 18.01.23 21:00 МСК / 19:00 CET
 ......"></textarea>
-        <div class="control">
-            <button type="submit" class="button" ng-click="getTextSchedule()">Добавить расписание</button>
-            <button class="button" ng-click="closeTextField()">Отменить</button>
+            <div class="control">
+                <button type="submit" class="button" ng-click="getTextSchedule()">Добавить расписание</button>
+                <button class="button" ng-click="closeTextField()">Отменить</button>
+            </div>
         </div>
+        <div class="overlay"></div>
+    </div>
+    <div class="footer_in_content">
+        <div class="footer_text">WowVendorTeamHelper</div>
     </div>
 </div>
 </body>
