@@ -14,7 +14,7 @@ import java.util.List;
 public class StatusService {
     private final StatusRepository statusRepository;
 
-    public Status saveOrUpdateStatus(StatusDto statusDto) {
+    public Status saveStatus(StatusDto statusDto) {
         Status status = new Status();
         status.setTitle(statusDto.getTitle());
         return statusRepository.save(status);
@@ -39,13 +39,4 @@ public class StatusService {
                 new ResourceNotFoundException("Статус '" + title + "' не найден."));
     }
 
-    public Status getStatus(Long id, String title) {
-        if (id != null) {
-            return findById(id);
-        }
-        if (title != null) {
-            return findByTitle(title);
-        }
-        return null;
-    }
 }
