@@ -34,6 +34,14 @@ spring:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
     contexts: dev
+  mail:
+    host: smtp.yandex.ru
+    username: WowVendorTeamHelper@yandex.ru
+    password: xmmlrqqbdfddjrbc
+    port: 465
+    protocol: smtps
+mail:
+  debug: true
 logging:
   level:
     org.springframework.transaction: DEBUG

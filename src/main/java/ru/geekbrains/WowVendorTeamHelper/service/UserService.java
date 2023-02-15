@@ -20,9 +20,10 @@ import ru.geekbrains.WowVendorTeamHelper.dto.JwtResponse;
 import ru.geekbrains.WowVendorTeamHelper.dto.UserDto;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.AppError;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
+import ru.geekbrains.WowVendorTeamHelper.mapper.UserMapper;
 import ru.geekbrains.WowVendorTeamHelper.model.Role;
+import ru.geekbrains.WowVendorTeamHelper.model.Status;
 import ru.geekbrains.WowVendorTeamHelper.model.User;
-import ru.geekbrains.WowVendorTeamHelper.repository.RoleRepository;
 import ru.geekbrains.WowVendorTeamHelper.repository.UserRepository;
 import ru.geekbrains.WowVendorTeamHelper.utils.JwtTokenUtil;
 
@@ -34,13 +35,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final UserMapper userMapper;
+    private final RoleService roleService;
     private final PrivilegeService privilegeService;
 
     private final StatusService statusService;
     private final PasswordEncoder bCryptPasswordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
+
+    private final MailService mailService;
     static final String NOTAPPROVED = "not_approved";
     static final String APPROVED = "approved";
     static final String ROLEUSER = "ROLE_USER";
@@ -64,31 +68,52 @@ public class UserService implements UserDetailsService {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getTitle())).collect(Collectors.toList());
     }
 
-    public UserDto createUser(UserDto userDto) {
+    public ResponseEntity<?> createUser(UserDto userDto) {
 
         if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
-            throw new ResourceNotFoundException("Извините, но такой пользователь уже зарегестрирован");
+
+            return new ResponseEntity(new AppError(HttpStatus.BAD_REQUEST.value(), "Извините, но такой пользователь уже зарегестрирован"), HttpStatus.BAD_REQUEST);
         }
         User user = new User();
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRoles(Arrays.asList(roleRepository.findByTitle(ROLEUSER).orElseThrow()));
+        user.setUsername(userDto.getUsername());
+        user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        user.setRoles(Arrays.asList(roleService.findByTitle(ROLEUSER)));
         user.setStatus(statusService.findByTitle(NOTAPPROVED));
         user.setActivationCode(user.getUsername() + "_" + UUID.randomUUID());
-        return new UserDto(userRepository.save(user));
+        user.setPrivileges(new ArrayList<>());
+        user.setEmail(userDto.getEmail());
+
+        mailService.sendHtmlMessage(userDto.getEmail(), "Заявка на регистрацию принята!", "mail-registration.html", new HashMap<>());
+
+        return new ResponseEntity<>(userMapper.toDto(userRepository.save(user)), HttpStatus.CREATED);
     }
 
     public boolean userApproved(Long userId, Long statusId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new ResourceNotFoundException("Не удается найти пользователя с идентификатором: " + userId));
-        user.setStatus(statusService.findById(statusId));
-        userRepository.save(user);
+        Status status = statusService.findById(statusId);
+        String subject = "";
+        String template = "";
+        if(status.getTitle().equals(APPROVED)) {
+            subject = "Регистрация одобрена!";
+            template = "mail-approved.html";
+            user.setStatus(status);
+            userRepository.save(user);
+
+        } else if (status.getTitle().equals(NOTAPPROVED)){
+            subject = "Заявка на регистрацию отклонена!";
+            template = "mail-not-approved.html";
+            userRepository.delete(user);
+        }
+        mailService.sendHtmlMessage(user.getEmail(), subject, template, new HashMap<>());
+
         return true;
     }
 
     public ResponseEntity<?> authenticationUser(JwtRequest authRequest) {
         User user = userRepository.findByUsername(authRequest.getUsername()).orElseThrow(() ->
                 new ResourceNotFoundException("Не найдено пользователя с логином: " + authRequest.getUsername()));
-        if (user.getStatus().equals(NOTAPPROVED)) {
+        if (user.getStatus().getTitle().equals(NOTAPPROVED)) {
             return new ResponseEntity(new AppError(HttpStatus.FORBIDDEN.value(), "Регистрация пользователя не была подтверждена"), HttpStatus.FORBIDDEN);
         }
         try {
@@ -97,27 +122,28 @@ public class UserService implements UserDetailsService {
             return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(), "Неправильный логин или пароль. Проверьте правильность учётных данных."), HttpStatus.UNAUTHORIZED);
         }
         UserDetails userDetails = loadUserByUsername(authRequest.getUsername());
-        String token = jwtTokenUtil.generateToken(userDetails);
-        log.info("Пользователь с таким именем был авторизован: " + authRequest.getUsername());
+        String token = jwtTokenUtil.generateToken(userDetails, user);
+        log.info("Пользователь " + authRequest.getUsername() + " был авторизован" );
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
-    public List<UserDto> findUsersByStatus(String status) {
-        return userRepository.findAllByStatus(status).stream().map(UserDto::new).collect(Collectors.toList());
+    public List<UserDto> findUsersByStatus(String statusTitle) {
+        Status status = statusService.findByTitle(statusTitle);
+        return userRepository.findAllByStatus(status).stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     public List<UserDto> findUsersByPrivilege(String privilege) {
-        return userRepository.findAllByPrivilege(privilege).stream().map(UserDto::new).collect(Collectors.toList());
+        return userRepository.findAllByPrivilege(privilege).stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     public List<UserDto> findUsersByRole(String role) {
         String roleFormatted = "ROLE_" + role.toUpperCase();
         System.out.println(roleFormatted);
-        return userRepository.findAllByRole(roleFormatted).stream().map(UserDto::new).collect(Collectors.toList());
+        return userRepository.findAllByRole(roleFormatted).stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     public List<UserDto> getAllUsers() {
-        return userRepository.findAll().stream().map(UserDto::new).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     @Transactional
@@ -125,7 +151,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new ResourceNotFoundException("Не найдено пользователя с id: " + userId));
         user.getPrivileges().add(privilegeService.findById(privilegeId));
-        return new UserDto(user);
+        return userMapper.toDto(user);
     }
 
     @Transactional
@@ -133,6 +159,22 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new ResourceNotFoundException("Не найдено пользователя с id: " + userId));
         user.getPrivileges().remove(privilegeService.findById(privilegeId));
+        return true;
+    }
+
+    @Transactional
+    public UserDto addRoleToUser(Long userId, Long roleId) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ResourceNotFoundException("Не найдено пользователя с id: " + userId));
+        user.getRoles().add(roleService.findById(roleId));
+       return userMapper.toDto(user);
+    }
+
+    @Transactional
+    public boolean deleteRoleFromUser(Long userId, Long roleId) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ResourceNotFoundException("Не найдено пользователя с id: " + userId));
+        user.getRoles().remove(roleService.deleteRoleById(roleId));
         return true;
     }
 }

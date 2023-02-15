@@ -36,18 +36,28 @@ public class UserController {
         return userService.findUsersByPrivilege(privilege);
     }
 
-    @PostMapping("/{userId}/privilege/{privilegeId}")
+    @PostMapping("/{userId}/add_privilege/{privilegeId}")
     public UserDto addPrivilegeToUser(@PathVariable Long userId, @PathVariable Long privilegeId) {
         return userService.addPrivilegeToUser(userId, privilegeId);
     }
 
-    @DeleteMapping("/{userId}/privilege/{privilegeId}")
+    @DeleteMapping("/{userId}/delete_privilege/{privilegeId}")
     public boolean deletePrivilegeFromUser(@PathVariable Long userId, @PathVariable Long privilegeId) {
         return userService.deletePrivilegeFromUser(userId, privilegeId);
     }
 
-    @PostMapping("/{userId}/status/{statusId}")
+    @PostMapping("/{userId}/approved/{statusId}")
     public boolean userApproved(@PathVariable Long userId, @PathVariable Long statusId) {
         return userService.userApproved(userId, statusId);
+    }
+
+    @PutMapping("/{userId}/add_role/{roleId}")
+    public UserDto userAddRole(@PathVariable Long userId, @PathVariable Long roleId) {
+        return userService.addRoleToUser(userId, roleId);
+    }
+
+    @DeleteMapping("/{userId}/delete_role/{roleId}")
+    public boolean userDeleteRole(@PathVariable Long userId, @PathVariable Long roleId) {
+        return userService.deleteRoleFromUser(userId, roleId);
     }
 }
