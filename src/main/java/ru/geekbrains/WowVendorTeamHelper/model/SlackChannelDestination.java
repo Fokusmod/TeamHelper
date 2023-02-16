@@ -1,14 +1,16 @@
 package ru.geekbrains.WowVendorTeamHelper.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import ru.geekbrains.WowVendorTeamHelper.dto.WowEventTypeDTO;
 
 import javax.persistence.*;
+import java.util.Set;
 
-@Entity
 @Data
-@Table(name = "wow_events_types")
-public class WowEventType {
+@Entity
+@Table(name = "slack_channel_destinations")
+public class SlackChannelDestination {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +20,4 @@ public class WowEventType {
     @Column(name = "title")
     private String title;
 
-    public static WowEventTypeDTO makeDto(WowEventType type){
-        return new WowEventTypeDTO(type);
-    }
 }

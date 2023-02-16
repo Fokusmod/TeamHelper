@@ -10,22 +10,18 @@ body {
 .background_admin {
     background: #f3f3f3;
     margin: 0 auto;
-    min-width: 85%;
-    height: 100%;
+    min-width: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    margin-right: 15%;
-
-
 }
 
 .top_admin {
     margin: 0 auto;
     min-width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
-    /*flex-grow: 1;*/
+    flex-grow: 1;
 }
 
 .title_admin {
@@ -47,21 +43,6 @@ body {
     color: #00152a;
 }
 
-.footer {
-    background: #00152a;
-    opacity: 0.7;
-    height: 30px;
-    min-width: 100%;
-
-    padding-top: 15px;
-    padding-bottom: 30px;
-    color: #f1f1f1;
-    text-align: center;
-    font-size: 15px;
-    font-weight: bold;
-    letter-spacing: 0.04em;
-}
-
 .showBlock_link {
     align-self: center;
     font-size: 16px;
@@ -75,20 +56,21 @@ body {
 #users_1 {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
-
     margin-left: 2%;
     margin-right: 2%;
     margin-bottom: 20px;
     font-size: 12px;
+    min-width: 96%;
 }
+
 #users_2 {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
-
     margin-left: 2%;
     margin-right: 2%;
     margin-bottom: 20px;
     font-size: 12px;
+    min-width: 96%;
 }
 
 #users_1 td,
@@ -97,6 +79,7 @@ body {
 #users_2 th {
     border: 1px solid #ddd;
     padding: 1px;
+    text-align: center;
 }
 
 #users_1 tr:nth-child(even),
@@ -114,33 +97,42 @@ body {
 #users_2 th{
     padding-top: 2px;
     padding-bottom: 2px;
-    text-align: left;
-    background-color: #fe5050;
+    text-align: center;
+    /*background-color: #fe5050;*/
+    background-image: linear-gradient(to bottom right, #1a0d21, #37204a);
     color: white;
     font-size: 14px;
 }
 
 .horizontal-separator {
     border-top: 1px solid gray;
-    weight: 100%;
+    width: 100%;
    padding-top: 12px;
    padding-bottom: 12px;
 }
-.statistics_blocks{
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 50px;
+
+.admin_button{
+    padding: 5px;
+    color: #f1f1f1;
+
+    border: 1px solid #00152a;
+    text-align: center;
+    background-color: #00152a;
+
 }
-.slack_block{
-    border: 1px solid gray;
-    width: 45%;
-    height: 300px;
-    background-color: #ddd;
+.button {
+    padding: 5px 10px 5px 10px;
+    text-align: center;
+    width: auto;
+    height: 30px;
+    background-color: #00152a;
+    color: white;
+    margin: auto;
+    border: 0.5px solid #f3f3f3;
 }
-.blizzard_block{
-    border: 1px solid gray;
-    width: 45%;
-    height: 300px;
-    background-color: #ddd;
+
+.button:hover {
+    cursor: pointer;
+    background-color: #012b56;
 }
 

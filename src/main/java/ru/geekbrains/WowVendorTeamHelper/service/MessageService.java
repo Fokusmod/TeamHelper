@@ -29,6 +29,8 @@ public class MessageService {
 
     //Нужна проверка что сообщение доставлено из определенного а не из тестового. TODO
 
+    //Нужно отследить изменения названия каналов. Затем изменить их названия в бд //TODO
+
     private final App app;
     private final SlackMessageRepository repository;
 

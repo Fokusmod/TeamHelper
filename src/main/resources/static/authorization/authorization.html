@@ -1,20 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
 
-    <div class="background" ng-controller="authorizationController" ng-show="!isUserLoggedIn()">
-        <div class="top">
-            <div class="title">Authorization</div>
-            <form class="form_block" ng-submit="authorization()">
-                <div class="input_form">
-                    <div class="input_form_text">Username</div>
-                    <input class="inputText" type="text" placeholder="Enter your Username" ng-model="user.username">
-                    <div class="input_form_text">Password</div>
-                    <input class="inputText" type="password" placeholder="Enter your Password" ng-model="user.password">
-                </div>
-
-                <div><button class="submit_button" type="submit" >Continue</button></div>
-            </form>
-            <br/>
-            <br/>
-            <a class="registration_link" href="../registration/registration.html">Registration</a>
-        </div>
-        <div class="footer">WowVendorTeamHelper</div>
+<head>
+    <meta charset="UTF-8">
+</head>
+<div class="background">
+    <div class="top">
+        <div class="title">Авторизация</div>
+        <form class="form_block" ng-submit="authorization()">
+            <div class="input_form">
+                <label id="login" for="authLogin" class="input_form_text">
+                    <input id="authLogin" minlength="4" autocomplete="on" type="text" ng-model="user.login">
+                    <span class="placeholder">Login</span>
+                    <span class="msg-error">Поле должно содержать не менее 4 символов.</span>
+                </label>
+                <label id="password" for="authPassword" class="input_form_text">
+                    <input id="authPassword" minlength="4" autocomplete="on" type="password" ng-model="user.password">
+                    <span class="placeholder">Password</span>
+                    <span class="msg-error">Поле должно содержать не менее 4 символов.</span>
+                </label>
+                <button class="submit_button" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0v-2z" />
+                        <path fill-rule="evenodd"
+                            d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                    </svg>
+                    <span>Войти</span>
+                </button>
+            </div>
+        </form>
+        <label class="registration_link" ng-click="relocateToRegistration()">Создать учётную запись</label>
     </div>
+    <div class="footer">WowVendorTeamHelper</div>
+</div>

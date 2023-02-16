@@ -3,7 +3,12 @@ package ru.geekbrains.WowVendorTeamHelper.dto;
 import lombok.Data;
 
 @Data
-public class JwtRequest {
-    private String login;
+public class RegistrationRequest {
+
+    private String username;
+
+    private String email;
+
     private String password;
+
 }

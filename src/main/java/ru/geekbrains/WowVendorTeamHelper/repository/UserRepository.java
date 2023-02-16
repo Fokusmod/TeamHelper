@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "select * from users as u " +
             "right join users_privileges as up on u.id = up.user_id where up.privilege_id = (select id from privileges where title = :privilege)", nativeQuery = true)
     List<User> findAllByPrivilege(String privilege);
+
+    Optional<User> findByEmail (String email);
 }
