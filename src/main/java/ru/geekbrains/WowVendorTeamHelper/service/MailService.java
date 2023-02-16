@@ -48,7 +48,7 @@ public class MailService {
         String html = templateEngine.process(emailContext.getTemplate(), context);
         helper.setText(html, true);
         emailSender.send(message);
-        log.info("Send email message");
+        log.info("Send email message from " + username + " to " + userEmail);
         } catch (
                 MessagingException mailException) {
             log.error("Error while sending out email..{}", mailException.getStackTrace());
