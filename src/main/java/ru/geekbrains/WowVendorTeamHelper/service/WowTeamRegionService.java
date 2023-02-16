@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.geekbrains.WowVendorTeamHelper.dto.RegionRequest;
 import ru.geekbrains.WowVendorTeamHelper.dto.WowTeamRegionDto;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.WowTeamRegion;
@@ -44,7 +45,9 @@ public class WowTeamRegionService {
     }
 
     @Transactional
-    public WowTeamRegionDto changeRegion(Long id, String newTitle) {
+    public WowTeamRegionDto changeRegion(RegionRequest request) {
+        String newTitle = request.getNewRegion();
+        Long id = request.getId();
         Optional<WowTeamRegion> wowTeamRegion = repository.findById(id);
         if (wowTeamRegion.isPresent()) {
             WowTeamRegion region = wowTeamRegion.get();
