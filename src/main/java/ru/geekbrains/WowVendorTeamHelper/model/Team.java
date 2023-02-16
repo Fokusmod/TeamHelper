@@ -19,7 +19,7 @@ public class Team {
     @Column(name = "title")
     private String title;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "region_id", referencedColumnName = "id")
     private WowTeamRegion teamRegion;
 

@@ -61,7 +61,7 @@ create table users_roles
  (
      id                bigserial primary key,
      title varchar(100) not null,
-     region_id bigint references wow_teams_regions(id)
+     region_id bigint references wow_teams_regions(id) ON DELETE CASCADE
  );
 
 --changeset WowVendorTeamHelper:create_tables_events
