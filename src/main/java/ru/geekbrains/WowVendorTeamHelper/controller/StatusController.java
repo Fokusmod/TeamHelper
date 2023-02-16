@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/status")
+@RequestMapping("api/v1/user-status")
 public class StatusController {
 
     private final StatusService statusService;
@@ -22,12 +22,12 @@ public class StatusController {
         return statusService.getAllStatus().stream().map(statusMapper::toDto).collect(Collectors.toList());
     }
 
-    @GetMapping("/get_by_id/{id}")
+    @GetMapping("/{id}")
     public StatusDto getStatusById(@PathVariable Long id){
         return statusMapper.toDto(statusService.findById(id));
     }
 
-    @GetMapping("/get_by_title/{title}")
+    @GetMapping("/{title}")
     public StatusDto getStatusByTitle(@PathVariable String title){
         return statusMapper.toDto(statusService.findByTitle(title));
     }
