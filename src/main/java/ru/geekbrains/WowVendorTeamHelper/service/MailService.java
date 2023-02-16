@@ -28,13 +28,13 @@ public class MailService {
 
     public void sendHtmlMessage(String userEmail, String subject, String template, Map<String, Object> properties) {
 
-        EmailContext emailContext = EmailContext.createBuilder()
-                .withEmail(userEmail)
-                .withSubject(subject)
-                .withTemplate(template)
-                .withFrom(username)
-                .withTo(userEmail)
-                .withProperties(properties)
+        EmailContext emailContext = EmailContext.builder()
+                .email(userEmail)
+                .subject(subject)
+                .template(template)
+                .from(username)
+                .to(userEmail)
+                .properties(properties)
                 .build();
 
         MimeMessage message = emailSender.createMimeMessage();
