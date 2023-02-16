@@ -21,15 +21,17 @@ public class SlackAppController extends SlackAppServlet {
         super(app);
         this.messageService = messageService;
 
-
+        //Получение сообщений в которых содержится строка ===
         app.event(MessageEvent.class, (payload, ctx) -> {
-            app.executorService().submit(() -> {
-                System.out.println("get event ");
-                MessageEvent messageEvent = payload.getEvent();
-                if (messageEvent.getText().contains("===")) {
-                    this.messageService.getMessageMethod(messageEvent);
-                }
-            });
+            if (payload.getEvent().getChannel().equals("C04K0GF2H9Q")) {
+                app.executorService().submit(() -> {
+                    System.out.println("get event ");
+                    MessageEvent messageEvent = payload.getEvent();
+                    if (messageEvent.getText().contains("===")) {
+                        this.messageService.getMessageMethod(messageEvent);
+                    }
+                });
+            }
             return ctx.ack();
         });
 

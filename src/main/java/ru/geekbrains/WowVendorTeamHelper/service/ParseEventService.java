@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class ParseEventService {
-    private final int step = 2;
+    private final static int STEP = 2;
 
     public List<RequestEvents> parseRequest(String strings) {
         List<RequestEvents> list = new ArrayList<>();
@@ -31,7 +31,7 @@ public class ParseEventService {
 
     public String parseType(String[] arr) {
         StringBuilder type = new StringBuilder();
-        for (int i = 0; i < step; i++) {
+        for (int i = 0; i < STEP; i++) {
             if (i == 0) {
                 type.append(arr[i]).append(" ");
             } else {
@@ -43,8 +43,8 @@ public class ParseEventService {
 
     public String parseTeam(String[] arr) {
         StringBuilder team = new StringBuilder();
-        for (int i = step; i < step + step; i++) {
-            if (i == step) {
+        for (int i = STEP; i < STEP + STEP; i++) {
+            if (i == STEP) {
                 team.append(arr[i]).append("-");
             } else {
                 team.append(arr[i]);
@@ -55,7 +55,7 @@ public class ParseEventService {
 
     public String parseDate(String[] arr) {
         StringBuilder date = new StringBuilder();
-        for (int i = step + step; i < step + step + 1; i++) {
+        for (int i = STEP + STEP; i < STEP + STEP + 1; i++) {
             date.append(arr[i]);
         }
         return date.toString();

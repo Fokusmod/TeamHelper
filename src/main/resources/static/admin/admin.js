@@ -50,14 +50,28 @@ const contextPath = 'http://localhost:3100';
         });
     };
 
-    $scope.changeRole = function (userId) {
-        $http.post(contextPath + '/user_approved/' + userId)
-        .then(function (response) {
-            $scope.loadUsers();
-            $scope.loadNotApprovedUsers();
-        });
+    $scope.getRoles = function () {
+        $http.get("http://localhost:3100/api/v1/role")
+            .then(function successCallback(response) {
+                $scope.roles = response.data;
+                $scope.selectedRole = $scope.roles[0];
+            }, function failCallback(response) {
+
+            })
     };
+
+     $scope.changeRole = function (userID) {
+            let selectedRole = document.getElementById('role-selected').value;
+            console.log(selectedRole);
+            $http.put(contextPath + '/api/v1/user/' + userID + '/change_role/' + selectedRole)
+                .then(function successCallback(response) {
+
+                }, function failCallback(response) {
+            })
+     }
 
     $scope.loadUsers();
     $scope.loadNotApprovedUsers();
+    $scope.getRoles();
+
 });
