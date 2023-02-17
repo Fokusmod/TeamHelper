@@ -6,7 +6,7 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
             .then(function succesCallback(responce) {
                 responce.data.push({title: 'select-all'})
                 $scope.teams = responce.data;
-                $scope.selectedTeam = $scope.teams[$scope.teams.length - 1];
+/*                $scope.selectedTeam = $scope.teams[$scope.teams.length - 1];*/
             }, function failCallback(responce) {
 
             })
@@ -17,7 +17,7 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
             .then(function succesCallback(responce) {
                 responce.data.push({title: 'select-all'})
                 $scope.eventType = responce.data;
-                $scope.selectedType = $scope.eventType[$scope.eventType.length - 1];
+/*                $scope.selectedType = $scope.eventType[$scope.eventType.length - 1];*/
             }, function failCallback(responce) {
 
             })
@@ -182,6 +182,16 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
             $scope.clearTextField()
         }
         div.style.display = 'block';
+    };
+
+    $scope.chooseScheduleForm = function () {
+        let scheduleForm = $scope.selectedScheduleForm;
+        if (scheduleForm === 'вручную') {
+            $scope.getTableForm();
+        }
+        if (scheduleForm === 'текстом') {
+        $scope.getTextForm();
+        }
     };
 
     $scope.getTextForm = function () {

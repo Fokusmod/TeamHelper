@@ -74,9 +74,9 @@ angular.module('index-app').controller('indexController', function ($rootScope, 
     };
 
 
-        $scope.showUsername = function () {
+    $scope.showUsername = function () {
             if ($localStorage.springWebUser) {
-            $scope.usname = $localStorage.springWebUser.username;
+            $scope.userlogin = $localStorage.springWebUser.login;
             } else {
             $location.path('/authorization');
             }

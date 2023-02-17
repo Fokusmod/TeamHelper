@@ -11,36 +11,35 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
+    <script src="https://kit.fontawesome.com/63828237af.js" crossorigin="anonymous"></script>
 
 </head>
 <body ng-app="index-app" ng-controller="indexController">
 <DIV class="main-container" ng-show="isUserLoggedIn()">
-    <div>
-        <div class="user-panel">
-            <div> Username: {{usname}} </div>
-            <div> Role: </div>
-        </div>
+
+    <div class="user-panel">
+        <i_user class="fa fa-id-card-o fa-2x" aria-hidden="true"></i_user>
+        <div> {{userlogin}}</div>
     </div>
+
     <div class="panel-container">
-        <a href="#!/clientList">
-            <div class="panel-item-container">
-                <div class="panel-item-title">Клиенты</div>
-            </div>
+        <a href="#!/clientList" class="panel-item-container">
+            <i class="fa fa-users" aria-hidden="true"></i>
+            <div class="panel-item-title">Клиенты</div>
         </a>
-        <a href="#!/schedule">
-            <div class="panel-item-container">
-                <div class="panel-item-title">Расписание</div>
-            </div>
+        <a href="#!/schedule" class="panel-item-container">
+            <i class="fa fa-calendar" aria-hidden="true"></i>
+            <div class="panel-item-title">Расписание</div>
         </a>
-        <a href="#!/admin">
-            <div class="panel-item-container" >
-                <div class="panel-item-title">Админка</div>
-            </div>
+
+        <a href="#!/admin" class="panel-item-container">
+            <i class="fa fa-cog" aria-hidden="true"></i>
+            <div class="panel-item-title">Админка</div>
         </a>
-        <a href="" ng-click="tryToLogout()">
-            <div class="panel-item-container" >
-                <div class="panel-item-title">Выйти</div>
-            </div>
+
+        <a href="" ng-click="tryToLogout()" class="panel-item-container">
+            <i class="fa fa-sign-out" aria-hidden="true"></i>
+            <div class="panel-item-title">Выйти</div>
         </a>
     </div>
     <div></div>
