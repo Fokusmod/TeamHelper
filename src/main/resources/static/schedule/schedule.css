@@ -28,11 +28,7 @@ body {
     cursor: pointer;
 }
 .event-top-label {
-
-    margin: auto;
-    height: 3%;
-    background-image: linear-gradient(to bottom right, #1a0d21, #37204a);
-    color: #f3f3f3;
+    background-color: #eff1f4;
 }
 
 .addEventButton {
@@ -78,14 +74,10 @@ body {
     z-index:2;
 }
 .button {
-    padding: 5px 10px 5px 10px;
     text-align: center;
-    width: auto;
-    height: 30px;
     background-color: #00152a;
-    color: white;
-    margin: auto;
-    border: 0.5px solid #f3f3f3;
+    color: #f3f3f3;
+    font-size: 11px;
 }
 
 .selector-scheduleList {
@@ -96,7 +88,7 @@ body {
 }
 .button:hover {
     cursor: pointer;
-    background-color: #012b56;
+    background-color: #00274f;
 }
 
 .schedule-div {
@@ -125,7 +117,9 @@ body {
 }
 label {
     text-align: center;
-    margin: auto;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    padding: 5px;
 }
 label_in_schedule_form{
   text-align: center;
@@ -158,7 +152,9 @@ label_in_schedule_form{
     margin-left: auto;
     margin-right: auto;
     width: 70%;
-    height: 5%;
+    height: 30px;
+    background-image: linear-gradient(to bottom right, #1a0d21, #37204a);
+    color: #f3f3f3;
 }
 .event-content {
     text-align: center;
