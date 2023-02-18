@@ -4,7 +4,6 @@ package ru.geekbrains.WowVendorTeamHelper.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.WowVendorTeamHelper.dto.UserDto;
-import ru.geekbrains.WowVendorTeamHelper.dto.UserPrivilegeRequest;
 import ru.geekbrains.WowVendorTeamHelper.dto.UserRoleRequest;
 import ru.geekbrains.WowVendorTeamHelper.service.UserService;
 
@@ -38,17 +37,17 @@ public class UserController {
         return userService.findUsersByPrivilege(privilege);
     }
 
-    @PostMapping("/add_privilege")
-    public UserDto addPrivilegeToUser(@RequestBody UserPrivilegeRequest userPrivilegeRequest) {
-        return userService.addPrivilegeToUser(userPrivilegeRequest);
+    @PostMapping("/{userId}/privilege/{privilegeId}")
+    public UserDto addPrivilegeToUser(@PathVariable Long userId, @PathVariable Long privilegeId) {
+        return userService.addPrivilegeToUser(userId, privilegeId);
     }
 
-    @DeleteMapping("/delete_privilege")
-    public boolean deletePrivilegeFromUser(@RequestBody UserPrivilegeRequest userPrivilegeRequest) {
-        return userService.deletePrivilegeFromUser(userPrivilegeRequest);
+    @DeleteMapping("/{userId}/privilege/{privilegeId}")
+    public boolean deletePrivilegeFromUser(@PathVariable Long userId, @PathVariable Long privilegeId) {
+        return userService.deletePrivilegeFromUser(userId, privilegeId);
     }
 
-    @PostMapping("/{userId}/approved/{statusId}")
+    @PostMapping("/{userId}/status/{statusId}")
     public boolean userApproved(@PathVariable Long userId, @PathVariable Long statusId) {
         return userService.userApproved(userId, statusId);
     }

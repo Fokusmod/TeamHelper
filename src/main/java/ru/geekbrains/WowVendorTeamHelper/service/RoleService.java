@@ -9,6 +9,7 @@ import ru.geekbrains.WowVendorTeamHelper.model.Role;
 import ru.geekbrains.WowVendorTeamHelper.repository.RoleRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -17,14 +18,6 @@ import java.util.List;
 public class RoleService {
     private final RoleRepository roleRepository;
 
-    public List<Role> getAllPrivilege() {
-        return roleRepository.findAll();
-    }
-
-    public Role findByTitle(String roleTitle) {
-        return roleRepository.findByTitle(roleTitle).orElseThrow(() ->
-                new ResourceNotFoundException("Не удается найти роль с наименованием: " + roleTitle));
-    }
 
     public Role findById(Long id) {
         return roleRepository.findById(id).orElseThrow(() ->
@@ -41,5 +34,18 @@ public class RoleService {
     public boolean deleteRoleById(Long id) {
         roleRepository.deleteById(id);
         return true;
+    }
+
+    public List<Role> getAllRoles() {
+        return roleRepository.findAll();
+    }
+
+    public Role getRoleByTitle(String title) {
+        Optional<Role> role = roleRepository.findByTitle(title);
+        if (role.isPresent()) {
+            return role.get();
+        } else {
+            throw new ResourceNotFoundException("Пользовательской роли " + title + " не найдено");
+        }
     }
 }

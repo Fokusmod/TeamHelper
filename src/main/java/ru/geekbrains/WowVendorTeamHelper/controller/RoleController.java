@@ -19,7 +19,7 @@ public class RoleController {
 
     @GetMapping()
     public List<RoleDto> getAllRole() {
-        return roleService.getAllPrivilege().stream().map(roleMapper::toDto).collect(Collectors.toList());
+        return roleService.getAllRoles().stream().map(roleMapper::toDto).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")

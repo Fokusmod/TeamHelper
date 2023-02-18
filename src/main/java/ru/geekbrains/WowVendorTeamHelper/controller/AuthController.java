@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.WowVendorTeamHelper.dto.JwtRequest;
-import ru.geekbrains.WowVendorTeamHelper.dto.UserDto;
+import ru.geekbrains.WowVendorTeamHelper.dto.RegistrationRequest;
 import ru.geekbrains.WowVendorTeamHelper.service.UserService;
 
 
@@ -20,8 +20,7 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registration(
-            @RequestBody UserDto userDto) {
-        return userService.createUser(userDto);
+    public ResponseEntity<?> registration(@RequestBody RegistrationRequest request) {
+        return userService.createUser(request);
     }
 }
