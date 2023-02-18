@@ -128,7 +128,7 @@ public class UserService implements UserDetailsService {
         }
         UserDetails userDetails = loadUserByUsername(user.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails, user);
-        log.info("Пользователь с таким логином был авторизован: " + authRequest.getLogin());
+        log.info("Пользователь с логином " + authRequest.getLogin() + " был авторизован: " );
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
@@ -187,18 +187,3 @@ public class UserService implements UserDetailsService {
         return true;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
