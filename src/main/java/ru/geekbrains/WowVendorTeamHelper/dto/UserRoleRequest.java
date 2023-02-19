@@ -7,8 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StatusDto {
-    private Long id;
-    private String title;
-
+public class UserRoleRequest {
+    private Long userId;
+    private Long roleId;
 }

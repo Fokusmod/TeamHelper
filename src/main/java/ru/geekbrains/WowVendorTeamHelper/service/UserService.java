@@ -14,13 +14,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.geekbrains.WowVendorTeamHelper.dto.JwtRequest;
-import ru.geekbrains.WowVendorTeamHelper.dto.JwtResponse;
-import ru.geekbrains.WowVendorTeamHelper.dto.RegistrationRequest;
-import ru.geekbrains.WowVendorTeamHelper.dto.UserDto;
+import ru.geekbrains.WowVendorTeamHelper.dto.*;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.AppError;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
+import ru.geekbrains.WowVendorTeamHelper.mapper.UserMapper;
 import ru.geekbrains.WowVendorTeamHelper.model.Role;
+import ru.geekbrains.WowVendorTeamHelper.model.Status;
 import ru.geekbrains.WowVendorTeamHelper.model.User;
 import ru.geekbrains.WowVendorTeamHelper.repository.UserRepository;
 import ru.geekbrains.WowVendorTeamHelper.utils.JwtTokenUtil;
@@ -28,12 +27,13 @@ import ru.geekbrains.WowVendorTeamHelper.utils.JwtTokenUtil;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
-
     private static final String NOT_APPROVED = "not_approved";
+    private static final String APPROVED = "approved";
     private static final String ROLE_USER = "ROLE_USER";
     private final UserRepository userRepository;
     private final RoleService roleService;
@@ -42,6 +42,9 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder bCryptPasswordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
+    private final UserMapper userMapper;
+    private final MailService mailService;
+
 
 
     public User findByUsername(String username) {
@@ -76,16 +79,33 @@ public class UserService implements UserDetailsService {
             newUser.setStatus(statusService.findByTitle(NOT_APPROVED));
             newUser.setRoles(List.of(roleService.getRoleByTitle(ROLE_USER)));
             newUser.setPrivileges(List.of());
-            UserDto userDto = new UserDto(userRepository.save(newUser));
+            UserDto userDto = userMapper.toDto(userRepository.save(newUser));
+
+            mailService.sendHtmlMessage(userDto.getEmail(), "Заявка на регистрацию принята!", "mail-registration.html", new HashMap<>());
+
             return new ResponseEntity<>(userDto, HttpStatus.CREATED);
         }
     }
 
     public boolean userApproved(Long userId, Long statusId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("Не удалось найти пользователя с идентификатором: " + userId));
-        user.setStatus(statusService.findById(statusId));
-        userRepository.save(user);
+                new ResourceNotFoundException("Не удается найти пользователя с идентификатором: " + userId));
+        Status status = statusService.findById(statusId);
+        String subject = "";
+        String template = "";
+        if(status.getTitle().equals(APPROVED)) {
+            subject = "Регистрация одобрена!";
+            template = "mail-approved.html";
+            user.setStatus(status);
+            userRepository.save(user);
+
+        } else if (status.getTitle().equals(NOT_APPROVED)){
+            subject = "Заявка на регистрацию отклонена!";
+            template = "mail-not-approved.html";
+            userRepository.delete(user);
+        }
+        mailService.sendHtmlMessage(user.getEmail(), subject, template, new HashMap<>());
+
         return true;
     }
 
@@ -107,9 +127,17 @@ public class UserService implements UserDetailsService {
             return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(), "Неправильный логин или пароль. Проверьте правильность учётных данных."), HttpStatus.UNAUTHORIZED);
         }
         UserDetails userDetails = loadUserByUsername(user.getUsername());
-        String token = jwtTokenUtil.generateToken(userDetails);
-        log.info("Пользователь с таким логином был авторизован: " + authRequest.getLogin());
+        String token = jwtTokenUtil.generateToken(userDetails, user);
+        log.info("Пользователь с логином " + authRequest.getLogin() + " был авторизован: " );
         return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+    public List<UserDto> findUsersByStatus(String status) {
+        return userRepository.findAllByStatus(status).stream().map(userMapper::toDto).collect(Collectors.toList());
+    }
+
+    public List<UserDto> findUsersByPrivilege(String privilege) {
+        return userRepository.findAllByPrivilege(privilege).stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     public User findByEmail(String email) {
@@ -117,22 +145,14 @@ public class UserService implements UserDetailsService {
         return user.orElse(null);
     }
 
-    public List<UserDto> findUsersByStatus(String status) {
-        return userRepository.findAllByStatus(status).stream().map(UserDto::new).collect(Collectors.toList());
-    }
-
-    public List<UserDto> findUsersByPrivilege(String privilege) {
-        return userRepository.findAllByPrivilege(privilege).stream().map(UserDto::new).collect(Collectors.toList());
-    }
-
     public List<UserDto> findUsersByRole(String role) {
         String roleFormatted = "ROLE_" + role.toUpperCase();
         System.out.println(roleFormatted);
-        return userRepository.findAllByRole(roleFormatted).stream().map(UserDto::new).collect(Collectors.toList());
+        return userRepository.findAllByRole(roleFormatted).stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     public List<UserDto> getAllUsers() {
-        return userRepository.findAll().stream().map(UserDto::new).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     @Transactional
@@ -140,7 +160,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new ResourceNotFoundException("Не найдено пользователя с id: " + userId));
         user.getPrivileges().add(privilegeService.findById(privilegeId));
-        return new UserDto(user);
+        return userMapper.toDto(user);
     }
 
     @Transactional
@@ -148,6 +168,22 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new ResourceNotFoundException("Не найдено пользователя с id: " + userId));
         user.getPrivileges().remove(privilegeService.findById(privilegeId));
+        return true;
+    }
+
+    @Transactional
+    public UserDto addRoleToUser(UserRoleRequest userRoleRequest) {
+        User user = userRepository.findById(userRoleRequest.getUserId()).orElseThrow(() ->
+                new ResourceNotFoundException("Не найдено пользователя с id: " + userRoleRequest.getUserId()));
+        user.getRoles().add(roleService.findById(userRoleRequest.getRoleId()));
+       return userMapper.toDto(user);
+    }
+
+    @Transactional
+    public boolean deleteRoleFromUser(UserRoleRequest userRoleRequest) {
+        User user = userRepository.findById(userRoleRequest.getUserId()).orElseThrow(() ->
+                new ResourceNotFoundException("Не найдено пользователя с id: " + userRoleRequest.getUserId()));
+        user.getRoles().remove(roleService.deleteRoleById(userRoleRequest.getRoleId()));
         return true;
     }
 }
