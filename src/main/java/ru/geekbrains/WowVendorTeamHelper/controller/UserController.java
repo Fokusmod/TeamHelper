@@ -52,12 +52,12 @@ public class UserController {
         return userService.userApproved(userId, statusId);
     }
 
-    @PutMapping("/add_role")
+    @PutMapping("/role")
     public UserDto userAddRole(@RequestBody UserRoleRequest userRoleRequest) {
         return userService.addRoleToUser(userRoleRequest);
     }
 
-    @DeleteMapping("/delete_role")
+    @DeleteMapping("/role")
     public boolean userDeleteRole(@RequestBody UserRoleRequest userRoleRequest) {
         return userService.deleteRoleFromUser(userRoleRequest);
     }
