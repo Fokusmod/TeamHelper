@@ -6,5 +6,6 @@ angular.module('index-app').controller('clientListController', function ($scope,
                 $location.path('/authorization');
                 return false;
             }
-        };
+   };
+
 });

@@ -1,6 +1,12 @@
 angular.module('index-app').controller('scheduleController', function ($scope, $http, $location, $localStorage, $rootScope) {
 
 
+    $scope.selectFunction = function () {
+        var select = 'background-color: #eff1f4; color:#00152a; cursor: pointer;';
+        document.getElementById('team-selected').style.cssText=select;
+        document.getElementById('type-selected').style.cssText=select;
+    };
+
     $scope.getTeamsForSettings = function () {
         $http.get("http://localhost:3100/teams/all")
             .then(function succesCallback(responce) {
@@ -325,8 +331,8 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
         const changeButton = elementsDiv.change;
         const newButton = document.createElement('button')
         newButton.id = 'change'
-        newButton.className = "button"
-        newButton.textContent = "save change"
+        newButton.className = "fa fa-floppy-o fa-2 safe_icon_button "
+     /*   newButton.textContent = <i class="fa fa-floppy-o" aria-hidden="true"></i>*/
         newButton.onclick = function () {
             const eventId = elements.id.textContent
             $scope.changeAcceptButton(eventId);

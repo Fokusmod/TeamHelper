@@ -10,8 +10,6 @@
                     <th>ID</th>
                     <th>Username</th>
                     <th>Email</th>
-                    <th>Created at</th>
-                    <th>Role</th>
                     <th>Status</th>
                     <th>Approve</th>
                 </tr>
@@ -20,14 +18,6 @@
                     <td>{{u.id}}</td>
                     <td>{{u.username}}</td>
                     <td>{{u.email}}</td>
-                    <td>{{u.createdAt}}</td>
-                    <td>
-                        <table>
-                            <tr ng-repeat="r in u.roles">
-                                <td>{{r.title}} </td>
-                            </tr>
-                        </table>
-                    </td>
                     <td>{{u.status}}</td>
                     <td>
                         <button class="admin_button" ng-click="approveUser(u.id)">Approve</button>
@@ -36,7 +26,6 @@
                 </tbody>
             </table>
             <div class="horizontal-separator"></div>
-
             <a class="showBlock_link" href="" ng-click="showBlock = ! showBlock">Show user list</a>
             <div ng-show="showBlock">
                 <table id="users_2">
@@ -44,37 +33,29 @@
                         <th>ID</th>
                         <th>username</th>
                         <th>email</th>
-                        <th>activationCode</th>
-                        <th>created at</th>
-                        <th>updated at</th>
                         <th>role</th>
                         <th>change role</th>
                         <th>privilege</th>
                         <th>add privilege</th>
                         <th>status</th>
-                        <th>delete</th>
-
                     </tr>
                     <tbody>
                     <tr ng-repeat="u in usersList">
                         <td>{{u.id}}</td>
                         <td>{{u.username}}</td>
                         <td>{{u.email}}</td>
-                        <td>{{u.activationCode}}</td>
-                        <td>{{u.createdAt}}</td>
-                        <td>{{u.updatedAt}}</td>
                         <td>
-                            <table>
+                            <!--<table>
                                 <tr ng-repeat="r in u.roles">
                                     <td>{{r.title}} </td>
                                 </tr>
-                            </table>
+                            </table>-->
                         </td>
                         <td>
-                            <select name="role-selected" id="role-selected" ng-model="selectedRole"
+                            <!--<select name="role-selected" id="role-selected" ng-model="selectedRole"
                                     ng-options="role.title for role in roles" class="button">
                             </select>
-                            <button id="change" class="button" ng-click="changeRole(u.id)">изменить</button>
+                            <button id="change" class="button" ng-click="changeRole(u.id)">изменить</button>-->
                         </td>
                         <td>
                             <table>
@@ -85,17 +66,13 @@
                         </td>
                         <td>
                             <div>
-                                <select multiple name="privileges[]" id="privileges[]" ng-model="selectedPrivileges"
+                               <!-- <select multiple name="privileges[]" id="privileges[]" ng-model="selectedPrivileges"
 
                                         ng-options="privilege.title for privilege in privileges"
-                                        ng-change="addPrivileges()" class="button">
+                                        ng-change="addPrivileges()" class="button">-->
                             </div>
-
-
-                            <!--<button ng-click="addPrivilege(u.id)">change</button>-->
                         </td>
                         <td>{{u.status}}</td>
-                        <td><button class="admin_button" ng-click="deleteUser(u.id)">delete</button></td>
                     </tr>
                     </tbody>
                 </table>
