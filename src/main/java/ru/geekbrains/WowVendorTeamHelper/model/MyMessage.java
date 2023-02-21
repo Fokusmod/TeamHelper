@@ -1,12 +1,13 @@
 package ru.geekbrains.WowVendorTeamHelper.model;
 
 
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
 import java.io.Serializable;
-
+@Data
 @RedisHash(value = "Messages", timeToLive = 3600L)
 public class MyMessage implements Serializable {
 
