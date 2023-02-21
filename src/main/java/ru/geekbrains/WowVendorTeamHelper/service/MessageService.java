@@ -14,13 +14,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.geekbrains.WowVendorTeamHelper.model.MyMessage;
-import ru.geekbrains.WowVendorTeamHelper.model.TeamChannelId;
+import ru.geekbrains.WowVendorTeamHelper.utils.emuns.TeamChannelId;
 import ru.geekbrains.WowVendorTeamHelper.repository.SlackMessageRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
@@ -34,7 +36,9 @@ public class MessageService {
     private final App app;
     private final SlackMessageRepository repository;
 
-    private final OrderParser orderParser;
+    private final WowClientService wowClientService;
+
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     //Отправляет сообщение в канал (тестовый) и заносит данные в бд
     public void postMessageInChannel(MessageEvent messageEvent) throws IOException, SlackApiException {
@@ -67,7 +71,9 @@ public class MessageService {
         message.setText(messageEvent.getText());
         message.setTs(messageEvent.getTs());
         message.setChannel(messageEvent.getChannel());
-        orderParser.stringParser(message);
+        executorService.submit(()-> {
+            wowClientService.getParseClients(message);
+        });
         repository.save(message);
     }
 

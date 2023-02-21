@@ -3,6 +3,7 @@ package ru.geekbrains.WowVendorTeamHelper.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.proxy.HibernateProxy;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -21,33 +22,19 @@ public class OrderStatus {
     private String title;
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass() && !getClass().isAssignableFrom(o.getClass())) return false;
+        OrderStatus orderStatus = (OrderStatus) (o instanceof OrderStatus ? o : ((HibernateProxy) o).getHibernateLazyInitializer().getImplementation());
+        return Objects.equals(id, orderStatus.id) &&
+                Objects.equals(title, orderStatus.title);
 
-        if (!(obj instanceof OrderStatus)) {
-            return false;
-        }
-
-        OrderStatus other = (OrderStatus) obj;
-        if (isProxy(this) || isProxy(other)) {
-            return Objects.equals(id, other.id);
-        }
-
-        return Objects.equals(id, other.id) && Objects.equals(title, other.title);
     }
 
     @Override
     public int hashCode() {
-        if (isProxy(this)) {
-            return Objects.hashCode(id);
-        }
-
         return Objects.hash(id, title);
     }
 
-    private boolean isProxy(Object obj) {
-        return obj != null && obj.getClass().getName().contains("$$");
-    }
+
 }

@@ -1,11 +1,13 @@
 package ru.geekbrains.WowVendorTeamHelper.model;
 
-import lombok.Data;
+
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.proxy.HibernateProxy;
-
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -19,6 +21,19 @@ public class WowClient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+    @Column(name = "bundle")
+    private String bundle;
+
+    @OneToOne
+    @JoinColumn(name = "bundle_id", referencedColumnName = "id")
+    private Bundle bundleType;
+
+    @OneToMany
+    @Fetch(FetchMode.SUBSELECT)
+    @JoinTable(name = "clients_bundle_stages",
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "client_stage_id"))
+    private List<ClientStages> clientBundleStage;
     @Column(name = "order_code")
     private String orderCode;
     @Column(name = "battle_tag")
@@ -49,10 +64,12 @@ public class WowClient {
     private String armoryLink;
     @Column(name = "no_parse_info")
     private String noParseInfo;
+    @OneToOne
+    @JoinColumn(name = "status_id", referencedColumnName = "id")
+    private OrderStatus orderStatus;
 
-    private String orderStatus;
-    @Column(name = "comments")
-    private String comments;
+    @Column(name = "order_comments")
+    private String orderComments;
 
     @Override
     public boolean equals(Object o) {
@@ -73,6 +90,9 @@ public class WowClient {
     public String toString() {
         return "WowClient{" +
                 "id=" + id +
+                ", bundle='" + bundle + '\'' +
+                ", bundleType=" + bundleType +
+                ", clientBundleStage=" + clientBundleStage +
                 ", orderCode='" + orderCode + '\'' +
                 ", battleTag='" + battleTag + '\'' +
                 ", fraction='" + fraction + '\'' +
@@ -88,9 +108,8 @@ public class WowClient {
                 ", specificBosses='" + specificBosses + '\'' +
                 ", armoryLink='" + armoryLink + '\'' +
                 ", noParseInfo='" + noParseInfo + '\'' +
-                ", orderStatus='" + orderStatus + '\'' +
-                ", comments='" + comments + '\'' +
+                ", orderStatus=" + orderStatus +
+                ", orderComments='" + orderComments + '\'' +
                 '}';
     }
-
 }

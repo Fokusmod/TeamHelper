@@ -52,7 +52,6 @@ public class OrderParser {
      * (standard 8 of 8 bosses) Петя ревущий фьорд орда Petya777#2848 , &BY0233, OrderStatus=null, comments=null)
      * -------------------------------
      */
-    private final WowClientService wowClientService;
     private final static String DELIMITER = "===";
     private final static String ORDER_CODE_SYMBOL = "&";
     private final static String PROTOCOL = "https";
@@ -65,7 +64,7 @@ public class OrderParser {
     private final static int ORDER_INFO = 2;
     private final static int MODE_SETTINGS = 2;
 
-    public void stringParser(MyMessage message) {
+    public List<WowClient> stringParser(MyMessage message) {
         List<String> clientStringList = new ArrayList<>();
         String[] strings = message.getText().replace("*", "").replace("&amp;", ORDER_CODE_SYMBOL).replace("\"", "").split("\n");
 
@@ -84,7 +83,7 @@ public class OrderParser {
             }
         }
         client.setLength(0);
-        clientParser(clientStringList);
+        return clientParser(clientStringList);
     }
 
     private String checkUnnecessaryInfo(String strings) {
@@ -108,14 +107,16 @@ public class OrderParser {
         return stringBuilder.toString();
     }
 
-    private void clientParser(List<String> strings) {
+    private List<WowClient> clientParser(List<String> strings) {
+        List<WowClient> wowClients = new ArrayList<>();
         for (String order : strings) {
             String[] string = order.split("\n");
-            parseRows(string);
+            wowClients.addAll(parseRows(string)) ;
         }
+        return wowClients;
     }
 
-    private void parseRows(String[] string) {
+    private List<WowClient> parseRows(String[] string) {
         List<WowClient> list = new ArrayList<>();
         WowClient wowClient;
         for (int i = 0; i < string.length; i++) {
@@ -123,6 +124,7 @@ public class OrderParser {
             arrayToTrim(fields);
             if (string[i].contains(ORDER_CODE_FP_PATTERN) && fields.length < CORRECT_FORMAT_COMMA) {
                 wowClient = noParseClient(string);
+                checkBundle(string, wowClient);
                 list.add(wowClient);
             } else if (string[i].contains(ORDER_CODE_SYMBOL) && fields.length > CORRECT_FORMAT_COMMA) {
                 wowClient = new WowClient();
@@ -131,20 +133,37 @@ public class OrderParser {
                     parseClientInfo(fields, wowClient);
                     parseOrderInfo(fields, wowClient);
                     parseArmoryLink(string, wowClient);
+                    checkBundle(string, wowClient);
                     list.add(wowClient);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     wowClient = noParseClient(string);
+                    checkBundle(string, wowClient);
                     list.add(wowClient);
                 }
             } else if (!string[i].contains(DELIMITER) && !string[i].contains(PROTOCOL)
                     && !string[i].contains(ORDER_CODE_FP_PATTERN) && !string[i].contains(ORDER_CODE_SYMBOL)) {
-                list.get(0).setComments(string[i]);
+                list.get(0).setOrderComments(string[i]);
             } else if (!string[i].contains(DELIMITER) && !string[i].contains(PROTOCOL)) {
                 wowClient = noParseClient(string);
+                checkBundle(string, wowClient);
                 list.add(wowClient);
             }
         }
-        wowClientService.saveClient(list);
+        return list;
+    }
+
+    private void checkBundle(String[] string, WowClient wowClient) {
+        String bundle = "bundle";
+        String percentage = "%";
+
+        for (String s : string) {
+            String str = s.toLowerCase();
+            if (str.contains(bundle) || str.contains(percentage)) {
+                wowClient.setBundle("true");
+                return;
+            }
+            wowClient.setBundle("false");
+        }
     }
 
     private WowClient noParseClient(String[] string) {
