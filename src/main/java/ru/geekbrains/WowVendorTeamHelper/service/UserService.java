@@ -170,7 +170,7 @@ public class UserService implements UserDetailsService {
     }
 
     public List<UserDto> findUsersByStatus(String status) {
-        return userRepository.findAllByStatus(status).stream().map(userMapper::toDto).collect(Collectors.toList());
+        return userRepository.findAllByStatus(statusService.findByTitle(status)).stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     public List<UserDto> findUsersByPrivilege(String privilege) {
