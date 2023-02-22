@@ -24,6 +24,7 @@ import ru.geekbrains.WowVendorTeamHelper.model.User;
 import ru.geekbrains.WowVendorTeamHelper.repository.UserRepository;
 import ru.geekbrains.WowVendorTeamHelper.utils.JwtTokenUtil;
 
+import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -87,6 +88,42 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public ResponseEntity<?> updatePassword(RequestChangePassword requestChangePassword, Principal principal) {
+
+        if(requestChangePassword.getOldPassword() == null || requestChangePassword.getNewPassword() == null
+        || requestChangePassword.getEmail() == null) {
+            log.info("Пользователь не ввел один из паролей, или email");
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Необходимо ввести старый и новый пароли, а также email"), HttpStatus.BAD_REQUEST);
+        }
+
+        if(principal == null) {
+            log.info("В запросе нет токена");
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Запрос должен быть с авторизацией"), HttpStatus.BAD_REQUEST);
+        }
+
+        User user = findByEmail(requestChangePassword.getEmail());
+
+        if(user == null) {
+            throw new ResourceNotFoundException("Пользователь с email: " + requestChangePassword.getEmail() + ", не найден.");
+        }
+
+        if(!user.getUsername().equals(principal.getName())) {
+            log.info("Пользователь с именем: " + principal.getName() + ", хочет изменить пароль пользователя с именем: " + user.getUsername());
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Вы не можете сменить пароль. Введенный вами email, не принадлежит вам."), HttpStatus.BAD_REQUEST);
+        }
+
+
+        if (!bCryptPasswordEncoder.matches(requestChangePassword.getOldPassword(), user.getPassword())) {
+            log.info("При смене пароля пользователь ввел неверный старый пароль");
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Введенный вами старый пароль не верен, " +
+                    "если вы забыли пароль, обратитесь к администратору"), HttpStatus.BAD_REQUEST);
+        }
+
+        user.setPassword(bCryptPasswordEncoder.encode(requestChangePassword.getNewPassword()));
+        mailService.sendHtmlMessage(user.getEmail(), "Пароль изменен!", "mail-change-password.html", new HashMap<>());
+        return new ResponseEntity<>(userMapper.toDto(userRepository.save(user)), HttpStatus.OK);
+    }
+
     public boolean userApproved(Long userId, Long statusId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new ResourceNotFoundException("Не удается найти пользователя с идентификатором: " + userId));
@@ -143,6 +180,20 @@ public class UserService implements UserDetailsService {
     public User findByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         return user.orElse(null);
+    }
+
+    public ResponseEntity<?> checkUserByEmail(RequestEmail requestEmail) {
+        if(requestEmail.getEmail() == null) {
+            log.info("В запросе не указан email");
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Не указан email"), HttpStatus.BAD_REQUEST);
+        }
+
+        User user = findByEmail(requestEmail.getEmail());
+
+        if(user == null) {
+            throw new ResourceNotFoundException("Пользователь с email: " + requestEmail.getEmail() + ", не найден.");
+        }
+        return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
     }
 
     public List<UserDto> findUsersByRole(String role) {
