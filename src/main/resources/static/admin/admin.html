@@ -1,86 +1,165 @@
+<div class="content-container" ng-show="isUserLoggedIn()">
+    <div class="settings-container">
+        <div class="settings">
+            <div class="settings-item ">
+                <select class="settings_button" ng-change="usersMenu()" ng-model="selectedUsersMenu">
+                    <option value=''>Пользователи</option>
+                    <option>Список пользователей</option>
+                </select>
+            </div>
+            <div class="settings-item">
+                <select class="settings_button" ng-change="" ng-model="channels">
+                    <option value=''>Каналы</option>
+                </select>
+            </div>
+            <div class="settings-item">
+                <select class="settings_button" ng-change="" ng-model="types">
+                    <option value=''>События</option>
+                </select>
+            </div>
+        </div>
+        <div class="settings-item">
+            <button class="settings_button" ng-click="showWaitingApproveUsers()"><i class="fa fa-bell" aria-hidden="true"></i> Waiting Approve Users </button>
+        </div>
+    </div>
+    <div id="users-list-form" class="modal-wrapper">
+        <div class="users-list-form">
+            <div class="table_title">Waiting approve users</div>
+            <div id="{{event.id}}" class="users-content" ng-repeat="user in notApprovedUsersList">
+                <div id="id" class="users-data">{{user.id}}</div>
+                <div id="type" class="users-data">{{user.username}}</div>
+                <div id="team" class="users-data">{{user.email}}</div>
+                <div id="eventButton" class="users-data">
+                    <button class="approve_button" ng-click="approveUser(u.id)">Approve</button>
+                </div>
+            </div>
+            <div class="control">
+                <button class="users-list-form-button" ng-click="cancelUsersListForm()">Закрыть окно</button>
+            </div>
+        </div>
+        <div class="overlay"></div>
+    </div>
+    <div id="users-list" class="admin-content">
+        <table id="users_table">
+            <tr>
+                <th>ID</th>
+                <th>username</th>
+                <th>email</th>
+                <th>role</th>
+                <th>change role</th>
+                <th>privilege</th>
+                <th>add privilege</th>
+                <th>status</th>
+            </tr>
+            <tbody>
+            <tr ng-repeat="u in users">
+                <td>{{u.id}}</td>
+                <td>{{u.username}}</td>
+                <td>{{u.email}}</td>
+                <td>
+                    <table>
+                        <tr ng-repeat="r in u.roles">
+                            <td>{{r.title}} </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
 
-<div class="content-container" ng-show="isUserLoggedIn()" >
-    <div class="background_admin">
-        <div class="top_admin">
-            <div class="title_admin">Admin page</div>
-            <div class="horizontal-separator"></div>
-            <div class="table_title">Not approved users</div>
-            <table id="users_1">
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Approve</th>
-                </tr>
-                <tbody>
-                <tr ng-repeat="u in notApprovedUsersList">
-                    <td>{{u.id}}</td>
-                    <td>{{u.username}}</td>
-                    <td>{{u.email}}</td>
-                    <td>{{u.status}}</td>
-                    <td>
-                        <button class="admin_button" ng-click="approveUser(u.id)">Approve</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <div class="horizontal-separator"></div>
-            <a class="showBlock_link" href="" ng-click="showBlock = ! showBlock">Show user list</a>
-            <div ng-show="showBlock">
-                <table id="users_2">
+                </td>
+                <td>
+                    <table>
+                        <tr ng-repeat="p in u.privileges">
+                            <td>{{p.title}} </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+
+                </td>
+                <td>{{u.status}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--        <div class="top_admin">
+                <div class="title_admin">Admin page</div>
+                <div class="horizontal-separator"></div>
+                <div class="table_title">Not approved users</div>
+                <table id="users_1">
                     <tr>
                         <th>ID</th>
-                        <th>username</th>
-                        <th>email</th>
-                        <th>role</th>
-                        <th>change role</th>
-                        <th>privilege</th>
-                        <th>add privilege</th>
-                        <th>status</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Approve</th>
                     </tr>
-                    <tbody>
-                    <tr ng-repeat="u in usersList">
+             &lt;!&ndash;       <tbody>
+                    <tr ng-repeat="u in notApprovedUsersList">
                         <td>{{u.id}}</td>
                         <td>{{u.username}}</td>
                         <td>{{u.email}}</td>
-                        <td>
-                            <!--<table>
-                                <tr ng-repeat="r in u.roles">
-                                    <td>{{r.title}} </td>
-                                </tr>
-                            </table>-->
-                        </td>
-                        <td>
-                            <!--<select name="role-selected" id="role-selected" ng-model="selectedRole"
-                                    ng-options="role.title for role in roles" class="button">
-                            </select>
-                            <button id="change" class="button" ng-click="changeRole(u.id)">изменить</button>-->
-                        </td>
-                        <td>
-                            <table>
-                                <tr ng-repeat="p in u.privileges">
-                                    <td>{{p.title}} </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td>
-                            <div>
-                               <!-- <select multiple name="privileges[]" id="privileges[]" ng-model="selectedPrivileges"
-
-                                        ng-options="privilege.title for privilege in privileges"
-                                        ng-change="addPrivileges()" class="button">-->
-                            </div>
-                        </td>
                         <td>{{u.status}}</td>
+                        <td>
+                            <button class="admin_button" ng-click="approveUser(u.id)">Approve</button>
+                        </td>
                     </tr>
-                    </tbody>
+                    </tbody>&ndash;&gt;
                 </table>
-            </div>
-        </div>
-        <div class="footer_in_content">
-            <div class="footer_text">WowVendorTeamHelper</div>
-        </div>
-    </div>
+                <div class="horizontal-separator"></div>
+                <a class="showBlock_link" href="" ng-click="showBlock = ! showBlock">Show user list</a>
+                <div ng-show="showBlock">
+                    <table id="users_2">
+                        <tr>
+                            <th>ID</th>
+                            <th>username</th>
+                            <th>email</th>
+                            <th>role</th>
+                            <th>change role</th>
+                            <th>privilege</th>
+                            <th>add privilege</th>
+                            <th>status</th>
+                        </tr>
+                        <tbody>
+                        <tr ng-repeat="u in usersList">
+                            <td>{{u.id}}</td>
+                            <td>{{u.username}}</td>
+                            <td>{{u.email}}</td>
+                            <td>
+                                &lt;!&ndash;<table>
+                                    <tr ng-repeat="r in u.roles">
+                                        <td>{{r.title}} </td>
+                                    </tr>
+                                </table>&ndash;&gt;
+                            </td>
+                            <td>
+                                &lt;!&ndash;<select name="role-selected" id="role-selected" ng-model="selectedRole"
+                                        ng-options="role.title for role in roles" class="button">
+                                </select>
+                                <button id="change" class="button" ng-click="changeRole(u.id)">изменить</button>&ndash;&gt;
+                            </td>
+                            <td>
+                                <table>
+                                    <tr ng-repeat="p in u.privileges">
+                                        <td>{{p.title}} </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>
+                                <div>
+                                   &lt;!&ndash; <select multiple name="privileges[]" id="privileges[]" ng-model="selectedPrivileges"
 
+                                            ng-options="privilege.title for privilege in privileges"
+                                            ng-change="addPrivileges()" class="button">&ndash;&gt;
+                                </div>
+                            </td>
+                            <td>{{u.status}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>-->
+    <div class="footer_in_content">
+        <div class="footer_text">WowVendorTeamHelper</div>
+    </div>
 </div>

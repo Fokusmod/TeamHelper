@@ -5,6 +5,7 @@
 
 body {
     font-family: sans-serif;
+    background-color: #eff1f4;
 }
 
 .background {
@@ -129,7 +130,7 @@ input:focus + .placeholder, label.filed .placeholder {
 
 .submit_button:hover {
     cursor: pointer;
-/*    background-color: #012b56;*/
+    background-color: #012b56;
 }
 
 .registration_link {
@@ -278,7 +279,7 @@ input:invalid:not(:placeholder-shown) {
 }
 
 .submit_button:active {
-/*    background: #0057a1;*/
+    background: #0057a1;
 }
 
 .msg-error {
