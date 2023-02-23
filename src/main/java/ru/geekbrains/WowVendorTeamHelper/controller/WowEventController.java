@@ -1,8 +1,11 @@
 package ru.geekbrains.WowVendorTeamHelper.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.WowVendorTeamHelper.dto.RequestEvents;
+import ru.geekbrains.WowVendorTeamHelper.dto.ResponseEvents;
 import ru.geekbrains.WowVendorTeamHelper.dto.WowEventDto;
 import ru.geekbrains.WowVendorTeamHelper.service.ParseEventService;
 import ru.geekbrains.WowVendorTeamHelper.service.WowEventService;
@@ -21,13 +24,15 @@ public class WowEventController {
     private final ParseEventService parseEventService;
 
     @GetMapping("/all")
-    public List<WowEventDto> getAllEvents() {
-        return wowEventService.getAllEvents().stream().map(WowEventDto::new).collect(Collectors.toList());
+    public ResponseEntity<List<WowEventDto>> getAllEvents() {
+        List<WowEventDto> list = wowEventService.getAllEvents().stream().map(WowEventDto::new).collect(Collectors.toList());
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PostMapping(value = "/createList", consumes = "application/json")
-    public void createEvents(@RequestBody List<RequestEvents> requestEvents) {
-        wowEventService.createEvents(requestEvents);
+    public ResponseEntity<List<ResponseEvents>> createEvents(@RequestBody List<RequestEvents> requestEvents) {
+        List<ResponseEvents> list = wowEventService.createEvents(requestEvents);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PostMapping("/createText")
@@ -52,18 +57,13 @@ public class WowEventController {
     }
 
     @PutMapping (value = "/changeList/{id}")
-    public void changeEvent(@PathVariable Long id, @RequestBody List<RequestEvents> requestEvents) {
-        wowEventService.changeById(id,requestEvents);
+    public ResponseEntity<WowEventDto> changeEvent(@PathVariable Long id, @RequestBody List<RequestEvents> requestEvents) {
+        WowEventDto dto = wowEventService.changeById(id,requestEvents);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
     public void deleteEvent(@PathVariable Long id) {
         wowEventService.deleteEvent(id);
     }
-
-
-
-
-
-
 }
