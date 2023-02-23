@@ -1,0 +1,49 @@
+.client-item {
+    margin-bottom: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+.client-item,label,.item:hover{
+    cursor: pointer;
+}
+.client-item label {
+    font-weight: bold;
+    font-size: 18px;
+    color: white;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.item {
+    display: flex;
+}
+
+.ball {
+    margin-right: 5px;
+    margin-left: 5px;
+    background-color: orange;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 25px;
+    min-width: 25px;
+    border-radius: 49%;
+}
+
+.page {
+    visibility: hidden;
+    background-color: #73b3f6;
+    position: absolute;
+    width: 90%;
+    height: 90%;
+}
+
+.new-client {
+    margin-left: auto;
+    margin-right: auto;
+    height: 80px;
+    width: 80%;
+    background-color: #595959;
+}
+

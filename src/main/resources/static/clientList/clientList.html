@@ -3,16 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Главная страница</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
     <link rel="stylesheet" href="../style1.css">
+    <link rel="stylesheet" href="clientList/clientList.css">
 </head>
 <div ng-show="isUserLoggedIn()">
-    <div id="client" class="content-container">
-        <div>Client</div>
-        <div class="footer_in_content">
-            <div class="footer_text">WowVendorTeamHelper</div>
+    <div class="content-container">
+        <!--Контейрен настроек ==================================================-->
+        <div class="settings-container">
+            <div class="client-item" ng-click="setVisibleClientPage()">
+                <div class="item">
+                    <label>Клиенты</label>
+                    <div class="ball">99</div>
+                </div>
+            </div>
+            <div class="client-item" ng-click="setVisibleWaitList()">
+                <div class="item">
+                    <label>Лист ожидания</label>
+                    <div class="ball">99</div>
+                </div>
+            </div>
+        </div>
+        <!--     Контейнер для страниц ==================================================-->
+        <div id="client-list" class="page">
+            <div class="new-client"></div>
+        </div>
+
+
+        <div id="wait-list" class="page">
+            <h1>Wait List</h1>
+        </div>
+
+        <div>
+
+            <!--футер ==================================================-->
+            <div class="footer_in_content">
+                <div class="footer_text">WowVendorTeamHelper</div>
+            </div>
         </div>
     </div>
 </div>
