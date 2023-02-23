@@ -22,4 +22,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new AppError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<AppError> containsLiteralsException(RequestContainsLiteralsException e) {
+        log.error(e.getMessage(), e);
+        return new ResponseEntity<>(new AppError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<AppError> containsLiteralsException(FailedEventListCreationException e) {
+        log.error(e.getMessage(), e);
+        return new ResponseEntity<>(new AppError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }
