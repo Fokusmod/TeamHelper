@@ -122,9 +122,26 @@ body {
     color: #f3f3f3;
     cursor: pointer;
 }
+.button_in_schedule_form {
+    text-align: center;
+    background-color: #00152a;
+    color: #f3f3f3;
+    font-size: 13px;
+    height: 30px;
+    padding: 5px 10px 5px 10px;
+    border: 0.5px solid #00152a;
+    width: auto;
+    margin: auto;
+}
+
+.button_in_schedule_form:hover {
+    cursor: pointer;
+    background-color: #f3f3f3;
+    color: #00152a;
+}
 .button {
     text-align: center;
-    background-color: #f3f3f3a;
+    background-color: #f3f3f3;
     color: #00152a;
     font-size: 13px;
     height: 30px;
@@ -134,18 +151,9 @@ body {
     margin: auto;
 }
 
-
 .button:hover {
     cursor: pointer;
-    background-color: #f3f3f3a;
-    color: #00152a;
 }
-.button:active {
-    cursor: pointer;
-    background-color: #f3f3f3a;
-    color: #00152a;
-}
-
 .control {
     margin: 15px;
 }

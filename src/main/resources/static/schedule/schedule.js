@@ -163,20 +163,26 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
         $http.post("http://localhost:3100/events/createList", content)
             .then(function succesCallback(responce) {
                 alert("События успешно добавлены")
+                $scope.defaultSchedule();
                 $scope.filterByTeamAndType();
             }, function failCallback(responce) {
                 alert("Что то пошло не так")
             })
+        var div = document.getElementById('schedule-table-form');
+        div.style.display = 'none';
     }
 
     $scope.postScheduleText = function (content) {
         $http.post("http://localhost:3100/events/createText", content)
             .then(function succesCallback(responce) {
                 alert("События успешно добавлены")
+                $scope.defaultSchedule();
                 $scope.filterByTeamAndType();
             }, function failCallback(responce) {
                 alert("Что то пошло не так")
             })
+        var div = document.getElementById('schedule-text-form');
+        div.style.display = 'none';
     }
 
 

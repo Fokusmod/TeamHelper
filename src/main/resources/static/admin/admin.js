@@ -10,23 +10,46 @@ const contextPath = 'http://localhost:3100';
         }
     };
 
+    $scope.showWaitingApproveUsers = function () {
+        const div = document.getElementById('users-list-form');
+        div.style.display = 'block';
+
+    };
+
+    $scope.cancelUsersListForm = function () {
+        var div = document.getElementById('users-list-form');
+        div.style.display = 'none';
+    }
+
     $scope.loadUsers = function () {
         $http.get(contextPath + '/api/v1/user')
         .then(function (response) {
-        $scope.usersList = response.data;
+        $scope.users = response.data;
         });
+    };
+
+     $scope.usersMenu = function () {
+        let selectedUsersMenu = $scope.selectedUsersMenu;
+        if (selectedUsersMenu === 'Список пользователей') {
+            $scope.showUsers();
+        }
+     };
+
+    $scope.showUsers = function () {
+        const div = document.getElementById('users-list');
+        div.style.display = 'block';
     };
 
     $scope.loadNotApprovedUsers = function () {
      var user_status ='not_approved';
         $http({
-            url: contextPath + 'api/v1/user/status',
+            url: contextPath + '/api/v1/user/status',
             method: 'GET',
             params: {
                 status: user_status
             }
         }).then(function (response) {
-        console.log(data);
+            console.log(response.data);
             $scope.notApprovedUsersList = response.data;
         });
     };
@@ -70,6 +93,8 @@ const contextPath = 'http://localhost:3100';
 
     $scope.loadUsers();
     $scope.loadNotApprovedUsers();
+
+
 /*    $scope.getRoles();*/
 
 });
