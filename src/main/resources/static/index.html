@@ -23,9 +23,28 @@
     </div>
 
     <div class="panel-container">
-        <a href="#!/clientList" class="panel-item-container" id="clientList" ng-click="menuStyle('clientList')">
+         <div id="item-client" class="panel-item-container">
+             <i class="fa fa-users" aria-hidden="true"></i>
+             <div class="panel-item-title" ng-click="clientPage()">Клиенты</div>
+
+         </div>
+        <div id="item-schedule" class="panel-item-container">
             <i class="fa fa-users" aria-hidden="true"></i>
-            <div class="panel-item-title">Клиенты</div>
+            <div class="panel-item-title" ng-click="schedulePage()">Расписание</div>
+
+        </div>
+        <div id="admin" class="panel-item-container">
+            <i class="fa fa-users" aria-hidden="true"></i>
+            <div class="panel-item-title" ng-click="adminPage()">Админка</div>
+
+        </div>
+        <div id="log-out" class="panel-item-container">
+            <i class="fa fa-users" aria-hidden="true"></i>
+            <div class="panel-item-title" ng-click="tryToLogout()">Выйти</div>
+
+        </div>
+       <!-- <a href="#!/clientList" class="panel-item-container" id="clientList" ng-click="menuStyle('clientList')">
+
         </a>
         <a href="#!/schedule" class="panel-item-container" id="schedule" ng-click="menuStyle('schedule')">
             <i class="fa fa-calendar" aria-hidden="true"></i>
@@ -40,7 +59,7 @@
         <a href="" ng-click="tryToLogout()" class="panel-item-container">
             <i class="fa fa-sign-out" aria-hidden="true"></i>
             <div class="panel-item-title">Выйти</div>
-        </a>
+        </a>-->
     </div>
     <div></div>
 </DIV>
