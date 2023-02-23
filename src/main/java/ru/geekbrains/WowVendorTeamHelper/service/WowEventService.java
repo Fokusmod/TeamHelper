@@ -5,6 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.WowVendorTeamHelper.dto.RequestEvents;
+import ru.geekbrains.WowVendorTeamHelper.dto.ResponseEvents;
+import ru.geekbrains.WowVendorTeamHelper.dto.WowEventDto;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.FailedEventListCreationException;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.RequestContainsLiteralsException;
 import ru.geekbrains.WowVendorTeamHelper.model.Team;
 import ru.geekbrains.WowVendorTeamHelper.model.WowEvent;
 import ru.geekbrains.WowVendorTeamHelper.model.WowEventType;
@@ -39,57 +43,57 @@ public class WowEventService {
         return wowEventRepository.findByTeamTitleAndWowEventTypeTitle(team, type);
     }
 
-    public void changeById(Long id, List<RequestEvents> list) {
+    public WowEventDto changeById(Long id, List<RequestEvents> list) {
         if (isRussianLiterals(list)) {
-            log.error("changeRequest contains Russian literals.");
-            throw new RuntimeException("changeRequest contains Russian literals.");
+            throw new FailedEventListCreationException("Запрос на изменение содержит русские литералы.");
         }
-        if (checkDateAndTimeFormat(list)) {
-
-            Optional<WowEvent> request = wowEventRepository.findById(id);
-            if (request.isPresent()) {
-                WowEvent wowEvent = request.get();
-                for (RequestEvents requestEvents : list) {
-                    Team team = teamService.getTeamByTitle(requestEvents.getTeam());
-                    WowEventType type = wowEventTypeService.getTypeByTitle(requestEvents.getType());
-                    wowEvent.setTeam(team);
-                    wowEvent.setWowEventType(type);
-                    wowEvent.setEventDate(requestEvents.getDate());
-                    wowEvent.setStartedAt(requestEvents.getTime());
-                    wowEventRepository.save(wowEvent);
-                }
+        if (!checkDateAndTimeFormat(list)) {
+            throw new FailedEventListCreationException("Неудачное создание списка событий.");
+        }
+        Optional<WowEvent> request = wowEventRepository.findById(id);
+        WowEvent wowEvent = null;
+        if (request.isPresent()) {
+            wowEvent = request.get();
+            for (RequestEvents requestEvents : list) {
+                Team team = teamService.getTeamByTitle(requestEvents.getTeam());
+                WowEventType type = wowEventTypeService.getTypeByTitle(requestEvents.getType());
+                wowEvent.setTeam(team);
+                wowEvent.setWowEventType(type);
+                wowEvent.setEventDate(requestEvents.getDate());
+                wowEvent.setStartedAt(requestEvents.getTime());
+                wowEventRepository.save(wowEvent);
             }
-        } else {
-            log.error("Неудачное создание списка событий.");
-            throw new RuntimeException("Неудачное создание списка событий.");
         }
-
-
+        return new WowEventDto(wowEvent);
     }
 
     @Transactional
-    public void createEvents(List<RequestEvents> requestEvents) {
+    public List<ResponseEvents> createEvents(List<RequestEvents> requestEvents) {
         if (isRussianLiterals(requestEvents)) {
-            log.error("createRequest contains Russian literals.");
-            throw new RuntimeException("createRequest contains Russian literals.");
+            throw new RequestContainsLiteralsException("Запрос на создание содержит русские литералы.");
         }
-        if (checkDateAndTimeFormat(requestEvents)) {
-            List<RequestEvents> checkedRequestEvents = checkDuplicates(requestEvents);
-
-            for (RequestEvents request : checkedRequestEvents) {
-                WowEvent wowEvent = new WowEvent();
-                wowEvent.setEventDate(request.getDate());
-                wowEvent.setStartedAt(request.getTime().toUpperCase(Locale.ENGLISH));
-                Team team = teamService.getTeamByTitle(request.getTeam());
-                wowEvent.setTeam(team);
-                WowEventType wowEventType = wowEventTypeService.getTypeByTitle(request.getType());
-                wowEvent.setWowEventType(wowEventType);
-                wowEventRepository.save(wowEvent);
-            }
-        } else {
-            log.error("Неудачное создание списка событий.");
-            throw new RuntimeException("Неудачное создание списка событий.");
+        if (!checkDateAndTimeFormat(requestEvents)) {
+            throw new FailedEventListCreationException("Неудачное создание списка событий.");
         }
+        List<RequestEvents> checkedRequestEvents = checkDuplicates(requestEvents);
+        List<ResponseEvents> resultList = new ArrayList<>();
+        for (RequestEvents request : checkedRequestEvents) {
+            WowEvent wowEvent = new WowEvent();
+            wowEvent.setEventDate(request.getDate());
+            wowEvent.setStartedAt(request.getTime().toUpperCase(Locale.ENGLISH));
+            Team team = teamService.getTeamByTitle(request.getTeam());
+            wowEvent.setTeam(team);
+            WowEventType wowEventType = wowEventTypeService.getTypeByTitle(request.getType());
+            wowEvent.setWowEventType(wowEventType);
+            wowEventRepository.save(wowEvent);
+            resultList.add(new ResponseEvents(
+                    wowEvent.getWowEventType().getTitle(),
+                    wowEvent.getTeam().getTitle(),
+                    wowEvent.getEventDate(),
+                    wowEvent.getStartedAt())
+            );
+        }
+        return resultList;
     }
 
     private boolean isRussianLiterals(List<RequestEvents> requestEvents) {
@@ -125,15 +129,15 @@ public class WowEventService {
             String date = event.getDate();
             String[] time = event.getTime().split(" ");
             if (!dateService.checkDateFormat(date)) {
-                log.info("Проверка формата даты:" + dateService.checkDateFormat(date));
+                log.debug("Проверка формата даты:" + dateService.checkDateFormat(date));
                 return false;
             }
             if (!dateService.checkTimeFormat(time[0])) {
-                log.info("Проверка формата времени:" + dateService.checkTimeFormat(time[0]));
+                log.debug("Проверка формата времени:" + dateService.checkTimeFormat(time[0]));
                 return false;
             }
             if (!dateService.checkTimeFormat(time[3])) {
-                log.info("Проверка формата времени:" + dateService.checkTimeFormat(time[3]));
+                log.debug("Проверка формата времени:" + dateService.checkTimeFormat(time[3]));
                 return false;
             }
         }
