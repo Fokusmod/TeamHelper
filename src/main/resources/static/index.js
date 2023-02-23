@@ -56,6 +56,11 @@
 
 
 angular.module('index-app').controller('indexController', function ($rootScope, $scope, $http, $location, $localStorage) {
+   const clientItemPanel = document.getElementById('item-client');
+   const scheduleItemPanel = document.getElementById('item-schedule');
+   const adminItemPanel = document.getElementById('item-admin');
+
+
 
     $scope.tryToLogout = function () {
         $scope.clearUser();
@@ -77,13 +82,12 @@ angular.module('index-app').controller('indexController', function ($rootScope, 
     $scope.showUsername = function () {
         if ($localStorage.springWebUser) {
         $scope.userlogin = $localStorage.springWebUser.login;
-        schedule.style.cssText='background-color: #eff1f4; color:#00152a;';
         } else {
         $location.path('/authorization');
         }
     };
 
-    $scope.menuStyle = function (href) {
+   /* $scope.menuStyle = function (href) {
     var notActive = 'background-color: transparent; color:#f1f1f1;';
     var active = 'background-color: #eff1f4; color:#00152a;';
         if (href === 'clientList') {
@@ -101,8 +105,32 @@ angular.module('index-app').controller('indexController', function ($rootScope, 
         schedule.style.cssText=notActive;
         admin.style.cssText=active;
         }
-    };
-    $scope.menuStyle();
+    };*/
+     $scope.clientPage = function () {
+/*        var notActive = 'background-color: transparent; color: #f1f1f1;';
+        var active = 'background-color: #eff1f4; color: #00152a;';
+
+        clientItemPanel.style.background-color = '#eff1f4';
+        clientItemPanel.style.color = '#00152a';
+
+        scheduleItemPanel.style.background-color = 'transparent';
+        scheduleItemPanel.style.color = '#f1f1f1';
+
+        adminItemPanel.style.background-color = 'transparent';
+        adminItemPanel.style.color = '#f1f1f1';*/
+
+        $location.path('/clientList');
+
+     };
+      $scope.schedulePage = function () {
+
+        $location.path('/schedule');
+      };
+      $scope.adminPage = function () {
+        $location.path('/admin');
+      };
+
+
     $scope.showUsername();
 
 });

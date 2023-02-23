@@ -287,3 +287,4 @@ input:invalid:not(:placeholder-shown) {
     color: red;
     font-size: 12px;
 }
+
