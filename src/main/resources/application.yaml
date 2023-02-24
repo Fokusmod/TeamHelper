@@ -40,6 +40,10 @@ spring:
     password: xmmlrqqbdfddjrbc
     port: 465
     protocol: smtps
+  kafka:
+    consumer:
+      group-id: 223
+    bootstrap-servers: localhost:9092
 mail:
   debug: true
 logging:
