@@ -417,7 +417,22 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
             })
     }
 
+    $scope.schedulePanel = function () {
+        const clientItemPanel = document.getElementById('item-client');
+        const scheduleItemPanel = document.getElementById('item-schedule');
+        const adminItemPanel = document.getElementById('item-admin');
 
+        scheduleItemPanel.style.backgroundColor = "#eff1f4";
+        scheduleItemPanel.style.color = "#00152a";
+
+        clientItemPanel.style.backgroundColor = "transparent";
+        clientItemPanel.style.color = "#f1f1f1";
+
+        adminItemPanel.style.backgroundColor = "transparent";
+        adminItemPanel.style.color = "#f1f1f1";
+    };
+
+    $scope.schedulePanel();
     $scope.defaultSchedule();
     $scope.getTeamsForSettings();
     $scope.getEventTypeForSettings();

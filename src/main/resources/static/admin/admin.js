@@ -1,15 +1,6 @@
 angular.module('index-app').controller('adminController', function ($scope, $http, $location, $localStorage, $rootScope) {
 const contextPath = 'http://localhost:3100';
 
-    $rootScope.isUserLoggedIn = function () {
-        if ($localStorage.springWebUser) {
-            return true;
-        } else {
-            $location.path('/authorization');
-            return false;
-        }
-    };
-
     $scope.showWaitingApproveUsers = function () {
         const div = document.getElementById('users-list-form');
         div.style.display = 'block';
@@ -90,7 +81,22 @@ const contextPath = 'http://localhost:3100';
                 }, function failCallback(response) {
             })
      }*/
+    $scope.adminPanel = function () {
+        const clientItemPanel = document.getElementById('item-client');
+        const scheduleItemPanel = document.getElementById('item-schedule');
+        const adminItemPanel = document.getElementById('item-admin');
 
+        adminItemPanel.style.backgroundColor = "#eff1f4";
+        adminItemPanel.style.color = "#00152a";
+
+        scheduleItemPanel.style.backgroundColor = "transparent";
+        scheduleItemPanel.style.color = "#f1f1f1";
+
+        clientItemPanel.style.backgroundColor = "transparent";
+        clientItemPanel.style.color = "#f1f1f1";
+    }
+
+    $scope.adminPanel();
     $scope.loadUsers();
     $scope.loadNotApprovedUsers();
 
