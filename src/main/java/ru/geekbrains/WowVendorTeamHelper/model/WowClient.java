@@ -33,7 +33,7 @@ public class WowClient {
     @JoinTable(name = "clients_bundle_stages",
             joinColumns = @JoinColumn(name = "client_id"),
             inverseJoinColumns = @JoinColumn(name = "client_stage_id"))
-    private List<ClientStages> clientBundleStage;
+    private List<ClientStage> clientBundleStage;
     @Column(name = "order_code")
     private String orderCode;
     @Column(name = "battle_tag")

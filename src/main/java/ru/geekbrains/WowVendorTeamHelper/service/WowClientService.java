@@ -36,5 +36,9 @@ public class WowClientService {
         }
     }
 
+    public List<WowClient> getAllClients() {
+       return wowClientRepository.findAll();
+    }
+
 
 }

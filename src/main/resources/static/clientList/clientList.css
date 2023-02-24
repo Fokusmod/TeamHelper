@@ -32,18 +32,54 @@
 }
 
 .page {
+    padding-top: 30px;
+    padding-bottom: 30px;
     visibility: hidden;
-    background-color: #73b3f6;
     position: absolute;
     width: 90%;
     height: 90%;
 }
 
 .new-client {
+    padding-top: 10px;
+    margin-bottom: 15px;
     margin-left: auto;
     margin-right: auto;
-    height: 80px;
-    width: 80%;
-    background-color: #595959;
+    min-height: 80px;
+    width: 55%;
+    border-radius: 4px;
+    background-color: white;
+}
+.new-client:hover {
+    background-color: #003664;
+    cursor: pointer;
+    color: white;
+    box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.8);
+}
+
+.client-info {
+    margin: auto 10px;
+    width: 100%;
+    min-height: 25px;
+}
+.armory-link {
+    margin: auto 10px;
+    width: 100%;
+    min-height: 25px;
+}
+.order-info {
+    margin: auto 10px;
+    width: 100%;
+    min-height: 25px;
+}
+.comments {
+    margin: auto 10px;
+    width: 100%;
+    min-height: 25px;
+}
+.order-status {
+    margin: auto 10px;
+    width: 100%;
+    min-height: 25px;
 }
 

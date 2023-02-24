@@ -25,10 +25,22 @@
         </div>
         <!--     Контейнер для страниц ==================================================-->
         <div id="client-list" class="page">
-            <div class="new-client"></div>
+            <div class="new-client" ng-repeat="order in orderClient">
+                <div class="order-info">
+                    {{order.game}}, {{order.service}}, {{order.region}}, {{order.playingType}}, {{order.boostMode}},
+                    {{order.noParseInfo}}, {{order.specificBosses}}, {{order.orderDateTime}}
+                </div>
+                <div class="client-info">
+                    {{order.characterClass}}, {{order.fraction}}, {{order.nickname}}, {{order.realm}}, {{order.battleTag}}, {{order.orderCode}}
+                </div>
+                <div class="armory-link">{{order.armoryLink}}</div>
+
+                <div class="comments">Коментарии: {{order.orderComments}}</div>
+
+                <div class="order-status">Статус заказа: {{order.orderStatus}}</div>
+
+            </div>
         </div>
-
-
         <div id="wait-list" class="page">
             <h1>Wait List</h1>
         </div>
