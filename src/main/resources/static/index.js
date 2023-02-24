@@ -47,19 +47,15 @@
             //     }
             // } catch (e) {
             // }
-
-        } else {
-            $location.path('/authorization');
         }
     }
 })();
 
 
 angular.module('index-app').controller('indexController', function ($rootScope, $scope, $http, $location, $localStorage) {
-   const clientItemPanel = document.getElementById('item-client');
-   const scheduleItemPanel = document.getElementById('item-schedule');
-   const adminItemPanel = document.getElementById('item-admin');
-
+    // const clientItemPanel = document.getElementById('item-client');
+    // const scheduleItemPanel = document.getElementById('item-schedule');
+    // const adminItemPanel = document.getElementById('item-admin');
 
 
     $scope.tryToLogout = function () {
@@ -81,54 +77,23 @@ angular.module('index-app').controller('indexController', function ($rootScope, 
 
     $scope.showUsername = function () {
         if ($localStorage.springWebUser) {
-        $scope.userlogin = $localStorage.springWebUser.login;
+            $scope.userlogin = $localStorage.springWebUser.login;
         } else {
-        $location.path('/authorization');
+            $location.path('/authorization');
         }
     };
 
-   /* $scope.menuStyle = function (href) {
-    var notActive = 'background-color: transparent; color:#f1f1f1;';
-    var active = 'background-color: #eff1f4; color:#00152a;';
-        if (href === 'clientList') {
-        clientList.style.cssText=active;
-        schedule.style.cssText=notActive;
-        admin.style.cssText=notActive;
-        }
-        if (href === 'schedule') {
-        clientList.style.cssText=notActive;
-        schedule.style.cssText=active;
-        admin.style.cssText=notActive;
-        }
-        if (href === 'admin') {
-        clientList.style.cssText=notActive;
-        schedule.style.cssText=notActive;
-        admin.style.cssText=active;
-        }
-    };*/
-     $scope.clientPage = function () {
-/*        var notActive = 'background-color: transparent; color: #f1f1f1;';
-        var active = 'background-color: #eff1f4; color: #00152a;';
-
-        clientItemPanel.style.background-color = '#eff1f4';
-        clientItemPanel.style.color = '#00152a';
-
-        scheduleItemPanel.style.background-color = 'transparent';
-        scheduleItemPanel.style.color = '#f1f1f1';
-
-        adminItemPanel.style.background-color = 'transparent';
-        adminItemPanel.style.color = '#f1f1f1';*/
-
+    $scope.clientPage = function () {
         $location.path('/clientList');
 
-     };
-      $scope.schedulePage = function () {
-
+    };
+    $scope.schedulePage = function () {
         $location.path('/schedule');
-      };
-      $scope.adminPage = function () {
+    };
+
+    $scope.adminPage = function () {
         $location.path('/admin');
-      };
+    };
 
 
     $scope.showUsername();
