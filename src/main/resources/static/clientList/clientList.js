@@ -1,4 +1,8 @@
 angular.module('index-app').controller('clientListController', function ($scope, $http, $location, $localStorage, $rootScope) {
+
+    const clients = document.getElementById("client-list")
+    const waitList = document.getElementById("wait-list")
+
     $scope.clientPanel = function () {
         const clientItemPanel = document.getElementById('item-client');
         const scheduleItemPanel = document.getElementById('item-schedule');
