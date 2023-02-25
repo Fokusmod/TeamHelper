@@ -15,7 +15,7 @@ public class DateService {
 
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd MMM @ HH:mm ", Locale.ENGLISH);
     private final DateTimeFormatter scheduleDate = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.getDefault());
-    private final DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd.M.yy", Locale.ENGLISH);
+    private final DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd.MM.yy", Locale.ENGLISH);
     private final DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH);
     private final ZoneId mskZone = ZoneId.of("Europe/Moscow");
     private final ZoneId cetZone = ZoneId.of("CET");
@@ -25,7 +25,7 @@ public class DateService {
         try {
             LocalDate.parse(text,formatDate);
         } catch (DateTimeException exception){
-            log.error("Дата ", exception.getMessage());
+            log.error("Ошибка парсинга даты: " + exception.getMessage());
            return false;
         }
         return true;

@@ -27,7 +27,7 @@ body {
 .footer {
     position: fixed;
     bottom: 0;
-    width:100%;
+    width: 100%;
     height: 5%;
     left: 0;
     background: #00152a;
@@ -35,11 +35,12 @@ body {
     align-items: center;
     justify-content: center;
 }
+
 .footer_in_content {
-    position: fixed;
+    margin-top: 30px;
     bottom: 0;
-    width:90%;
-    height: 5%;
+    width: 100%;
+    height: 50px;
     left: 10%;
     background: #00152a;
     display: flex;
@@ -160,7 +161,7 @@ input:focus + .placeholder, label.filed .placeholder {
     width: 10%;
 }
 
-.user-panel{
+.user-panel {
     color: #f1f1f1;
     font-size: 15px;
     margin-top: 10px;
@@ -172,7 +173,7 @@ input:focus + .placeholder, label.filed .placeholder {
 
 .panel-item-container:hover {
     background-color: #eff1f4;
-    color:#00152a;
+    color: #00152a;
     cursor: pointer;
 }
 
@@ -195,24 +196,26 @@ i {
     width: 20px;
 
 }
+
 .panel-item-title {
-margin-left: 5px;
+    margin-left: 5px;
 }
+
 .content-container {
     margin-left: 10%;
-    height: 100vh;
+    height: 100%;
     width: 90%;
     background-color: #eff1f4;
 }
 
 .settings-container {
-     display: flex;
-     justify-content: space-between;
-     align-items: end;
-     background-color: #00152a;
-     width: 100%;
-     margin-bottom: 5%;
-     height: 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    background-color: #00152a;
+    width: 100%;
+
+    height: 100px;
 }
 
 .filters {
@@ -231,11 +234,12 @@ margin-left: 5px;
     margin: 10px 10px 10px 10px;
 }
 
-.buttons{
+.buttons {
     width: 100%;
     display: flex;
     justify-content: space-around;
 }
+
 .settings_button {
     text-align: center;
     background-color: #00152a;
@@ -243,6 +247,7 @@ margin-left: 5px;
     font-size: 16px;
     border: 1px #f3f3f3;
 }
+
 .settings_button:hover {
     cursor: pointer;
 }

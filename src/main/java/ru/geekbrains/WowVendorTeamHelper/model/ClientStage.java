@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Getter
 @NoArgsConstructor
 @Table(name = "client_stages")
-public class ClientStages {
+public class ClientStage {
 
     @Id
     @Column(name = "id")
