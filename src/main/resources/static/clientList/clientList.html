@@ -6,9 +6,11 @@
     <link rel="stylesheet" href="../style1.css">
     <link rel="stylesheet" href="clientList/clientList.css">
 </head>
+<body>
+
+</body>
 <div ng-show="isUserLoggedIn()">
     <div class="content-container">
-        <!--Контейрен настроек ==================================================-->
         <div class="settings-container">
             <div class="client-item" ng-click="setVisibleClientPage()">
                 <div class="item">
@@ -23,34 +25,47 @@
                 </div>
             </div>
         </div>
-        <!--     Контейнер для страниц ==================================================-->
+
         <div id="client-list" class="page">
             <div class="new-client" ng-repeat="order in orderClient">
-                <div class="order-info">
-                    {{order.game}}, {{order.service}}, {{order.region}}, {{order.playingType}}, {{order.boostMode}},
-                    {{order.noParseInfo}}, {{order.specificBosses}}, {{order.orderDateTime}}
+                <div class="order-id-container">{{order.id}}</div>
+                <div class="separator"></div>
+                <div class="order">
+                    <div class="order-info">
+                        {{order.game}} {{order.service}} {{order.region}} {{order.playingType}} {{order.boostMode}}
+                        {{order.noParseInfo}} {{order.specificBosses}} {{order.orderDateTime}}
+                    </div>
+                    <div class="order-info">
+                        {{order.characterClass}} {{order.fraction}} {{order.nickname}} {{order.realm}}
+                        {{order.battleTag}} {{order.orderCode}}
+                    </div>
+                    <div class="order-info">{{order.armoryLink}}</div>
+
+                    <div class="order-info">Коментарии: {{order.orderComments}}</div>
+
+                    <div class="order-info">Статус заказа: {{order.orderStatus.title}}</div>
                 </div>
-                <div class="client-info">
-                    {{order.characterClass}}, {{order.fraction}}, {{order.nickname}}, {{order.realm}}, {{order.battleTag}}, {{order.orderCode}}
+                <div class="separator"></div>
+                <div class="order-buttons-container">
+                    <button class="send-button">Отправить<i class="fas fa-angle-double-right" aria-hidden="true"></i></button>
                 </div>
-                <div class="armory-link">{{order.armoryLink}}</div>
-
-                <div class="comments">Коментарии: {{order.orderComments}}</div>
-
-                <div class="order-status">Статус заказа: {{order.orderStatus.title}}</div>
-
+            </div>
+            <div>
+                <div class="footer_in_content">
+                    <div class="footer_text">WowVendorTeamHelper</div>
+                </div>
             </div>
         </div>
+
+
         <div id="wait-list" class="page">
             <h1>Wait List</h1>
         </div>
 
-        <div>
 
-            <!--футер ==================================================-->
-            <div class="footer_in_content">
-                <div class="footer_text">WowVendorTeamHelper</div>
-            </div>
-        </div>
     </div>
 </div>
+
+
+
+

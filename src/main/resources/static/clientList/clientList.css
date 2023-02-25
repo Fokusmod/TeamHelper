@@ -3,9 +3,11 @@
     margin-left: 15px;
     margin-right: 15px;
 }
-.client-item,label,.item:hover{
+
+.client-item, label, .item:hover {
     cursor: pointer;
 }
+
 .client-item label {
     font-weight: bold;
     font-size: 18px;
@@ -32,54 +34,116 @@
 }
 
 .page {
-    padding-top: 30px;
-    padding-bottom: 30px;
-    visibility: hidden;
     position: absolute;
+    overflow: auto;
+    background-color: #dcedff;
+    padding-top: 30px;
+    visibility: hidden;
     width: 90%;
-    height: 90%;
+    min-height: 86.1vh;
+    max-height: 86.1vh;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+/* Стиль ползунка скроллбара */
+::-webkit-scrollbar-thumb {
+    background-color: #00152a;
+    border-radius: 10px;
+}
+
+/* Стиль трека скроллбара */
+::-webkit-scrollbar-track {
+    background-color: #eee;
+    border-radius: 10px;
+}
+
+/* Стиль кнопок управления скроллбаром */
+::-webkit-scrollbar-button {
+    display: none;
 }
 
 .new-client {
+    display: flex;
     padding-top: 10px;
     margin-bottom: 15px;
     margin-left: auto;
     margin-right: auto;
     min-height: 80px;
-    width: 55%;
-    border-radius: 4px;
+    width: 65%;
     background-color: white;
-}
-.new-client:hover {
-    background-color: #003664;
-    cursor: pointer;
-    color: white;
-    box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.8);
+    transition: 0.1s ease;
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #efefef;
 }
 
-.client-info {
-    margin: auto 10px;
-    width: 100%;
-    min-height: 25px;
+.new-client:hover {
+    background-color: #efefef;
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    border-top-color: silver;
+    border-bottom-color: silver;
 }
-.armory-link {
-    margin: auto 10px;
-    width: 100%;
-    min-height: 25px;
-}
+
+
 .order-info {
     margin: auto 10px;
-    width: 100%;
+    min-width: 100%;
     min-height: 25px;
 }
-.comments {
+
+.separator {
+    border-left: 1px solid silver;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.order-id-container {
     margin: auto 10px;
-    width: 100%;
-    min-height: 25px;
+    width: 40px;
+    text-align: center;
 }
-.order-status {
+
+.order-buttons-container {
     margin: auto 10px;
-    width: 100%;
-    min-height: 25px;
+    width: 120px;
+    text-align: center;
 }
+
+.order {
+    width: 920px;
+}
+
+
+.send-button {
+    border-radius: 5px;
+    border-width: 1px;
+    border-style: solid;
+    width: 100%;
+    height: 30px;
+    transition: 0.1s ease;
+    background-color: #012b56;
+    color: white;
+}
+
+.send-button:hover {
+    cursor: pointer;
+    color: orange;
+}
+.send-button:active {
+    margin-left: 2px;
+}
+
+
+
+
+
+
+
 
