@@ -3,6 +3,7 @@ package ru.geekbrains.WowVendorTeamHelper.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -10,11 +11,13 @@ import org.hibernate.annotations.FetchMode;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Setter
 @Getter
+@ToString
 @NoArgsConstructor
 @Table(name = "bundles")
 public class Bundle {
@@ -33,11 +36,18 @@ public class Bundle {
     private List<BundleStage> stages = new ArrayList<>();
 
     @Override
-    public String toString() {
-        return "Bundle{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", stages=" + stages +
-                '}';
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof Bundle)) return false;
+
+        Bundle other = (Bundle) obj;
+        return Objects.equals(title, other.title);
+
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title);
+    }
+
 }

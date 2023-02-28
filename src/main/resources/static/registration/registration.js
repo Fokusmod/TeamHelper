@@ -16,7 +16,7 @@ angular.module('index-app').controller('registrationController', function ($scop
         if (result) {
             $http.post(contextPath + '/registration', $scope.user)
                 .then(function successCallback(response) {
-                    if (response.data.statusCode === 200) {
+                    if (response.data.statusCode === 201) {
                         $rootScope.displayMessage("Успешная регистрация в приложении WowVendorTeamHelper. " +
                             "Для продолжения работы дождитесь одобрения заявки администратором", ok_color);
                     }

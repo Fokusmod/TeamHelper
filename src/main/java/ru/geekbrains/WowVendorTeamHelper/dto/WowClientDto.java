@@ -56,7 +56,11 @@ public class WowClientDto {
 
     private String noParseInfo;
 
+    private String originInfo;
+
     private OrderStatus orderStatus;
+
+    private String ts;
 
     private String orderComments;
 
@@ -80,7 +84,9 @@ public class WowClientDto {
         this.specificBosses = wowClient.getSpecificBosses();
         this.armoryLink = wowClient.getArmoryLink();
         this.noParseInfo = wowClient.getNoParseInfo();
+        this.originInfo = wowClient.getOriginInfo();
         this.orderStatus = wowClient.getOrderStatus();
         this.orderComments = wowClient.getOrderComments();
+        this.ts = wowClient.getTs();
     }
 }

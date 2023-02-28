@@ -6,6 +6,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -30,4 +31,18 @@ public class SlackChannel {
             joinColumns = @JoinColumn(name = "slack_channel_id"),
             inverseJoinColumns = @JoinColumn(name = "destination_id"))
     private Set<SlackChannelDestination> slackChannelDestination;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof SlackChannel)) return false;
+
+        SlackChannel other = (SlackChannel) obj;
+        return Objects.equals(channelId, other.channelId);
+
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(channelId);
+    }
 }
