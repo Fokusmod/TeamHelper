@@ -59,14 +59,16 @@ CREATE TABLE wow_clients
     specific_bosses varchar,
     armory_link     varchar,
     no_parse_info   varchar,
+    origin_info     varchar,
+    order_ts        varchar,
     status_id       bigint,
     foreign key (status_id) references order_statuses (id),
-    order_comments  varchar
+    order_comments  text
 );
 
 --changeset WowVendorTeamHelper:wow_clients_stage
 CREATE TABLE clients_bundle_stages
 (
-    client_id bigint,
+    client_id       bigint,
     client_stage_id bigint
 );

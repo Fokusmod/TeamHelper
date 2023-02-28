@@ -202,10 +202,7 @@ body {
 .event-label {
     display: grid;
     grid-template-columns: 10% 15% 15% 15% 25% 20%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin: 15px auto;
     color: #00152a;
     font-size: 18px;
     font-weight: bold;
@@ -223,16 +220,12 @@ body {
 }
 
 .icon_button{
-    margin: 0;
     padding: 5px;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin: 0 5px;
 }
 .safe_icon_button{
-    margin: 0;
     padding: 5px;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin: 0 5px;
     width: 34px;
 }
 
@@ -258,20 +251,14 @@ body {
 .event-date-input {
     text-align: center;
     width: 70px;
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: auto;
-    margin-left: auto;
+    margin: auto;
     height: 30px;
     padding-left: 3px;
 }
 .event-time-input {
     text-align: center;
     width: 170px;
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: auto;
-    margin-left: auto;
+    margin: auto;
     height: 30px;
     padding-left: 3px;
 }

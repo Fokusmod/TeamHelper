@@ -42,6 +42,7 @@
     width: 90%;
     min-height: 86.1vh;
     max-height: 86.1vh;
+
 }
 
 ::-webkit-scrollbar {
@@ -66,31 +67,17 @@
     display: none;
 }
 
-.new-client {
-    display: flex;
-    padding-top: 10px;
-    margin-bottom: 15px;
-    margin-left: auto;
-    margin-right: auto;
-    min-height: 80px;
-    width: 65%;
-    background-color: white;
-    transition: 0.1s ease;
-    box-sizing: border-box;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #efefef;
-}
-
 .new-client:hover {
     background-color: #efefef;
     cursor: pointer;
     border-width: 1px;
     border-style: solid;
-    border-top-color: silver;
-    border-bottom-color: silver;
+    border-top-color: #00152a;
+    border-bottom-color: #00152a;
 }
-
+.hover-div {
+    background-color: silver;
+}
 
 .order-info {
     margin: auto 10px;
@@ -122,10 +109,12 @@
 
 
 .send-button {
+    padding-left: 10px;
+    padding-right: 10px;
     border-radius: 5px;
     border-width: 1px;
     border-style: solid;
-    width: 100%;
+    width: auto;
     height: 30px;
     transition: 0.1s ease;
     background-color: #012b56;
@@ -136,8 +125,74 @@
     cursor: pointer;
     color: orange;
 }
+
 .send-button:active {
     margin-left: 2px;
+}
+
+.new-client {
+    padding-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+    min-height: 80px;
+    width: 65%;
+    background-color: white;
+    transition: 0.1s ease;
+    box-sizing: border-box;
+    border: 1px solid silver;
+}
+
+.client-content {
+    display: flex;
+}
+
+.additionalPanel {
+    background-color: #efefef;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 100%;
+    min-height: 300px;
+    max-height: 400px;
+}
+
+
+.separator-client {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+    width: 65%;
+    box-sizing: border-box;
+    border-left: 1px solid silver;
+    border-right: 1px solid silver;
+    border-bottom: 1px solid silver;
+}
+
+.label-client {
+    margin-left: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.area-client {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    font-size: 18px;
+    font-family: "Times New Roman";
+    padding: 10px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    border-bottom: 1px;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    resize: none;
+}
+
+.area-client:focus {
+    outline: none;
 }
 
 
