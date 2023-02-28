@@ -2,7 +2,6 @@ package ru.geekbrains.WowVendorTeamHelper.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.geekbrains.WowVendorTeamHelper.model.MyMessage;
 import ru.geekbrains.WowVendorTeamHelper.model.WowClient;
 import ru.geekbrains.WowVendorTeamHelper.utils.emuns.WowClassEnum;
 
@@ -52,6 +51,8 @@ public class OrderParser {
      * (standard 8 of 8 bosses) Петя ревущий фьорд орда Petya777#2848 , &BY0233, OrderStatus=null, comments=null)
      * -------------------------------
      */
+
+    private final static String BATTLE_TAG = "#";
     private final static String DELIMITER = "===";
     private final static String ORDER_CODE_SYMBOL = "&";
     private final static String PROTOCOL = "https";
@@ -64,9 +65,9 @@ public class OrderParser {
     private final static int ORDER_INFO = 2;
     private final static int MODE_SETTINGS = 2;
 
-    public List<WowClient> stringParser(MyMessage message) {
+    public List<WowClient> stringParser(String message) {
         List<String> clientStringList = new ArrayList<>();
-        String[] strings = message.getText().replace("*", "").replace("&amp;", ORDER_CODE_SYMBOL).replace("\"", "").split("\n");
+        String[] strings = message.replace("*", "").replace("&amp;", ORDER_CODE_SYMBOL).replace("\"", "").split("\n");
 
         StringBuilder client = new StringBuilder();
         for (String s : strings) {
@@ -134,6 +135,7 @@ public class OrderParser {
                     parseOrderInfo(fields, wowClient);
                     parseArmoryLink(string, wowClient);
                     checkBundle(string, wowClient);
+                    parseOriginInfo(string[i], wowClient);
                     list.add(wowClient);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     wowClient = noParseClient(string);
@@ -142,7 +144,7 @@ public class OrderParser {
                 }
             } else if (!string[i].contains(DELIMITER) && !string[i].contains(PROTOCOL)
                     && !string[i].contains(ORDER_CODE_FP_PATTERN) && !string[i].contains(ORDER_CODE_SYMBOL)) {
-                list.get(0).setOrderComments(string[i]);
+                    list.get(0).setOrderComments(string[i]);
             } else if (!string[i].contains(DELIMITER) && !string[i].contains(PROTOCOL)) {
                 wowClient = noParseClient(string);
                 checkBundle(string, wowClient);
@@ -150,6 +152,16 @@ public class OrderParser {
             }
         }
         return list;
+    }
+
+    private void parseOriginInfo(String strings, WowClient wowClient) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(strings).append("\n");
+        if (wowClient.getArmoryLink()!=null) {
+            stringBuilder.append(wowClient.getArmoryLink()).append("\n");
+        }
+        stringBuilder.append(DELIMITER);
+        wowClient.setOriginInfo(stringBuilder.toString());
     }
 
     private void checkBundle(String[] string, WowClient wowClient) {

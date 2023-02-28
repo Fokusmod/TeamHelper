@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -57,4 +58,18 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "status_id")
     private Status status;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof User)) return false;
+
+        User other = (User) obj;
+        return Objects.equals(email, other.email);
+
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
+    }
 }

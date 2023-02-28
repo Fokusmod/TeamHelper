@@ -3,15 +3,19 @@ package ru.geekbrains.WowVendorTeamHelper.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.proxy.HibernateProxy;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
 
 @Entity
+@ToString
 @Getter
 @Setter
 @Table(name = "wow_clients")
@@ -34,6 +38,7 @@ public class WowClient {
             joinColumns = @JoinColumn(name = "client_id"),
             inverseJoinColumns = @JoinColumn(name = "client_stage_id"))
     private List<ClientStage> clientBundleStage;
+    @NaturalId(mutable = true)
     @Column(name = "order_code")
     private String orderCode;
     @Column(name = "battle_tag")
@@ -64,52 +69,34 @@ public class WowClient {
     private String armoryLink;
     @Column(name = "no_parse_info")
     private String noParseInfo;
+
+    @Column(name = "origin_info")
+    private String originInfo;
     @OneToOne
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private OrderStatus orderStatus;
 
     @Column(name = "order_comments")
     private String orderComments;
+    @Column(name = "order_ts")
+    private String ts;
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass() && !getClass().isAssignableFrom(o.getClass())) return false;
-        WowClient wowClient = (WowClient) (o instanceof WowClient ? o : ((HibernateProxy) o).getHibernateLazyInitializer().getImplementation());
-        return Objects.equals(id, wowClient.id) &&
-                Objects.equals(orderCode, wowClient.orderCode);
-
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof WowClient) {
+            return ((WowClient) obj).getOrderCode().equals(getOrderCode());
+        }
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, orderCode);
+        return Objects.hash(orderCode);
     }
 
-    @Override
-    public String toString() {
-        return "WowClient{" +
-                "id=" + id +
-                ", bundle='" + bundle + '\'' +
-                ", bundleType=" + bundleType +
-                ", clientBundleStage=" + clientBundleStage +
-                ", orderCode='" + orderCode + '\'' +
-                ", battleTag='" + battleTag + '\'' +
-                ", fraction='" + fraction + '\'' +
-                ", realm='" + realm + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", orderDateTime='" + orderDateTime + '\'' +
-                ", characterClass='" + characterClass + '\'' +
-                ", boostMode='" + boostMode + '\'' +
-                ", playingType='" + playingType + '\'' +
-                ", region='" + region + '\'' +
-                ", service='" + service + '\'' +
-                ", game='" + game + '\'' +
-                ", specificBosses='" + specificBosses + '\'' +
-                ", armoryLink='" + armoryLink + '\'' +
-                ", noParseInfo='" + noParseInfo + '\'' +
-                ", orderStatus=" + orderStatus +
-                ", orderComments='" + orderComments + '\'' +
-                '}';
-    }
 }
+

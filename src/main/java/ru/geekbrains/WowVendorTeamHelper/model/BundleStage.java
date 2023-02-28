@@ -3,12 +3,14 @@ package ru.geekbrains.WowVendorTeamHelper.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
 @Setter
 @Getter
+@ToString
 @NoArgsConstructor
 @Table(name = "bundle_stages")
 public class BundleStage {
@@ -21,11 +23,4 @@ public class BundleStage {
     @Column(name = "title")
     private String title;
 
-    @Override
-    public String toString() {
-        return "BundleStage{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                '}';
-    }
 }

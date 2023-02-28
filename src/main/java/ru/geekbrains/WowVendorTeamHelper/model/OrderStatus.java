@@ -22,18 +22,18 @@ public class OrderStatus {
     private String title;
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass() && !getClass().isAssignableFrom(o.getClass())) return false;
-        OrderStatus orderStatus = (OrderStatus) (o instanceof OrderStatus ? o : ((HibernateProxy) o).getHibernateLazyInitializer().getImplementation());
-        return Objects.equals(id, orderStatus.id) &&
-                Objects.equals(title, orderStatus.title);
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof OrderStatus)) return false;
+
+        OrderStatus other = (OrderStatus) obj;
+        return Objects.equals(title, other.title);
 
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title);
+        return Objects.hash(title);
     }
 
 

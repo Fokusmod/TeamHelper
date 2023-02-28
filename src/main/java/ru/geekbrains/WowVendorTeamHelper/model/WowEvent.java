@@ -25,7 +25,7 @@ public class WowEvent {
     @Column(name = "event_date")
     private String eventDate;
 
-    @Column(name = "startedAt")
+    @Column(name = "started_at")
     private String startedAt;
 
 }
