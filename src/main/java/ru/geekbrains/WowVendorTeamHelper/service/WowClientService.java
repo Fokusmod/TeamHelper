@@ -114,6 +114,7 @@ public class WowClientService {
             order.setId(id);
             order.setClientBundleStage(clientStage);
             order.setOrderStatus(currentStatus);
+            order.setOrderComments(wowClient.getOrderComments());
             saveClient(order);
         }
         log.debug("Заказ [" + wowClient.getOrderCode() + "] был изменен через приложение.");

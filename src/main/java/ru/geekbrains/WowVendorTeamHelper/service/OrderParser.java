@@ -144,7 +144,9 @@ public class OrderParser {
                 }
             } else if (!string[i].contains(DELIMITER) && !string[i].contains(PROTOCOL)
                     && !string[i].contains(ORDER_CODE_FP_PATTERN) && !string[i].contains(ORDER_CODE_SYMBOL)) {
-                    list.get(0).setOrderComments(string[i]);
+                for (WowClient client : list) {
+                    client.setOrderComments("(Комментарий из слак канала: " + string[i]+")");
+                }
             } else if (!string[i].contains(DELIMITER) && !string[i].contains(PROTOCOL)) {
                 wowClient = noParseClient(string);
                 checkBundle(string, wowClient);
