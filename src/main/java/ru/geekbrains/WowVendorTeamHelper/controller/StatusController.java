@@ -3,6 +3,7 @@ package ru.geekbrains.WowVendorTeamHelper.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.WowVendorTeamHelper.dto.StatusDto;
+import ru.geekbrains.WowVendorTeamHelper.mapper.StatusMapper;
 import ru.geekbrains.WowVendorTeamHelper.service.StatusService;
 
 import java.util.List;
@@ -10,24 +11,30 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/status")
+@RequestMapping("api/v1/user-status")
 public class StatusController {
 
     private final StatusService statusService;
+    private final StatusMapper statusMapper;
 
     @GetMapping()
     public List<StatusDto> getAllStatus() {
-        return statusService.getAllStatus().stream().map(StatusDto::new).collect(Collectors.toList());
+        return statusService.getAllStatus().stream().map(statusMapper::toDto).collect(Collectors.toList());
     }
 
-    @GetMapping("/get_status")
-    public StatusDto getStatus(@RequestParam (required = false) Long id, @RequestParam (required = false) String title){
-        return new StatusDto(statusService.getStatus(id, title));
+    @GetMapping("/{id}")
+    public StatusDto getStatusById(@PathVariable Long id){
+        return statusMapper.toDto(statusService.findById(id));
+    }
+
+    @GetMapping("/{title}")
+    public StatusDto getStatusByTitle(@PathVariable String title){
+        return statusMapper.toDto(statusService.findByTitle(title));
     }
 
     @PostMapping()
     public StatusDto addStatus(@RequestBody StatusDto statusDto) {
-        return new StatusDto(statusService.saveOrUpdateStatus(statusDto));
+        return statusMapper.toDto(statusService.saveStatus(statusDto));
     }
 
     @DeleteMapping("/{id}")

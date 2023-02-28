@@ -47,15 +47,16 @@
             //     }
             // } catch (e) {
             // }
-
-        } else {
-            $location.path('/authorization');
         }
     }
 })();
 
 
 angular.module('index-app').controller('indexController', function ($rootScope, $scope, $http, $location, $localStorage) {
+    // const clientItemPanel = document.getElementById('item-client');
+    // const scheduleItemPanel = document.getElementById('item-schedule');
+    // const adminItemPanel = document.getElementById('item-admin');
+
 
     $scope.tryToLogout = function () {
         $scope.clearUser();
@@ -74,14 +75,29 @@ angular.module('index-app').controller('indexController', function ($rootScope, 
     };
 
 
-        $scope.showUsername = function () {
-            if ($localStorage.springWebUser) {
-            $scope.usname = $localStorage.springWebUser.username;
-            } else {
+    $scope.showUsername = function () {
+        if ($localStorage.springWebUser) {
+            $scope.userlogin = $localStorage.springWebUser.login;
+        } else {
             $location.path('/authorization');
-            }
-        };
+        }
+    };
+
+    $scope.clientPage = function () {
+        $location.path('/clientList');
+
+    };
+    $scope.schedulePage = function () {
+        $location.path('/schedule');
+    };
+
+    $scope.adminPage = function () {
+        $location.path('/admin');
+    };
+
+
     $scope.showUsername();
+
 });
 
 

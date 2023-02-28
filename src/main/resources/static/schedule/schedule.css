@@ -2,6 +2,8 @@ html,
 body {
     height:100%
 }
+
+
 .events::-webkit-scrollbar {
     width: 0;
     height: 0;
@@ -10,11 +12,13 @@ body {
 .events {
     padding-top: 2%;
     height: 80.5%;
-    width: 100%;
+    width: 900px;
     background-color: #eff1f4;
     overflow-y: auto;
     scroll-behavior: smooth;
     -ms-overflow-style: none;
+    margin-left: auto;
+    margin-right: auto;
 }
 .event {
     margin-top: 10px;
@@ -27,46 +31,17 @@ body {
 .event:hover {
     cursor: pointer;
 }
-.event-top-label {
-
-    margin: auto;
-    height: 3%;
-    background-image: linear-gradient(to bottom right, #1a0d21, #37204a);
-    color: #f3f3f3;
-}
-
-.addEventButton {
-    display: flex;
-    margin-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    height: 30px;
-    width: 80%;
-    background-color: #aea5b5;
-    border: 1px solid #00152a;
-    border-radius: 5px;
-    color: #00152a;
-    font-weight: bold;
-    letter-spacing: 0.04em;
-
-}
-.addEventButton:hover {
-    opacity: 0.8;
-    cursor: pointer;
-}
 
 .schedule-form {
-    background-color: white;
-/*    display: none;*/
-    width: 40%;
+    background-color: #eff1f4;
+    width: 560px;
     min-height: 100px;
     max-height: 500px;
     overflow: auto;
     text-align: center;
-    padding: 15px;
+    padding: 20px;
     border: 1px solid #00152a;
     border-radius: 10px;
-    color: #00152a;
     position: absolute;
     top: 25%;
     right: 0;
@@ -74,119 +49,205 @@ body {
     margin: auto;
     scroll-behavior: smooth;
     -ms-overflow-style: none;
-    align-items: center;
     z-index:2;
+    display: flex;
+    flex-direction: column;
 }
-.button {
-    padding: 5px 10px 5px 10px;
+
+.schedule-div {
+    display: grid;
+    grid-template-columns: 140px 140px 100px 180px;
+    height: 40px;
+    background-image: linear-gradient(to bottom right, #1a0d21, #37204a);
+    color: #f3f3f3;
+    margin-bottom: 10px;
+}
+
+.schedule-form-label {
     text-align: center;
-    width: auto;
+    font-size: 14px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+.add-schedule-list{
+    display: grid;
+    grid-template-columns: 140px 140px 100px 180px;
     height: 30px;
-    background-color: #00152a;
-    color: white;
-    margin: auto;
-    border: 0.5px solid #f3f3f3;
+    margin: 5px 0 5px 0;
 }
 
 .selector-scheduleList {
     width: 100%;
     height: 30px;
     background-color: #00152a;
-    color: white;
-}
-.button:hover {
-    cursor: pointer;
-    background-color: #012b56;
-}
-
-.schedule-div {
-    text-align: center;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 25%);
-    height: 50px;
-    margin: 5px 5px 5px 5px;
-    background-image: linear-gradient(to bottom right, #1a0d21, #37204a);
     color: #f3f3f3;
 }
-.add-schedule-list{
-    text-align: center;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 25%);
-    height: 30px;
-    margin: 5px 5px 5px 5px;
-    background-color: #73b3f6;
-}
+
 .input-schedule {
+    margin: 0;
+    padding: 0;
+    border-width: 1px;
+    border-color: #d1d1d1;
+    border-radius: 0;
+    width: 95%;
     background-color: #00152a;
-    margin-top: auto;
-    margin-bottom: auto;
-    height: 25px;
-    color: white;
+    padding-left: 5%;
+    height: 29px;
+    color: #f3f3f3;
+    font-size: 14px;
 }
-label {
+.input-schedule:focus{
+    background-color: white;
+    color: #00152a;
+}
+
+.addEventButton {
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 30px;
+    width: 40%;
+    background-color: #e2e2e2;
+    border: 1px solid #d1d1d1;
+    border-radius: 5px;
+    color: #00152a;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.addEventButton:hover {
+    background-color: #00152a;
+    color: #f3f3f3;
+    cursor: pointer;
+}
+.button_in_schedule_form {
     text-align: center;
+    background-color: #00152a;
+    color: #f3f3f3;
+    font-size: 13px;
+    height: 30px;
+    padding: 5px 10px 5px 10px;
+    border: 0.5px solid #00152a;
+    width: auto;
     margin: auto;
 }
-label_in_schedule_form{
-  text-align: center;
-  margin: auto;
-  color: #00152a;
-  font-weight: bold;
-  letter-spacing: 0.04em;
+
+.button_in_schedule_form:hover {
+    cursor: pointer;
+    background-color: #f3f3f3;
+    color: #00152a;
+}
+.button {
+    text-align: center;
+    background-color: #f3f3f3;
+    color: #00152a;
+    font-size: 13px;
+    height: 30px;
+    padding: 5px 10px 5px 10px;
+    border: 0.5px solid #00152a;
+    width: auto;
+    margin: auto;
+}
+
+.button:hover {
+    cursor: pointer;
 }
 .control {
     margin: 15px;
 }
+
+.label_in_schedule_form {
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    color: #00152a;
+}
+
 .input-text-schedule {
     margin-top: 10px;
     text-align: start;
-    width: 100%;
-    height: 150px;
+    height: 100px;
     resize: none;
     font-size: 17px;
+    padding: 5%;
 }
+
 .input-text-schedule::placeholder {
     font-size: 17px;
     text-align: center;
     margin-top: 0;
 }
-
-.event-label {
+.notaBene{
+    font-size: 14px;
     text-align: center;
+    margin-top: 10px;
+    color: #88001b;
+    opacity: 0.8;
+}
+
+.event-top-label {
+    width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.horizontal-separator {
+    border-top: 1px solid #00152a;
+    width: 100%;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.event-label {
     display: grid;
     grid-template-columns: 10% 15% 15% 15% 25% 20%;
     margin-left: auto;
     margin-right: auto;
-    width: 70%;
-    height: 5%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color: #00152a;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+
 }
 .event-content {
-    text-align: center;
     display: grid;
     grid-template-columns: 10% 15% 15% 15% 25% 20%;
     margin-bottom: 10px;
     margin-left: auto;
     margin-right: auto;
-/*    background-color: #aaaaaa;*/
-    width: 70%;
-    height: 5%;
-    border-radius: 4px;
+    height: 7%;
+    border-radius: 10px;
 }
 
-
+.icon_button{
+    margin: 0;
+    padding: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.safe_icon_button{
+    margin: 0;
+    padding: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 34px;
+}
 
 .event-content:nth-child(odd) {
     background-color: #ffffff;/* фон нечетных столбцов */
 }
 .event-content:nth-child(odd):hover {
-    background-color: #07004f;
+    background-image: linear-gradient(to bottom right, #1a0d21, #37204a);;
     color: #f3f3f3;
 }
 .event-content:nth-child(even) {
    background-color: #ffffff;/* фон нечетных столбцов */
 }
 .event-content:nth-child(even):hover {
-    background-color: #07004f;
+    background-image: linear-gradient(to bottom right, #1a0d21, #37204a);
     color: #f3f3f3;
 }
 
@@ -197,18 +258,22 @@ label_in_schedule_form{
 .event-date-input {
     text-align: center;
     width: 70px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: auto;
+    margin-bottom: auto;
     margin-right: auto;
     margin-left: auto;
+    height: 30px;
+    padding-left: 3px;
 }
 .event-time-input {
     text-align: center;
-    width: 150px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    width: 170px;
+    margin-top: auto;
+    margin-bottom: auto;
     margin-right: auto;
     margin-left: auto;
+    height: 30px;
+    padding-left: 3px;
 }
 
 .modal-wrapper {

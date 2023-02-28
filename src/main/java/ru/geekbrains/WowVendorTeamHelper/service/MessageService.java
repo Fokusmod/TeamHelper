@@ -14,13 +14,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.geekbrains.WowVendorTeamHelper.model.MyMessage;
-import ru.geekbrains.WowVendorTeamHelper.model.TeamChannelId;
+import ru.geekbrains.WowVendorTeamHelper.utils.emuns.TeamChannelId;
 import ru.geekbrains.WowVendorTeamHelper.repository.SlackMessageRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
@@ -34,6 +36,10 @@ public class MessageService {
     private final App app;
     private final SlackMessageRepository repository;
 
+    private final WowClientService wowClientService;
+
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+
     //Отправляет сообщение в канал (тестовый) и заносит данные в бд
     public void postMessageInChannel(MessageEvent messageEvent) throws IOException, SlackApiException {
         String testChannel = TeamChannelId.TEST.getValue();
@@ -43,7 +49,7 @@ public class MessageService {
                 .text(messageEvent.getText())
                 .build();
         app.getClient().chatPostMessage(chatPostMessageRequest);
-        log.info("опубликовано сообщение в канале - сообщение отправилено в "+ testChannel);
+        log.info("опубликовано сообщение в канале - сообщение отправилено в " + testChannel);
         ConversationsHistoryRequest conversationsHistoryRequest = ConversationsHistoryRequest
                 .builder()
                 .channel(testChannel)
@@ -65,13 +71,10 @@ public class MessageService {
         message.setText(messageEvent.getText());
         message.setTs(messageEvent.getTs());
         message.setChannel(messageEvent.getChannel());
+        executorService.submit(()-> {
+            wowClientService.getParseClients(message);
+        });
         repository.save(message);
-        try {
-            postMessageInChannel(messageEvent);
-        } catch (IOException | SlackApiException e) {
-            log.error("Ошибка при отправке сообщения.", e.getMessage());
-            throw new RuntimeException(e);
-        }
     }
 
     //Изменяет сообщение в канале в котором находится это сообщение
@@ -91,7 +94,7 @@ public class MessageService {
                 myMessage.setText(messageChangedEvent.getMessage().getText());
                 repository.save(myMessage);
             } catch (IOException | SlackApiException e) {
-                log.error("Ошибка при изменении сообщения в канале.", e.getMessage());
+                log.error("Ошибка при изменении сообщения в канале." + e.getMessage());
                 throw new RuntimeException(e);
             }
         }
@@ -113,7 +116,7 @@ public class MessageService {
                 app.getClient().chatDelete(chatDeleteRequest);
                 repository.delete(myMessage);
             } catch (IOException | SlackApiException e) {
-                log.error("Ошибка при удалении сообщения.", e.getMessage());
+                log.error("Ошибка при удалении сообщения." + e.getMessage());
                 throw new RuntimeException(e);
             }
         }

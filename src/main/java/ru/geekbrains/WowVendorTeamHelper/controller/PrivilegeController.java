@@ -4,6 +4,7 @@ package ru.geekbrains.WowVendorTeamHelper.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.WowVendorTeamHelper.dto.PrivilegeDto;
+import ru.geekbrains.WowVendorTeamHelper.mapper.PrivilegeMapper;
 import ru.geekbrains.WowVendorTeamHelper.service.PrivilegeService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,20 +15,21 @@ import java.util.stream.Collectors;
 public class PrivilegeController {
 
     private final PrivilegeService privilegeService;
+    private final PrivilegeMapper privilegeMapper;
 
     @GetMapping()
     public List<PrivilegeDto> getAllPrivilege() {
-        return privilegeService.getAllPrivilege().stream().map(PrivilegeDto::new).collect(Collectors.toList());
+        return privilegeService.getAllPrivilege().stream().map(privilegeMapper::toDto).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     public PrivilegeDto findById(@PathVariable Long id){
-        return new PrivilegeDto(privilegeService.findById(id));
+        return privilegeMapper.toDto(privilegeService.findById(id));
     }
 
     @PostMapping()
     public PrivilegeDto addPrivilege(@RequestBody PrivilegeDto privilegeDto) {
-        return new PrivilegeDto(privilegeService.saveOrUpdatePrivilege(privilegeDto));
+        return privilegeMapper.toDto(privilegeService.saveOrUpdatePrivilege(privilegeDto));
     }
 
     @DeleteMapping("/{id}")

@@ -1,12 +1,18 @@
 angular.module('index-app').controller('scheduleController', function ($scope, $http, $location, $localStorage, $rootScope) {
 
 
+    $scope.selectFunction = function () {
+        var select = 'background-color: #eff1f4; color:#00152a; cursor: pointer;';
+        document.getElementById('team-selected').style.cssText=select;
+        document.getElementById('type-selected').style.cssText=select;
+    };
+
     $scope.getTeamsForSettings = function () {
         $http.get("http://localhost:3100/teams/all")
             .then(function succesCallback(responce) {
                 responce.data.push({title: 'select-all'})
                 $scope.teams = responce.data;
-                $scope.selectedTeam = $scope.teams[$scope.teams.length - 1];
+/*                $scope.selectedTeam = $scope.teams[$scope.teams.length - 1];*/
             }, function failCallback(responce) {
 
             })
@@ -17,7 +23,7 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
             .then(function succesCallback(responce) {
                 responce.data.push({title: 'select-all'})
                 $scope.eventType = responce.data;
-                $scope.selectedType = $scope.eventType[$scope.eventType.length - 1];
+/*                $scope.selectedType = $scope.eventType[$scope.eventType.length - 1];*/
             }, function failCallback(responce) {
 
             })
@@ -157,20 +163,26 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
         $http.post("http://localhost:3100/events/createList", content)
             .then(function succesCallback(responce) {
                 alert("События успешно добавлены")
+                $scope.defaultSchedule();
                 $scope.filterByTeamAndType();
             }, function failCallback(responce) {
                 alert("Что то пошло не так")
             })
+        var div = document.getElementById('schedule-table-form');
+        div.style.display = 'none';
     }
 
     $scope.postScheduleText = function (content) {
         $http.post("http://localhost:3100/events/createText", content)
             .then(function succesCallback(responce) {
                 alert("События успешно добавлены")
+                $scope.defaultSchedule();
                 $scope.filterByTeamAndType();
             }, function failCallback(responce) {
                 alert("Что то пошло не так")
             })
+        var div = document.getElementById('schedule-text-form');
+        div.style.display = 'none';
     }
 
 
@@ -182,6 +194,16 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
             $scope.clearTextField()
         }
         div.style.display = 'block';
+    };
+
+    $scope.chooseScheduleForm = function () {
+        let scheduleForm = $scope.selectedScheduleForm;
+        if (scheduleForm === 'вручную') {
+            $scope.getTableForm();
+        }
+        if (scheduleForm === 'текстом') {
+        $scope.getTextForm();
+        }
     };
 
     $scope.getTextForm = function () {
@@ -315,8 +337,8 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
         const changeButton = elementsDiv.change;
         const newButton = document.createElement('button')
         newButton.id = 'change'
-        newButton.className = "button"
-        newButton.textContent = "save change"
+        newButton.className = "fa fa-floppy-o fa-2 safe_icon_button "
+     /*   newButton.textContent = <i class="fa fa-floppy-o" aria-hidden="true"></i>*/
         newButton.onclick = function () {
             const eventId = elements.id.textContent
             $scope.changeAcceptButton(eventId);
@@ -395,7 +417,22 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
             })
     }
 
+    $scope.schedulePanel = function () {
+        const clientItemPanel = document.getElementById('item-client');
+        const scheduleItemPanel = document.getElementById('item-schedule');
+        const adminItemPanel = document.getElementById('item-admin');
 
+        scheduleItemPanel.style.backgroundColor = "#eff1f4";
+        scheduleItemPanel.style.color = "#00152a";
+
+        clientItemPanel.style.backgroundColor = "transparent";
+        clientItemPanel.style.color = "#f1f1f1";
+
+        adminItemPanel.style.backgroundColor = "transparent";
+        adminItemPanel.style.color = "#f1f1f1";
+    };
+
+    $scope.schedulePanel();
     $scope.defaultSchedule();
     $scope.getTeamsForSettings();
     $scope.getEventTypeForSettings();

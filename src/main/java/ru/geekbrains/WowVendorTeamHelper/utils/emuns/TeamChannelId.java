@@ -1,4 +1,4 @@
-package ru.geekbrains.WowVendorTeamHelper.model;
+package ru.geekbrains.WowVendorTeamHelper.utils.emuns;
 
 public enum TeamChannelId {
 

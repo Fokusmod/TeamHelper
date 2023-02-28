@@ -11,37 +11,36 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
+    <script src="/webjars/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/2.3.4/stomp.min.js"></script>
+    <script src="https://kit.fontawesome.com/63828237af.js" crossorigin="anonymous"></script>
 
 </head>
 <body ng-app="index-app" ng-controller="indexController">
 <DIV class="main-container" ng-show="isUserLoggedIn()">
-    <div>
-        <div class="user-panel">
-            <div> Username: {{usname}} </div>
-            <div> Role: </div>
-        </div>
+
+    <div class="user-panel">
+        <i_user class="fa fa-id-card-o fa-2x" aria-hidden="true"></i_user>
+        <div> {{userlogin}}</div>
     </div>
+
     <div class="panel-container">
-        <a href="#!/clientList">
-            <div class="panel-item-container">
-                <div class="panel-item-title">Клиенты</div>
-            </div>
-        </a>
-        <a href="#!/schedule">
-            <div class="panel-item-container">
-                <div class="panel-item-title">Расписание</div>
-            </div>
-        </a>
-        <a href="#!/admin">
-            <div class="panel-item-container" >
-                <div class="panel-item-title">Админка</div>
-            </div>
-        </a>
-        <a href="" ng-click="tryToLogout()">
-            <div class="panel-item-container" >
-                <div class="panel-item-title">Выйти</div>
-            </div>
-        </a>
+         <div id="item-client" class="panel-item-container" ng-click="clientPage()">
+             <i class="fa fa-users" aria-hidden="true"></i>
+             <div class="panel-item-title">Клиенты</div>
+         </div>
+        <div id="item-schedule" class="panel-item-container" ng-click="schedulePage()">
+            <i class="fa fa-users" aria-hidden="true"></i>
+            <div class="panel-item-title" >Расписание</div>
+        </div>
+        <div id="item-admin" class="panel-item-container" ng-click="adminPage()">
+            <i class="fa fa-users" aria-hidden="true"></i>
+            <div class="panel-item-title" >Админка</div>
+        </div>
+        <div id="log-out" class="panel-item-container" ng-click="tryToLogout()">
+            <i class="fa fa-users" aria-hidden="true"></i>
+            <div class="panel-item-title">Выйти</div>
+        </div>
     </div>
     <div></div>
 </DIV>
