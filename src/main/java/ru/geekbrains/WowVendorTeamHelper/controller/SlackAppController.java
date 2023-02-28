@@ -21,7 +21,6 @@ public class SlackAppController extends SlackAppServlet {
         super(app);
         this.messageService = messageService;
 
-        //Получение сообщений в которых содержится строка ===
         app.event(MessageEvent.class, (payload, ctx) -> {
             if (payload.getEvent().getChannel().equals("C04K26N5R70")) {
                 app.executorService().submit(() -> {
@@ -34,7 +33,6 @@ public class SlackAppController extends SlackAppServlet {
             return ctx.ack();
         });
 
-        //Подписка на событие изменения сообщения
         app.event(MessageChangedEvent.class, (payload, ctx) -> {
             app.executorService().submit(()->{
                 MessageChangedEvent messageChangedEvent = payload.getEvent();
@@ -43,7 +41,6 @@ public class SlackAppController extends SlackAppServlet {
             return ctx.ack();
         });
 
-        //Подписка на удаление сообщения
         app.event(MessageDeletedEvent.class, (payload, ctx) -> {
             app.executorService().submit(()->{
                 MessageDeletedEvent messageDeletedEvent = payload.getEvent();
