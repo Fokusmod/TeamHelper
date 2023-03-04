@@ -35,23 +35,24 @@
             <table role="presentation"
                    style="width:764px;border-collapse:collapse;border-spacing:0;text-align:left;">
                 <tr>
-                    <td align="center" style="padding:80px 0 40px 0;background:#ffffff;">
-                        <img src="" alt="" width="132" style="height:auto;display:block;" />
-                    </td>
-                </tr>
-                <tr>
                     <td align="center"
                         style="padding:40px 0 12px 0;background:#F5F7FB;border-top-left-radius: 10px;border-top-right-radius: 10px;">
-                        <h1 style="margin:0;color: #303030;">Заявка на регистрацию!</h1>
+                        <h1 style="margin:0;color: #303030;">Подтвердите регистрацию!</h1>
                     </td>
                 </tr>
                 <tr>
                     <td align="center" style="padding:12px 96px 20px 96px;background:#F5F7FB">
-                        <p style="margin:0;color: #303030;font-size: 18px;line-height: 27px;">Ваша заявка на регистрацию принята и находится на рассмотрении.<br />
-                            Пожалуйста, дождитесь подтверждение регистрации от администратора.<br />
-                            Ответ придет на ваш адрес электронной почты.</p>
+                        <p style="margin:0;color: #303030;font-size: 18px;line-height: 27px;">Добро пожаловать в WowVendorTeam!<br />
+                            Мы благодарны Вам за то, что Вы желаете присоединится к нам!<br />
+                            Пожалуйста, подтвердите адрес электронной почты.</p>
                     </td>
                 </tr>
+                <tr>
+                    <td align="center" style="padding:20px 0 16px 0;background:#F5F7FB">
+                        <a th:href="${activationUrl} + ${activationCode}">Подтвердить</a>
+                    </td>
+                </tr>
+
                 <tr>
                     <td align="center"
                         style="padding:16px 0 24px 0;background:#F5F7FB;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
