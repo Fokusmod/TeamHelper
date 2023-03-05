@@ -1,4 +1,4 @@
-package ru.geekbrains.WowVendorTeamHelper.model;
+package ru.geekbrains.WowVendorTeamHelper.service.Blizzard;
 
 public class Endpoints {
 
@@ -12,8 +12,5 @@ public class Endpoints {
         return baseUrl + "/profile/wow/character/" + realm + "/" + character + "?namespace=" + namespace;
     }
 
-
-
-//    https://eu.api.blizzard.com/profile/wow/character/stormscale/mallygun?namespace=profile-eu&locale=en-gb
 
 }

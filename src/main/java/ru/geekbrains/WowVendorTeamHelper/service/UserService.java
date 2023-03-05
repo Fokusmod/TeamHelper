@@ -19,8 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.WowVendorTeamHelper.dto.*;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.AppError;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.ExceptionRedisBroken;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.mapper.UserMapper;
 import ru.geekbrains.WowVendorTeamHelper.model.Role;
 import ru.geekbrains.WowVendorTeamHelper.model.Status;
@@ -149,8 +149,8 @@ public class UserService implements UserDetailsService {
 
         User user = findByEmail(requestChangePassword.getEmail());
 
-        if (user == null) {
-            throw new ResourceNotFoundException("Пользователь с email: " + requestChangePassword.getEmail() + ", не найден.");
+        if(user == null) {
+            throw new WWTHResourceNotFoundException("Пользователь с email: " + requestChangePassword.getEmail() + ", не найден.");
         }
 
         if (!user.getUsername().equals(principal.getName())) {
@@ -172,7 +172,7 @@ public class UserService implements UserDetailsService {
 
     public boolean userApproved(Long userId, Long statusId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("Не удается найти пользователя с идентификатором: " + userId));
+                new WWTHResourceNotFoundException("Не удается найти пользователя с идентификатором: " + userId));
         Status status = statusService.findById(statusId);
         String subject = "";
         String template = "";
@@ -199,7 +199,7 @@ public class UserService implements UserDetailsService {
         } else if (findByUsername(authRequest.getLogin()) != null) {
             user = findByUsername(authRequest.getLogin());
         } else {
-            throw new ResourceNotFoundException("Пользователя с таким логином " + authRequest.getLogin() + " не существует");
+            throw new WWTHResourceNotFoundException("Пользователя с таким логином " + authRequest.getLogin() + " не существует");
         }
         if (user.getStatus().getTitle().equals(NOT_APPROVED)) {
             return new ResponseEntity<>(new AppError(HttpStatus.FORBIDDEN.value(), "Авторизация прошла успешно, но аккаунт " + authRequest.getLogin() + " не был одобрен со стороны администрации."), HttpStatus.FORBIDDEN);
@@ -235,9 +235,8 @@ public class UserService implements UserDetailsService {
         }
 
         User user = findByEmail(requestEmail.getEmail());
-
-        if (user == null) {
-            throw new ResourceNotFoundException("Пользователь с email: " + requestEmail.getEmail() + ", не найден.");
+        if(user == null) {
+            throw new WWTHResourceNotFoundException("Пользователь с email: " + requestEmail.getEmail() + ", не найден.");
         }
         return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
     }
@@ -255,7 +254,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public UserDto addPrivilegeToUser(Long userId, Long privilegeId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("Не найдено пользователя с id: " + userId));
+                new WWTHResourceNotFoundException("Не найдено пользователя с id: " + userId));
         user.getPrivileges().add(privilegeService.findById(privilegeId));
         return userMapper.toDto(user);
     }
@@ -263,7 +262,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public boolean deletePrivilegeFromUser(Long userId, Long privilegeId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("Не найдено пользователя с id: " + userId));
+                new WWTHResourceNotFoundException("Не найдено пользователя с id: " + userId));
         user.getPrivileges().remove(privilegeService.findById(privilegeId));
         return true;
     }
@@ -271,7 +270,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public UserDto addRoleToUser(UserRoleRequest userRoleRequest) {
         User user = userRepository.findById(userRoleRequest.getUserId()).orElseThrow(() ->
-                new ResourceNotFoundException("Не найдено пользователя с id: " + userRoleRequest.getUserId()));
+                new WWTHResourceNotFoundException("Не найдено пользователя с id: " + userRoleRequest.getUserId()));
         user.getRoles().add(roleService.findById(userRoleRequest.getRoleId()));
         return userMapper.toDto(user);
     }
@@ -279,7 +278,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public boolean deleteRoleFromUser(UserRoleRequest userRoleRequest) {
         User user = userRepository.findById(userRoleRequest.getUserId()).orElseThrow(() ->
-                new ResourceNotFoundException("Не найдено пользователя с id: " + userRoleRequest.getUserId()));
+                new WWTHResourceNotFoundException("Не найдено пользователя с id: " + userRoleRequest.getUserId()));
         user.getRoles().remove(roleService.deleteRoleById(userRoleRequest.getRoleId()));
         return true;
     }

@@ -33,14 +33,14 @@
                     <div class="separator"></div>
                     <div class="order">
                         <div class="order-info">
-                            {{order.game}} {{order.service}} {{order.region}} {{order.playingType}} {{order.boostMode}}
+                            {{order.game}} {{order.service}} {{order.discountInfo}} {{order.region}} {{order.playingType}} {{order.boostMode}}
                             {{order.noParseInfo}} {{order.specificBosses}} {{order.orderDateTime}}
                         </div>
                         <div class="order-info">
-                            {{order.characterClass}} {{order.fraction}} {{order.nickname}} {{order.realm}}
+                            {{order.characterClass}} {{order.blizzardApiClass}} {{order.fraction}} {{order.nickname}} {{order.realm}}
                             {{order.battleTag}} {{order.orderCode}}
                         </div>
-                        <div class="order-info">{{order.armoryLink}}</div>
+                        <div class="order-info"><a href="{{order.armoryLink}}" target="_blank">{{order.armoryLink}}</a></div>
                         <div class="order-info">Статус заказа: {{order.orderStatus.title}}</div>
                     </div>
                     <div class="separator"></div>

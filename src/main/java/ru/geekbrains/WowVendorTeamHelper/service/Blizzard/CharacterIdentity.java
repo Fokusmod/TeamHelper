@@ -1,4 +1,6 @@
-package ru.geekbrains.WowVendorTeamHelper.model;
+package ru.geekbrains.WowVendorTeamHelper.service.Blizzard;
+
+import ru.geekbrains.WowVendorTeamHelper.utils.emuns.Region;
 
 import java.util.Objects;
 

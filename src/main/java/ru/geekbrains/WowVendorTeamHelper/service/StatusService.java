@@ -3,7 +3,7 @@ package ru.geekbrains.WowVendorTeamHelper.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.geekbrains.WowVendorTeamHelper.dto.StatusDto;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.Status;
 import ru.geekbrains.WowVendorTeamHelper.repository.StatusRepository;
 
@@ -27,7 +27,7 @@ public class StatusService {
 
     public Status findById(Long statusId) {
         return statusRepository.findById(statusId).orElseThrow(() ->
-                new ResourceNotFoundException("Статус с идентификатором '" + statusId + "' не найден."));
+                new WWTHResourceNotFoundException("Статус с идентификатором '" + statusId + "' не найден."));
     }
 
     public List<Status> getAllStatus() {
@@ -36,7 +36,7 @@ public class StatusService {
 
     public Status findByTitle(String title) {
         return statusRepository.findByTitle(title).orElseThrow(() ->
-                new ResourceNotFoundException("Статус '" + title + "' не найден."));
+                new WWTHResourceNotFoundException("Статус '" + title + "' не найден."));
     }
 
 }

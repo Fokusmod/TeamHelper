@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.WowVendorTeamHelper.dto.TypeRequest;
 import ru.geekbrains.WowVendorTeamHelper.dto.WowEventTypeDTO;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.WowEventType;
 import ru.geekbrains.WowVendorTeamHelper.repository.WowEventTypeRepository;
 
@@ -30,7 +30,7 @@ public class WowEventTypeService {
         Optional<WowEventType> optional = wowEventTypeRepository.findByTitle(title);
         if (optional.isEmpty()) {
             log.error("Тип события " + title + " не найден.");
-            throw new ResourceNotFoundException("Тип события " + title + " не найден.");
+            throw new WWTHResourceNotFoundException("Тип события " + title + " не найден.");
         }
         return optional.get();
     }
@@ -40,7 +40,7 @@ public class WowEventTypeService {
         Optional<WowEventType> optional = wowEventTypeRepository.findById(id);
         if (optional.isEmpty()) {
             log.error("Тип эвента c id: " + id + " не найден.");
-            throw new ResourceNotFoundException("Тип эвента c id: " + id + " не найден.");
+            throw new WWTHResourceNotFoundException("Тип эвента c id: " + id + " не найден.");
         }
         WowEventType type = optional.get();
         String title = type.getTitle();
@@ -56,7 +56,7 @@ public class WowEventTypeService {
         Optional<WowEventType> optional = wowEventTypeRepository.findById(id);
         if (optional.isEmpty()) {
             log.error("Тип эвента " + newTitle + " не найден.");
-            throw new ResourceNotFoundException("Тип эвента " + newTitle + " не найден.");
+            throw new WWTHResourceNotFoundException("Тип эвента " + newTitle + " не найден.");
         }
         WowEventType type = optional.get();
         String oldTitle = type.getTitle();

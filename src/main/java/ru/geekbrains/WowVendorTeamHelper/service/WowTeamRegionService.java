@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.WowVendorTeamHelper.dto.RegionRequest;
 import ru.geekbrains.WowVendorTeamHelper.dto.WowTeamRegionDto;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.WowTeamRegion;
 import ru.geekbrains.WowVendorTeamHelper.repository.WowTeamRegionRepository;
 
@@ -40,7 +40,7 @@ public class WowTeamRegionService {
             return new WowTeamRegionDto(region);
         } else {
             log.error("Регион c id: " + id + " не найден.");
-            throw new ResourceNotFoundException("Регион c id: " + id + " не найден.");
+            throw new WWTHResourceNotFoundException("Регион c id: " + id + " не найден.");
         }
     }
 
@@ -57,7 +57,7 @@ public class WowTeamRegionService {
             return new WowTeamRegionDto(region);
         } else {
             log.error("Регион c id: " + id + " не найден.");
-            throw new ResourceNotFoundException("Регион c id: " + id + " не найден.");
+            throw new WWTHResourceNotFoundException("Регион c id: " + id + " не найден.");
         }
     }
 }

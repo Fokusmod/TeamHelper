@@ -5,8 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.WowVendorTeamHelper.dto.BundleRequest;
-import ru.geekbrains.WowVendorTeamHelper.dto.BundleStageDto;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.Bundle;
 import ru.geekbrains.WowVendorTeamHelper.model.BundleStage;
 import ru.geekbrains.WowVendorTeamHelper.repository.BundleRepository;
@@ -35,7 +34,7 @@ public class BundleService {
     }
 
     public Bundle findByTitle(String title) {
-        return bundleRepository.findByTitle(title).orElseThrow(() -> new ResourceNotFoundException("Bundle '" + title + "' не найден"));
+        return bundleRepository.findByTitle(title).orElseThrow(() -> new WWTHResourceNotFoundException("Bundle '" + title + "' не найден"));
     }
 
     public void addNewBundle(BundleRequest bundleRequest) {
@@ -51,7 +50,7 @@ public class BundleService {
             bundle.setStages(bundleStageList);
             bundleRepository.save(bundle);
         } else {
-            throw new ResourceNotFoundException("Bundle '" + bundleRequest.getTitle() + "' уже существует.");
+            throw new WWTHResourceNotFoundException("Bundle '" + bundleRequest.getTitle() + "' уже существует.");
         }
     }
 
@@ -67,7 +66,7 @@ public class BundleService {
     }
 
     public Bundle findById(Long id) {
-        return bundleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bundle с айди - '" + id + "' не найден."));
+        return bundleRepository.findById(id).orElseThrow(() -> new WWTHResourceNotFoundException("Bundle с айди - '" + id + "' не найден."));
     }
 
     @Transactional

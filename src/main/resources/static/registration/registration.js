@@ -1,9 +1,10 @@
-angular.module('index-app').controller('registrationController', function ($scope, $http, $localStorage, $rootScope, $location) {
+angular.module('index-app').controller('registrationController', function ($scope, $http, $localStorage, $rootScope, $location, messageService) {
 
-    //цвета фона для сообщений на фронт по умолчанию error_color
     const error_color = "#ffe6e6";
     const warn_color = "#fff6e0";
     const ok_color = "#e8fcdb";
+
+    $scope.displayMessage = messageService.displayMessage;
 
     const reg = /^([A-Za-z\d_\-.])+@([A-Za-z\d_\-.])+\.([A-Za-z]{2,4})$/;
 
@@ -12,21 +13,20 @@ angular.module('index-app').controller('registrationController', function ($scop
 
     $scope.registration = function () {
         const result = validation();
-        console.log(result)
         if (result) {
             $http.post(contextPath + '/registration', $scope.user)
                 .then(function successCallback(response) {
-                    if (response.data.statusCode === 201) {
-                        $rootScope.displayMessage("Успешная регистрация в приложении WowVendorTeamHelper. " +
-                            "Для продолжения работы дождитесь одобрения заявки администратором", ok_color);
-                    }
+                    console.log(response)
+                    $scope.displayMessage("Успешная регистрация в приложении WowVendorTeamHelper. " +
+                        "Для продолжения работы дождитесь одобрения заявки администратором", ok_color);
                     $rootScope.createdUser = response.data;
                     $location.path('/authorization');
                 }, function errorCallback(response) {
-                    $rootScope.displayMessage(response.data.message);
+                    $scope.displayMessage(response.data.message);
                 });
         }
     };
+
 
     function validation() {
         const login = document.getElementById("inputEmail");
@@ -34,14 +34,14 @@ angular.module('index-app').controller('registrationController', function ($scop
         const username = document.getElementById("inputUsername");
 
         if (!reg.test(login.value)) {
-            $rootScope.displayMessage("Поле E-mail должно быть в формате example@mail.ru");
+            $scope.displayMessage("Поле E-mail должно быть в формате example@mail.ru");
             return false;
         }
         if (login.value === '' && password.value === '' && username.value === '') {
-            $rootScope.displayMessage("Поля не должны быть пустыми");
+            $scope.displayMessage("Поля не должны быть пустыми");
             return false
         } else if (login.value === '' || password.value === '' || username.value === '') {
-            $rootScope.displayMessage("Одно из полей пустое");
+            $scope.displayMessage("Одно из полей пустое");
             return false;
         } else {
             return true

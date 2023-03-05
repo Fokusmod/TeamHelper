@@ -36,10 +36,10 @@
 .page {
     position: absolute;
     overflow: auto;
-    background-color: #dcedff;
+    background-color: #eff3ff;
     padding-top: 30px;
     visibility: hidden;
-    width: 90%;
+    width: 87%;
     min-height: 86.1vh;
     max-height: 86.1vh;
 
@@ -50,19 +50,19 @@
     height: 10px;
 }
 
-/* Стиль ползунка скроллбара */
+
 ::-webkit-scrollbar-thumb {
     background-color: #00152a;
     border-radius: 10px;
 }
 
-/* Стиль трека скроллбара */
+
 ::-webkit-scrollbar-track {
     background-color: #eee;
     border-radius: 10px;
 }
 
-/* Стиль кнопок управления скроллбаром */
+
 ::-webkit-scrollbar-button {
     display: none;
 }
@@ -80,8 +80,8 @@
 }
 
 .order-info {
-    margin: auto 10px;
-    min-width: 100%;
+    margin: 0 10px 10px 10px;
+    min-width: 90%;
     min-height: 25px;
 }
 
@@ -136,7 +136,7 @@
     margin-right: auto;
     margin-top: 15px;
     min-height: 80px;
-    width: 65%;
+    width: 66%;
     background-color: white;
     transition: 0.1s ease;
     box-sizing: border-box;
@@ -156,17 +156,20 @@
     max-height: 400px;
 }
 
-
 .separator-client {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 15px;
-    width: 65%;
+    width: 66%;
     box-sizing: border-box;
     border-left: 1px solid silver;
     border-right: 1px solid silver;
     border-bottom: 1px solid silver;
+
 }
+
+
+
 
 .label-client {
     margin-left: 20px;
@@ -182,6 +185,7 @@
     font-family: "Times New Roman";
     padding: 10px;
     width: 90%;
+    height: auto;
     margin-left: auto;
     margin-right: auto;
     border-bottom: 1px;
