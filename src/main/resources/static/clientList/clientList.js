@@ -1,29 +1,10 @@
-angular.module('index-app').controller('clientListController', function ($scope, $http, $location, $localStorage, $rootScope) {
+angular.module('index-app').controller('clientListController', function ($scope, $http, $location, $localStorage, $rootScope, messageService) {
 
     const error_color = "#ffe6e6";
     const warn_color = "#fff6e0";
     const ok_color = "#e8fcdb";
 
-    $scope.displayMessage = function (msgText, color) {
-        const html = document.querySelector('html');
-        const panel = document.createElement('div');
-        panel.setAttribute('class', 'msgBox');
-        panel.style.backgroundColor = color;
-        panel.setAttribute('id', 'msgBox');
-        html.appendChild(panel);
-
-        const msg = document.createElement('p');
-        msg.setAttribute('class', 'msgBox_p');
-        msg.textContent = msgText;
-        panel.appendChild(msg);
-    }
-
-    document.addEventListener('click', function (event) {
-        const e = document.getElementById('msgBox');
-        if (e !== null) {
-            if (!e.contains(event.target)) e.remove()
-        }
-    });
+    $scope.displayMessage = messageService.displayMessage;
 
     const clients = document.getElementById("client-list")
     const waitList = document.getElementById("wait-list")
@@ -119,13 +100,16 @@ angular.module('index-app').controller('clientListController', function ($scope,
 
             const origin = document.createElement('textarea')
             origin.classList.add('area-client');
+            origin.addEventListener('input', () => {
+                origin.style.height = 'auto';
+                origin.style.height = origin.scrollHeight + 'px';
+            });
             if (order.originInfo === null) {
                 if (order.armoryLink === null) {
                     origin.value = order.noParseInfo + "\n===";
                 } else {
                     origin.value = order.noParseInfo + "\n" + order.armoryLink + "\n===";
                 }
-
             } else {
                 origin.value = order.originInfo;
             }
@@ -151,6 +135,11 @@ angular.module('index-app').controller('clientListController', function ($scope,
             comment.value = order.orderComments
             newDiv.appendChild(comment)
 
+            comment.addEventListener('input', () => {
+                comment.style.height = 'auto';
+                comment.style.height = comment.scrollHeight + 'px';
+            });
+
             const ready = document.createElement('button')
             ready.classList.add('send-button')
             ready.style.marginLeft = "50px"
@@ -170,25 +159,45 @@ angular.module('index-app').controller('clientListController', function ($scope,
             } else {
                 origin.style.backgroundColor = "#f5ffee"
             }
+            origin.style.height = origin.scrollHeight + 'px';
         }
 
     }
 
 
-    $scope.setComments = function (order, comment) {
+
+    // $scope.setComments = function (order, comment) {
+    //     let textComment = "null";
+    //     if (comment.length > 0) {
+    //         textComment = comment;
+    //     }
+    //     $http.put("http://localhost:3100/clients/" + order.id + "/comment", textComment)
+    //         .then(function successCallback(responce) {
+    //             console.log(responce)
+    //             order.orderComments = responce.data.orderComments
+    //             const div = document.getElementById('separator-'+order.id);
+    //             div.remove();
+    //         }, function failCallback(responce) {
+    //             console.log(responce.data)
+    //         })
+    // }
+
+    $scope.setComments = async function (order, comment) {
         let textComment = "null";
         if (comment.length > 0) {
             textComment = comment;
         }
-        $http.put("http://localhost:3100/clients/" + order.id + "/comment", textComment)
-            .then(function successCallback(responce) {
-                order.orderComments = responce.data.orderComments
-                const div = document.getElementById('separator-'+order.id);
-                div.remove();
-            }, function failCallback(responce) {
-                console.log(responce.data)
-            })
+        try {
+            const response = await $http.put("http://localhost:3100/clients/" + order.id + "/comment", textComment);
+            order.orderComments = response.data.orderComments
+            const div = document.getElementById('separator-' + order.id);
+            div.remove();
+        } catch (error) {
+            console.log(error.data)
+            throw error;
+        }
     }
+
 
 
     $scope.parseOrderInfo = async function (order, value) {

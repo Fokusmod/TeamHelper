@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.geekbrains.WowVendorTeamHelper.dto.RoleDto;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.Role;
 import ru.geekbrains.WowVendorTeamHelper.repository.RoleRepository;
 
@@ -21,7 +21,7 @@ public class RoleService {
 
     public Role findById(Long id) {
         return roleRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Не удается найти роль с идентификатором: " + id));
+                new WWTHResourceNotFoundException("Не удается найти роль с идентификатором: " + id));
     }
 
     public Role addRole(RoleDto roleDto) {
@@ -45,7 +45,7 @@ public class RoleService {
         if (role.isPresent()) {
             return role.get();
         } else {
-            throw new ResourceNotFoundException("Пользовательской роли " + title + " не найдено");
+            throw new WWTHResourceNotFoundException("Пользовательской роли " + title + " не найдено");
         }
     }
 }

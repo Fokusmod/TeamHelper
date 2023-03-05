@@ -7,8 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.WowVendorTeamHelper.dto.RequestEvents;
 import ru.geekbrains.WowVendorTeamHelper.dto.ResponseEvents;
 import ru.geekbrains.WowVendorTeamHelper.dto.WowEventDto;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.FailedEventListCreationException;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.RequestContainsLiteralsException;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHBadRequestException;
 import ru.geekbrains.WowVendorTeamHelper.model.Team;
 import ru.geekbrains.WowVendorTeamHelper.model.WowEvent;
 import ru.geekbrains.WowVendorTeamHelper.model.WowEventType;
@@ -45,10 +44,10 @@ public class WowEventService {
 
     public WowEventDto changeById(Long id, List<RequestEvents> list) {
         if (isRussianLiterals(list)) {
-            throw new FailedEventListCreationException("Запрос на изменение содержит русские литералы.");
+            throw new WWTHBadRequestException("В списке событий содержатся русские символы.");
         }
-        if (!checkDateAndTimeFormat(list)) {
-            throw new FailedEventListCreationException("Неудачное создание списка событий.");
+        if (checkFalseDateAndTimeFormat(list)) {
+            throw new WWTHBadRequestException("Неправильный формат даты или времени.");
         }
         Optional<WowEvent> request = wowEventRepository.findById(id);
         WowEvent wowEvent = null;
@@ -70,10 +69,10 @@ public class WowEventService {
     @Transactional
     public List<ResponseEvents> createEvents(List<RequestEvents> requestEvents) {
         if (isRussianLiterals(requestEvents)) {
-            throw new RequestContainsLiteralsException("Запрос на создание содержит русские литералы.");
+            throw new WWTHBadRequestException("В списке событий содержатся русские символы.");
         }
-        if (!checkDateAndTimeFormat(requestEvents)) {
-            throw new FailedEventListCreationException("Неудачное создание списка событий.");
+        if (checkFalseDateAndTimeFormat(requestEvents)) {
+            throw new WWTHBadRequestException("Неправильный формат даты или времени.");
         }
         List<RequestEvents> checkedRequestEvents = checkDuplicates(requestEvents);
         List<ResponseEvents> resultList = new ArrayList<>();
@@ -119,29 +118,24 @@ public class WowEventService {
         return result;
     }
 
-
-
-    //Метод проверки даты и времени
-    // Дата - [19:00 МСК / 17:00 CET]
-    // Время [18.01.23]
-    private boolean checkDateAndTimeFormat(List<RequestEvents> requestEvents) {
+    private boolean checkFalseDateAndTimeFormat(List<RequestEvents> requestEvents) {
         for (RequestEvents event : requestEvents) {
             String date = event.getDate();
             String[] time = event.getTime().split(" ");
             if (!dateService.checkDateFormat(date)) {
                 log.debug("Проверка формата даты:" + dateService.checkDateFormat(date));
-                return false;
+                return true;
             }
             if (!dateService.checkTimeFormat(time[0])) {
                 log.debug("Проверка формата времени:" + dateService.checkTimeFormat(time[0]));
-                return false;
+                return true;
             }
             if (!dateService.checkTimeFormat(time[3])) {
                 log.debug("Проверка формата времени:" + dateService.checkTimeFormat(time[3]));
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     private List<RequestEvents> checkDuplicates(List<RequestEvents> requestEvents) {

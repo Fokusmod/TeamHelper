@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ru.geekbrains.WowVendorTeamHelper.model.Bundle;
-import ru.geekbrains.WowVendorTeamHelper.model.ClientStage;
 import ru.geekbrains.WowVendorTeamHelper.model.OrderStatus;
 import ru.geekbrains.WowVendorTeamHelper.model.WowClient;
 
@@ -40,6 +39,8 @@ public class WowClientDto {
 
     private String characterClass;
 
+    private String blizzardApiClass;
+
     private String boostMode;
 
     private String playingType;
@@ -47,6 +48,8 @@ public class WowClientDto {
     private String region;
 
     private String service;
+
+    private String discountInfo;
 
     private String game;
 
@@ -88,5 +91,7 @@ public class WowClientDto {
         this.orderStatus = wowClient.getOrderStatus();
         this.orderComments = wowClient.getOrderComments();
         this.ts = wowClient.getTs();
+        this.discountInfo = wowClient.getDiscountInfo();
+        this.blizzardApiClass = wowClient.getBlizzardApiClass();
     }
 }

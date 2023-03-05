@@ -21,7 +21,6 @@ public class DateService {
     private final ZoneId cetZone = ZoneId.of("CET");
 
     public boolean checkDateFormat(String text) {
-
         try {
             LocalDate.parse(text,formatDate);
         } catch (DateTimeException exception){
@@ -34,14 +33,13 @@ public class DateService {
         try {
             LocalTime.parse(text,formatTime);
         } catch (DateTimeException exception){
-            log.error("Время ", exception.getMessage());
+            log.error("Время: " + exception.getMessage());
             return false;
         }
         return true;
     }
 
     public List<String> getTimeMscAndCET() {
-//      формат  (Sat 28 Jan @ 21:00 CET)
         List<String> timeList = new ArrayList<>();
         String mskTime = LocalDateTime.now(mskZone).format(dateTimeFormatter) + "MSC";
         String cetTime = LocalDateTime.now(cetZone).format(dateTimeFormatter) + "CET";

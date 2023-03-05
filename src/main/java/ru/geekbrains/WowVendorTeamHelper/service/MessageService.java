@@ -68,13 +68,15 @@ public class MessageService {
     }
 
     public void changeMessageMethod(MessageChangedEvent messageChangedEvent) {
-        log.info("Полученое Slack событие на изменение сообщения.");
-        Optional<SlackMessageInfo> message = repository.findByTs(messageChangedEvent.getMessage().getTs());
-        if (message.isPresent()) {
-            SlackMessageInfo slackMessageInfo = message.get();
-            slackMessageInfo.setText(messageChangedEvent.getMessage().getText());
-            repository.save(slackMessageInfo);
-            wowClientService.changeWowClientFromSlack(slackMessageInfo);
+        if (messageChangedEvent.getMessage().getAttachments() == null) {
+            log.info("Полученое Slack событие на изменение сообщения.");
+            Optional<SlackMessageInfo> message = repository.findByTs(messageChangedEvent.getMessage().getTs());
+            if (message.isPresent()) {
+                SlackMessageInfo slackMessageInfo = message.get();
+                slackMessageInfo.setText(messageChangedEvent.getMessage().getText());
+                repository.save(slackMessageInfo);
+                wowClientService.changeWowClientFromSlack(slackMessageInfo);
+            }
         }
     }
 

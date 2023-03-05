@@ -2,7 +2,31 @@
     angular
         .module('index-app', ['ngRoute', 'ngStorage'])
         .config(config)
+        .factory('messageService', function () {
+            return {
+                displayMessage: function (msgText, color) {
+                    const html = document.querySelector('html');
+                    const panel = document.createElement('div');
+                    panel.setAttribute('class', 'msgBox');
+                    panel.style.backgroundColor = color;
+                    panel.setAttribute('id', 'msgBox');
+                    html.appendChild(panel);
+                    const msg = document.createElement('p');
+                    msg.setAttribute('class', 'msgBox_p');
+                    msg.textContent = msgText;
+                    panel.appendChild(msg);
+                }
+
+            }
+        })
         .run(run);
+
+    document.addEventListener('click', function (event) {
+        const e = document.getElementById('msgBox');
+        if (e !== null) {
+            if (!e.contains(event.target)) e.remove()
+        }
+    });
 
     function config($routeProvider) {
         $routeProvider
@@ -89,7 +113,6 @@ angular.module('index-app').controller('indexController', function ($rootScope, 
     $scope.adminPage = function () {
         $location.path('/admin');
     };
-
 
     $scope.showUsername();
 

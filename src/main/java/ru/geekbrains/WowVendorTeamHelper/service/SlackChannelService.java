@@ -13,8 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.geekbrains.WowVendorTeamHelper.dto.SlackChannelRequest;
 import ru.geekbrains.WowVendorTeamHelper.dto.SlackChannelResponse;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.SlackException;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHErrorException;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.SlackChannel;
 import ru.geekbrains.WowVendorTeamHelper.model.SlackChannelDestination;
 import ru.geekbrains.WowVendorTeamHelper.repository.SlackChannelDestinationRepository;
@@ -76,7 +76,7 @@ public class SlackChannelService {
                     HttpStatus.BAD_REQUEST);
         } catch (IOException | SlackApiException e) {
             log.error(e.getMessage());
-            throw new SlackException("Произошла ошибка на стороне сервера, связанная со Slack API.");
+            throw new WWTHErrorException("Произошла ошибка на стороне сервера, связанная со Slack API.");
         }
     }
 
@@ -95,7 +95,7 @@ public class SlackChannelService {
                 return new ResponseEntity<>("Канал " + response.getTitle() + " c параметром " + response.getDestination() + " успешно был создан.", HttpStatus.OK);
             } else {
                 log.debug("Destinations " + response.getDestination() + " not found. Adding SlackChannel failed with id: " + response.getChannelId());
-                throw new ResourceNotFoundException("Параметра " + response.getDestination() + " не существует. Проверьте правильность данных");
+                throw new WWTHResourceNotFoundException("Параметра " + response.getDestination() + " не существует. Проверьте правильность данных");
             }
         } else {
             SlackChannel channel = slackChannel.get();
@@ -114,7 +114,7 @@ public class SlackChannelService {
                 return new ResponseEntity<>("Канал " + response.getTitle() + " c параметром " + response.getDestination() + " успешно был создан.", HttpStatus.OK);
             } else {
                 log.debug("Failed creating SlackChannel [" + response.getTitle() + "] parameter [" + response.getDestination() + " not found in database");
-                throw new ResourceNotFoundException("Параметр " + response.getDestination() + " не был найден.");
+                throw new WWTHResourceNotFoundException("Параметр " + response.getDestination() + " не был найден.");
             }
         }
     }
@@ -138,7 +138,7 @@ public class SlackChannelService {
             return new ResponseEntity<>(slackChannel.get(), HttpStatus.OK);
         } else {
             log.debug("SlackChannel [" + request.getChannelId() + " not found in database");
-            throw new ResourceNotFoundException("Канала с id " + request.getChannelId() + " не было найдено.");
+            throw new WWTHResourceNotFoundException("Канала с id " + request.getChannelId() + " не было найдено.");
         }
     }
 
@@ -166,7 +166,7 @@ public class SlackChannelService {
                 return new ResponseEntity<>("Канал " + slackChannel.getTitle() + " c параметром " + request.getDestination() + " успешно был создан.", HttpStatus.OK);
             } else {
                 log.debug("SlackChannelDestination [" + request.getDestination() + " not found in database");
-                throw new ResourceNotFoundException("Параметр " + request.getDestination() + " не был найден.");
+                throw new WWTHResourceNotFoundException("Параметр " + request.getDestination() + " не был найден.");
             }
         }
         return responseEntity;

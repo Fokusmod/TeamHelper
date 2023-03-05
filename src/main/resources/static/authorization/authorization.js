@@ -1,6 +1,7 @@
-angular.module('index-app').controller('authorizationController', function ($scope, $http, $localStorage, $rootScope, $location) {
+angular.module('index-app').controller('authorizationController', function ($scope, $http, $localStorage, $rootScope, $location,messageService) {
 
-    //цвета фона для сообщений на фронт
+    $scope.displayMessage = messageService.displayMessage;
+
     const error_color = "#ffe6e6";
     const warn_color = "#fff6e0";
     const ok_color = "#e8fcdb";
@@ -19,10 +20,10 @@ angular.module('index-app').controller('authorizationController', function ($sco
         const password = document.getElementById("authPassword");
 
         if (login.value === '' && password.value === '') {
-            $rootScope.displayMessage("Поля не должны быть пустыми");
+            $scope.displayMessage("Поля не должны быть пустыми");
             return false;
         } else if (login.value === '' || password.value === '') {
-            $rootScope.displayMessage("Одно из полей пустое");
+            $scope.displayMessage("Одно из полей пустое");
             return false;
         } else {
             return true;
@@ -45,9 +46,10 @@ angular.module('index-app').controller('authorizationController', function ($sco
                     }
                 }, function errorCallback(response) {
                     if (response.data.statusCode === 403) {
-                        $rootScope.displayMessage(response.data.message, warn_color);
+                        $scope.displayMessage(response.data.message, warn_color);
+
                     } else {
-                        $rootScope.displayMessage(response.data.message, error_color);
+                        $scope.displayMessage(response.data.message, error_color);
                     }
                 });
         }
@@ -56,27 +58,6 @@ angular.module('index-app').controller('authorizationController', function ($sco
     $scope.relocateToRegistration = function () {
         $location.path("/registration")
     }
-
-    $rootScope.displayMessage = function (msgText, color) {
-        const html = document.querySelector('html');
-        const panel = document.createElement('div');
-        panel.setAttribute('class', 'msgBox');
-        panel.style.backgroundColor = color;
-        panel.setAttribute('id', 'msgBox');
-        html.appendChild(panel);
-
-        const msg = document.createElement('p');
-        msg.setAttribute('class', 'msgBox_p');
-        msg.textContent = msgText;
-        panel.appendChild(msg);
-    }
-
-    document.addEventListener('click', function (event) {
-        const e = document.getElementById('msgBox');
-        if (e !== null) {
-            if (!e.contains(event.target)) e.remove()
-        }
-    });
 
     const form = {
         login: document.getElementById("login"),
