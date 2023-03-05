@@ -64,19 +64,19 @@ WowVendorTeamHelper
 - На странице приложения выберите "OAuth & Permissions" в меню слева.
 - <p>Добавьте необходимые разрешения для вашего приложения в частности :
 
-**`channels:history`**
+  <h4>**`channels:history`**
 
-**`channels:read`**
+  <h4>**`channels:read`**
 
-**`chat:write`**
+  <h4>**`chat:write`**
 
-**`groups:history`**
+  <h4>**`groups:history`**
 
-**`groups:read`**
+  <h4>**`groups:read`**
 
-**`im:read`**
+  <h4>**`im:read`**
 
-**`mpim:read`**
+  <h4>**`mpim:read`**
 
 
 - Нажмите "Install App to Workspace" и следуйте инструкциям, чтобы установить приложение в рабочем пространстве.
@@ -87,9 +87,9 @@ WowVendorTeamHelper
 - На странице приложения выберите "Basic Information" в меню слева и скопируйте значение Signing Secret.
 - Полученые данные занесите в переменные окружения
 
-**SLACK_BOT_TOKEN: `${YOUR_TOKEN}`**
+  <h4>**SLACK_BOT_TOKEN: `${YOUR_TOKEN}`**
 
-**SLACK_SIGNING_SECRET: `${YOUR_SIGNING_SECRET}`**
+  <h4>**SLACK_SIGNING_SECRET: `${YOUR_SIGNING_SECRET}`**
 
 
 4. Настроить вебхук
@@ -97,9 +97,9 @@ WowVendorTeamHelper
 - На странице приложения выберите "Event Subscriptions" в меню слева.
 - Проверьте что вы подписаны на события указанные ниже. Если вы не подписаны - добавьте их вручную.
 
-**`message.channels`**
+  <h4>**`message.channels`**
 
-**`message.groups`**
+  <h4>**`message.groups`**
 
 
 - Далее вам необходимо указал общедоступный URL-адрес приложения, сделать это можно
@@ -108,12 +108,12 @@ WowVendorTeamHelper
 - После скачивания [ngrok](https://dashboard.ngrok.com/get-started/setup) и регистрации запустите его из командной
   строки
 
-**`ngrok http 3100`**
+  <h4>**`ngrok http 3100`**
 
 - Скопируйте строчку **`https://$your-url.eu.ngrok.io`** и вставьте поле Request URL на странице Event Subscriptions и добавьте
   энд-поинт slack/events
 
-**`https://$your-url.eu.ngrok.io/slack/events`**
+  <h4>**`https://$your-url.eu.ngrok.io/slack/events`**
 
 - Нажмите "Save Changes". Обратите внимание что ваше приложение на момент включения подписки на события должно быть 
  запущено, в противном случае вы получете ошибку и не сможете сохранить изменения.
