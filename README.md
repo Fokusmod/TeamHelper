@@ -80,24 +80,22 @@ WowVendorTeamHelper
 
 - На старнице приложения выберите "OAuth & Permissions" в меню слева и скопируйте значение Bot User OAuth Token
 - На странице приложения выберите "Basic Information" в меню слева и скопируйте значение Signing Secret.
-
-<div style="margin-left: 27px">
-Эти данные занесите в переменные окружения
+- Полученые данные занесите в переменные окружения
 
 SLACK_BOT_TOKEN: `${YOUR_TOKEN}`
 
 SLACK_SIGNING_SECRET: `${YOUR_SIGNING_SECRET}`
-</div>
+
 
 4. Настроить вебхук
 
 - На странице приложения выберите "Event Subscriptions" в меню слева.
 - Проверьте что вы подписаны на события указанные ниже. Если вы не подписаны - добавьте их вручную.
 
-<div style="margin-left: 27px">
+
 <span style="border-radius: 10px; background-color: #FFA500; color: black; padding: 4px 6px;">message.channels</span>
 <span style="border-radius: 10px; background-color: #FFA500; color: black; padding: 4px 6px;">message.groups</span>
-</div>
+
 
 - Далее вам необходимо указал общедоступный URL-адрес приложения, сделать это можно
   через [ngrok](https://dashboard.ngrok.com/get-started/setup)
@@ -105,11 +103,10 @@ SLACK_SIGNING_SECRET: `${YOUR_SIGNING_SECRET}`
 - После скачивания [ngrok](https://dashboard.ngrok.com/get-started/setup) и регистрации запустите его из командной
   строки
 
-<div style="margin-left: 27px">
 
 `ngrok http 3100`
 
-</div>
+
 
 - Скопируйте строчку `https://$your-url.eu.ngrok.io` и вставьте поле Request URL на странице Event Subscriptions и добавьте
   энд-поинт slack/events
