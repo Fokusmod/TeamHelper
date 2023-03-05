@@ -37,4 +37,9 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler
+    public ResponseEntity<?> handleExceptionRedisBroken(ExceptionRedisBroken e) {
+        log.error(e.getMessage());
+        return new ResponseEntity<>(new AppError(HttpStatus.SERVICE_UNAVAILABLE.value(), e.getMessage()), HttpStatus.SERVICE_UNAVAILABLE);
+    }
 }
