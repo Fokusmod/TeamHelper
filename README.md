@@ -64,19 +64,19 @@ WowVendorTeamHelper
 - На странице приложения выберите "OAuth & Permissions" в меню слева.
 - <p>Добавьте необходимые разрешения для вашего приложения в частности :
 
-  <h4>`channels:history`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`channels:history`
 
-  <h4>`channels:read`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`channels:read`
 
-  <h4>`chat:write`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`chat:write`
 
-  <h4>`groups:history`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`groups:history`
 
-  <h4>`groups:read`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`groups:read`
 
-  <h4>`im:read`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`im:read`
 
-  <h4>`mpim:read`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`mpim:read`
 
 
 - Нажмите "Install App to Workspace" и следуйте инструкциям, чтобы установить приложение в рабочем пространстве.
@@ -87,10 +87,9 @@ WowVendorTeamHelper
 - На странице приложения выберите "Basic Information" в меню слева и скопируйте значение Signing Secret.
 - Полученые данные занесите в переменные окружения
 
-  <h4>SLACK_BOT_TOKEN: `${YOUR_TOKEN}`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SLACK_BOT_TOKEN: `${YOUR_TOKEN}`
 
-  <h4>SLACK_SIGNING_SECRET: `${YOUR_SIGNING_SECRET}`
-
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SLACK_SIGNING_SECRET: `${YOUR_SIGNING_SECRET}`
 
 4. Настроить вебхук
 
@@ -107,12 +106,12 @@ WowVendorTeamHelper
 - После скачивания [ngrok](https://dashboard.ngrok.com/get-started/setup) и регистрации запустите его из командной
   строки
 
-`ngrok http 3100`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`ngrok http 3100`**
 
 - Скопируйте строчку **`https://$your-url.eu.ngrok.io`** и вставьте поле Request URL на странице Event Subscriptions и добавьте
   энд-поинт slack/events
-  
-**`https://$your-url.eu.ngrok.io/slack/events`**
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`https://$your-url.eu.ngrok.io/slack/events`**
 
 - Нажмите "Save Changes". Обратите внимание что ваше приложение на момент включения подписки на события должно быть 
  запущено, в противном случае вы получете ошибку и не сможете сохранить изменения.
@@ -122,9 +121,9 @@ WowVendorTeamHelper
 ====================
 Скомпилируйте приложение и запустите JAR файл.
 
-  **`mvn package`**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`mvn package`**
 
-  **`java -jar target/WowVendorTeamHelper-0.0.1-SNAPSHOT.jar`**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`java -jar target/WowVendorTeamHelper-0.0.1-SNAPSHOT.jar`**
 
 Основные возможности представлены в виде gif изображений.
 =============================
