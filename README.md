@@ -127,7 +127,7 @@ WowVendorTeamHelper
 
 Запуск дополнительных инструментов.
 =====================
-Для работы приложения требуется иметь установленный [Docker](https://www.docker.com/products/docker-desktop/).
+Для работы приложения требуется [Docker](https://www.docker.com/products/docker-desktop/).
 В командной строке запустить контейнер.(Вы должны находиться в директории приложения так как файл docker-compose.yaml находится там)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`docker-compose up`**
