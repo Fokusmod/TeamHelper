@@ -101,7 +101,6 @@ WowVendorTeamHelper
 
 **`message.groups`**
 
-
 - Далее вам необходимо указал общедоступный URL-адрес приложения, сделать это можно
   через [ngrok](https://dashboard.ngrok.com/get-started/setup)
 
