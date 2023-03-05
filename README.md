@@ -64,15 +64,20 @@ WowVendorTeamHelper
 - На странице приложения выберите "OAuth & Permissions" в меню слева.
 - <p>Добавьте необходимые разрешения для вашего приложения в частности :
 
-<div style="margin-left: 27px">
-<span style="border-radius: 10px; background-color: #FFA500; color: black; padding: 4px 6px;">channels:history</span>
-<span style="border-radius: 10px; background-color: #FFA500; color: black; padding: 4px 6px;">channels:read</span>
-<span style="border-radius: 10px; background-color: #FFA500; color: black; padding: 4px 6px;">chat:write</span>
-<span style="border-radius: 10px; background-color: #FFA500; color: black; padding: 4px 6px;">groups:history</span>
-<span style="border-radius: 10px; background-color: #FFA500; color: black; padding: 4px 6px;">groups:read</span>
-<span style="border-radius: 10px; background-color: #FFA500; color: black; padding: 4px 6px;">im:read</span>
-<span style="border-radius: 10px; background-color: #FFA500; color: black; padding: 4px 6px;">mpim:read</span>
-</div>
+**`channels:history`**
+
+**`channels:read`**
+
+**`chat:write`**
+
+**`groups:history`**
+
+**`groups:read`**
+
+**`im:read`**
+
+**`mpim:read`**
+
 
 - Нажмите "Install App to Workspace" и следуйте инструкциям, чтобы установить приложение в рабочем пространстве.
 
@@ -82,9 +87,9 @@ WowVendorTeamHelper
 - На странице приложения выберите "Basic Information" в меню слева и скопируйте значение Signing Secret.
 - Полученые данные занесите в переменные окружения
 
-SLACK_BOT_TOKEN: `${YOUR_TOKEN}`
+**SLACK_BOT_TOKEN: `${YOUR_TOKEN}`**
 
-SLACK_SIGNING_SECRET: `${YOUR_SIGNING_SECRET}`
+**SLACK_SIGNING_SECRET: `${YOUR_SIGNING_SECRET}`**
 
 
 4. Настроить вебхук
@@ -92,9 +97,9 @@ SLACK_SIGNING_SECRET: `${YOUR_SIGNING_SECRET}`
 - На странице приложения выберите "Event Subscriptions" в меню слева.
 - Проверьте что вы подписаны на события указанные ниже. Если вы не подписаны - добавьте их вручную.
 
+**`message.channels`**
 
-<span style="border-radius: 10px; background-color: #FFA500; color: black; padding: 4px 6px;">message.channels</span>
-<span style="border-radius: 10px; background-color: #FFA500; color: black; padding: 4px 6px;">message.groups</span>
+**`message.groups`**
 
 
 - Далее вам необходимо указал общедоступный URL-адрес приложения, сделать это можно
@@ -103,15 +108,12 @@ SLACK_SIGNING_SECRET: `${YOUR_SIGNING_SECRET}`
 - После скачивания [ngrok](https://dashboard.ngrok.com/get-started/setup) и регистрации запустите его из командной
   строки
 
+**`ngrok http 3100`**
 
-`ngrok http 3100`
-
-
-
-- Скопируйте строчку `https://$your-url.eu.ngrok.io` и вставьте поле Request URL на странице Event Subscriptions и добавьте
+- Скопируйте строчку **`https://$your-url.eu.ngrok.io`** и вставьте поле Request URL на странице Event Subscriptions и добавьте
   энд-поинт slack/events
 
-  `https://$your-url.eu.ngrok.io/slack/events`
+**`https://$your-url.eu.ngrok.io/slack/events`**
 
 - Нажмите "Save Changes". Обратите внимание что ваше приложение на момент включения подписки на события должно быть 
  запущено, в противном случае вы получете ошибку и не сможете сохранить изменения.
@@ -121,9 +123,9 @@ SLACK_SIGNING_SECRET: `${YOUR_SIGNING_SECRET}`
 ====================
 Скомпилируйте приложение и запустите JAR файл.
 
-`mvn package`
+**`mvn package`**
 
-`java -jar target/WowVendorTeamHelper-0.0.1-SNAPSHOT.jar`
+**`java -jar target/WowVendorTeamHelper-0.0.1-SNAPSHOT.jar`**
 
 Основные возможности представлены в виде gif изображений.
 =============================
