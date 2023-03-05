@@ -2,6 +2,9 @@ package ru.geekbrains.WowVendorTeamHelper.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.RedisConnectionFailureException;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.WowVendorTeamHelper.dto.*;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.AppError;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHResourceNotFoundException;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.ExceptionRedisBroken;
 import ru.geekbrains.WowVendorTeamHelper.mapper.UserMapper;
 import ru.geekbrains.WowVendorTeamHelper.model.Role;
 import ru.geekbrains.WowVendorTeamHelper.model.Status;
@@ -33,6 +37,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
+
+    @Value("${my-config.url-activate}")
+    private String activationUrl;
     private static final String NOT_APPROVED = "not_approved";
     private static final String APPROVED = "approved";
     private static final String ROLE_USER = "ROLE_USER";
@@ -45,7 +52,7 @@ public class UserService implements UserDetailsService {
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
     private final MailService mailService;
-
+    private final RedisTemplate<String, Object> redisTemplate;
 
 
     public User findByUsername(String username) {
@@ -64,39 +71,78 @@ public class UserService implements UserDetailsService {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getTitle())).collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> createUser(RegistrationRequest request) {
+    public ResponseEntity<?> saveUserToCacheFromDto(RegistrationRequest request) {
+
         if (findByEmail(request.getEmail()) != null) {
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пользователь с таким " +
                     "Е-mail " + request.getEmail() + " уже зарегистрирован."), HttpStatus.BAD_REQUEST);
         } else if (findByUsername(request.getUsername()) != null) {
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пользователь с таким " +
                     "Username " + request.getUsername() + " уже зарегистрирован."), HttpStatus.BAD_REQUEST);
-        } else {
+        }
+
+        String activationCode = request.getEmail() + "_" + UUID.randomUUID();
+
+        try {
+            redisTemplate.opsForValue().set(activationCode, request);
+        } catch (
+                RedisConnectionFailureException redisException) {
+            throw new ExceptionRedisBroken("Error connecting to Redis");
+        }
+
+        if (!redisTemplate.hasKey(activationCode)) {
+            throw new ResourceNotFoundException("Registration data has not been saved in Redis");
+        }
+
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("activationUrl", activationUrl);
+        properties.put("activationCode", activationCode);
+
+        mailService.sendHtmlMessage(request.getEmail(), "Подтверждение регистрации!", "mail-activation.html", properties);
+
+        return new ResponseEntity<>("Вам отправили письмо, для подверждения регистации нажмите кнопку подтвердить", HttpStatus.OK);
+    }
+
+    public boolean createUser(String activatedCode) {
+
+        RegistrationRequest request;
+
+        try {
+            request = (RegistrationRequest) redisTemplate.opsForValue().get(activatedCode);
+        } catch (RuntimeException e) {
+             throw new ExceptionRedisBroken("Error connecting to Redis");
+        }
+
+        if (request == null) {
+            new ResourceNotFoundException("unable to load data from Redis");
+        }
+
+        if (!userRepository.findByEmail(request.getEmail()).isPresent()) {
             User newUser = new User();
             newUser.setEmail(request.getEmail());
             newUser.setUsername(request.getUsername());
             newUser.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
-            newUser.setActivationCode(request.getUsername() + "_" + UUID.randomUUID());
             newUser.setStatus(statusService.findByTitle(NOT_APPROVED));
             newUser.setRoles(List.of(roleService.getRoleByTitle(ROLE_USER)));
             newUser.setPrivileges(List.of());
-            UserDto userDto = userMapper.toDto(userRepository.save(newUser));
-
-            mailService.sendHtmlMessage(userDto.getEmail(), "Заявка на регистрацию принята!", "mail-registration.html", new HashMap<>());
-
-            return new ResponseEntity<>(userDto, HttpStatus.CREATED);
+            userRepository.save(newUser);
+            log.info("User " + newUser.getEmail() + " created!");
+            mailService.sendHtmlMessage(request.getEmail(), "Заявка на регистрацию принята!", "mail-registration.html", new HashMap<>());
+            return true;
         }
+        return false;
     }
+
 
     public ResponseEntity<?> updatePassword(RequestChangePassword requestChangePassword, Principal principal) {
 
-        if(requestChangePassword.getOldPassword() == null || requestChangePassword.getNewPassword() == null
-        || requestChangePassword.getEmail() == null) {
+        if (requestChangePassword.getOldPassword() == null || requestChangePassword.getNewPassword() == null
+                || requestChangePassword.getEmail() == null) {
             log.info("Пользователь не ввел один из паролей, или email");
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Необходимо ввести старый и новый пароли, а также email"), HttpStatus.BAD_REQUEST);
         }
 
-        if(principal == null) {
+        if (principal == null) {
             log.info("В запросе нет токена");
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Запрос должен быть с авторизацией"), HttpStatus.BAD_REQUEST);
         }
@@ -107,7 +153,7 @@ public class UserService implements UserDetailsService {
             throw new WWTHResourceNotFoundException("Пользователь с email: " + requestChangePassword.getEmail() + ", не найден.");
         }
 
-        if(!user.getUsername().equals(principal.getName())) {
+        if (!user.getUsername().equals(principal.getName())) {
             log.info("Пользователь с именем: " + principal.getName() + ", хочет изменить пароль пользователя с именем: " + user.getUsername());
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Вы не можете сменить пароль. Введенный вами email, не принадлежит вам."), HttpStatus.BAD_REQUEST);
         }
@@ -130,13 +176,13 @@ public class UserService implements UserDetailsService {
         Status status = statusService.findById(statusId);
         String subject = "";
         String template = "";
-        if(status.getTitle().equals(APPROVED)) {
+        if (status.getTitle().equals(APPROVED)) {
             subject = "Регистрация одобрена!";
             template = "mail-approved.html";
             user.setStatus(status);
             userRepository.save(user);
 
-        } else if (status.getTitle().equals(NOT_APPROVED)){
+        } else if (status.getTitle().equals(NOT_APPROVED)) {
             subject = "Заявка на регистрацию отклонена!";
             template = "mail-not-approved.html";
             userRepository.delete(user);
@@ -165,7 +211,7 @@ public class UserService implements UserDetailsService {
         }
         UserDetails userDetails = loadUserByUsername(user.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails, user);
-        log.info("Пользователь с логином " + authRequest.getLogin() + " был авторизован: " );
+        log.info("Пользователь с логином " + authRequest.getLogin() + " был авторизован: ");
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
@@ -183,13 +229,12 @@ public class UserService implements UserDetailsService {
     }
 
     public ResponseEntity<?> checkUserByEmail(RequestEmail requestEmail) {
-        if(requestEmail.getEmail() == null) {
+        if (requestEmail.getEmail() == null) {
             log.info("В запросе не указан email");
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Не указан email"), HttpStatus.BAD_REQUEST);
         }
 
         User user = findByEmail(requestEmail.getEmail());
-
         if(user == null) {
             throw new WWTHResourceNotFoundException("Пользователь с email: " + requestEmail.getEmail() + ", не найден.");
         }
@@ -227,7 +272,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(userRoleRequest.getUserId()).orElseThrow(() ->
                 new WWTHResourceNotFoundException("Не найдено пользователя с id: " + userRoleRequest.getUserId()));
         user.getRoles().add(roleService.findById(userRoleRequest.getRoleId()));
-       return userMapper.toDto(user);
+        return userMapper.toDto(user);
     }
 
     @Transactional
