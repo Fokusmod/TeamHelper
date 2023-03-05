@@ -93,7 +93,7 @@ SLACK_SIGNING_SECRET: `${YOUR_SIGNING_SECRET}`
 - Проверьте что вы подписаны на события указанные ниже. Если вы не подписаны - добавьте их вручную.
 
 
-<span style="border-radius: 10px; background-color: #FFA500; color: black; padding: 4px 6px;">message.channels</span>
+**<span style="border-radius: 10px; background-color: #FFA500; color: black; padding: 4px 6px;">message.channels</span>**
 <span style="border-radius: 10px; background-color: #FFA500; color: black; padding: 4px 6px;">message.groups</span>
 
 
