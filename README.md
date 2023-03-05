@@ -97,9 +97,9 @@ WowVendorTeamHelper
 - На странице приложения выберите "Event Subscriptions" в меню слева.
 - Проверьте что вы подписаны на события указанные ниже. Если вы не подписаны - добавьте их вручную.
 
-  <h4>`message.channels`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`message.channels`
 
-  <h4>`message.groups`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`message.groups`
 
 - Далее вам необходимо указал общедоступный URL-адрес приложения, сделать это можно
   через [ngrok](https://dashboard.ngrok.com/get-started/setup)
@@ -107,12 +107,12 @@ WowVendorTeamHelper
 - После скачивания [ngrok](https://dashboard.ngrok.com/get-started/setup) и регистрации запустите его из командной
   строки
 
-  <h4>`ngrok http 3100`
+`ngrok http 3100`
 
 - Скопируйте строчку **`https://$your-url.eu.ngrok.io`** и вставьте поле Request URL на странице Event Subscriptions и добавьте
   энд-поинт slack/events
-
-  <h4>`https://$your-url.eu.ngrok.io/slack/events`
+  
+**`https://$your-url.eu.ngrok.io/slack/events`**
 
 - Нажмите "Save Changes". Обратите внимание что ваше приложение на момент включения подписки на события должно быть 
  запущено, в противном случае вы получете ошибку и не сможете сохранить изменения.
@@ -122,9 +122,9 @@ WowVendorTeamHelper
 ====================
 Скомпилируйте приложение и запустите JAR файл.
 
-  <h4>`mvn package`
+  **`mvn package`**
 
-  <h4>`java -jar target/WowVendorTeamHelper-0.0.1-SNAPSHOT.jar`
+  **`java -jar target/WowVendorTeamHelper-0.0.1-SNAPSHOT.jar`**
 
 Основные возможности представлены в виде gif изображений.
 =============================
