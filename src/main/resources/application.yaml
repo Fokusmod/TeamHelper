@@ -36,3 +36,5 @@ logging:
   level:
     org.springframework.transaction: DEBUG
 
+my-config:
+  url-activate: http://localhost:3100/activate/
