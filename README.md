@@ -64,19 +64,19 @@ WowVendorTeamHelper
 - На странице приложения выберите "OAuth & Permissions" в меню слева.
 - <p>Добавьте необходимые разрешения для вашего приложения в частности :
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`channels:history`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`channels:history`**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`channels:read`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`channels:read`**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`chat:write`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`chat:write`**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`groups:history`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`groups:history`**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`groups:read`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`groups:read`**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`im:read`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`im:read`**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`mpim:read`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`mpim:read`**
 
 
 - Нажмите "Install App to Workspace" и следуйте инструкциям, чтобы установить приложение в рабочем пространстве.
@@ -87,18 +87,18 @@ WowVendorTeamHelper
 - На странице приложения выберите "Basic Information" в меню слева и скопируйте значение Signing Secret.
 - Полученые данные занесите в переменные окружения
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SLACK_BOT_TOKEN: `${YOUR_TOKEN}`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SLACK_BOT_TOKEN: **`${YOUR_TOKEN}`**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SLACK_SIGNING_SECRET: `${YOUR_SIGNING_SECRET}`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SLACK_SIGNING_SECRET: **`${YOUR_SIGNING_SECRET}`**
 
 4. Настроить вебхук
 
 - На странице приложения выберите "Event Subscriptions" в меню слева.
 - Проверьте что вы подписаны на события указанные ниже. Если вы не подписаны - добавьте их вручную.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`message.channels`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`message.channels`**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`message.groups`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`message.groups`**
 
 - Далее вам необходимо указал общедоступный URL-адрес приложения, сделать это можно
   через [ngrok](https://dashboard.ngrok.com/get-started/setup)
