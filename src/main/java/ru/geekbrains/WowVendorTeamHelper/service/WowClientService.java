@@ -3,14 +3,22 @@ package ru.geekbrains.WowVendorTeamHelper.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextListener;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.ClientStage;
 import ru.geekbrains.WowVendorTeamHelper.model.SlackMessageInfo;
 import ru.geekbrains.WowVendorTeamHelper.model.OrderStatus;
 import ru.geekbrains.WowVendorTeamHelper.model.WowClient;
 import ru.geekbrains.WowVendorTeamHelper.repository.WowClientRepository;
+import ru.geekbrains.WowVendorTeamHelper.service.Blizzard.CharacterIdentity;
+import ru.geekbrains.WowVendorTeamHelper.service.Blizzard.CharacterService;
+import ru.geekbrains.WowVendorTeamHelper.service.Blizzard.Profile;
+import ru.geekbrains.WowVendorTeamHelper.utils.emuns.Region;
 
+import javax.servlet.ServletRequestEvent;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +57,10 @@ public class WowClientService {
     private final SimpMessagingTemplate messagingTemplate;
     private final OrderStatusService orderStatusService;
 
+    private final CharacterService characterService;
+
+    private int count = 0;
+
     public void saveClient(WowClient wowClient) {
         Optional<WowClient> existsClient = wowClientRepository.findByOrderCode(wowClient.getOrderCode());
         if (existsClient.isPresent()) {
@@ -79,16 +91,43 @@ public class WowClientService {
         sendMessageToTopic(EVENT_NEW_CLIENTS);
     }
 
+    public void setCharacterClass(WowClient wowClient) {
+        try {
+            String clientRegion = wowClient.getRegion();
+            Region[] regions = Region.values();
+            for (Region region : regions) {
+                if (clientRegion.contains(region.name().toLowerCase())) {
+                    Profile profile = characterService.forCharacter(CharacterIdentity.of(region, wowClient.getRealm().toLowerCase().replace(" ", "-")
+                            , wowClient.getNickname().toLowerCase(), "profile-" + region));
+                    wowClient.setBlizzardApiClass("(" + profile.getCharacterClass() + " " + profile.getSpecialization()+ ")");
+                    count++;
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
+    }
+
     public List<WowClient> getNewClients() {
         OrderStatus orderStatus = orderStatusService.getOrderStatusByTitle(STATUS_NEW);
         Comparator<WowClient> byId = Comparator.comparingLong(WowClient::getId);
         List<WowClient> clients = wowClientRepository.getWowClientByOrderStatus(orderStatus);
+        for (WowClient client : clients) {
+            if (client.getCharacterClass() == null && client.getBlizzardApiClass() == null) {
+                setCharacterClass(client);
+                saveClient(client);
+            } else if (client.getBlizzardApiClass() != null && client.getCharacterClass()!= null) {
+                client.setBlizzardApiClass(null);
+            }
+        }
         clients.sort(byId);
         return clients;
     }
 
     private WowClient findById(Long id) {
-        return wowClientRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Пользователь c идентификатором - " + id + " не найден"));
+        return wowClientRepository.findById(id).orElseThrow(() -> new WWTHResourceNotFoundException("Пользователь c идентификатором - " + id + " не найден"));
     }
 
     public WowClient setComments(Long id, String comments) {
@@ -108,10 +147,12 @@ public class WowClientService {
         WowClient wowClient = findById(id);
         OrderStatus currentStatus = wowClient.getOrderStatus();
         List<ClientStage> clientStage = wowClient.getClientBundleStage();
-
         List<WowClient> wowClients = orderParser.stringParser(orderInfo);
+
         for (WowClient order : wowClients) {
             order.setId(id);
+            setCharacterClass(order);
+            order.setTs(wowClient.getTs());
             order.setClientBundleStage(clientStage);
             order.setOrderStatus(currentStatus);
             order.setOrderComments(wowClient.getOrderComments());
@@ -121,34 +162,55 @@ public class WowClientService {
         return wowClients;
     }
 
-
+    @Transactional
     public void deleteWowClientFromSlack(SlackMessageInfo slackMessageInfo) {
-        boolean thereAreMatches = false;
-        List<WowClient> clientList = wowClientRepository.getAllByTs(slackMessageInfo.getTs());
-        if (!clientList.isEmpty()) {
-            for (WowClient wowClient : clientList) {
-                wowClientRepository.deleteById(wowClient.getId());
-                thereAreMatches = true;
-                log.debug("Заказ [" + wowClient.getOrderCode()+ "] был удален пользователем Slack канала.");
+        try {
+            boolean thereAreMatches = false;
+            List<WowClient> clientList = wowClientRepository.getAllByTs(slackMessageInfo.getTs());
+            if (!clientList.isEmpty()) {
+                for (WowClient wowClient : clientList) {
+                    wowClientRepository.deleteById(wowClient.getId());
+                    thereAreMatches = true;
+                    log.debug("Заказ [" + wowClient.getOrderCode() + "] был удален пользователем Slack канала.");
+                }
             }
+            if (thereAreMatches) {
+                sendMessageToTopic(EVENT_DELETE_CLIENTS);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
-        if (thereAreMatches) {
-            sendMessageToTopic(EVENT_DELETE_CLIENTS);
 
-        }
     }
 
+    @Transactional
     public void changeWowClientFromSlack(SlackMessageInfo slackMessageInfo) {
         boolean thereAreMatches = false;
         List<WowClient> clientList = orderParser.stringParser(slackMessageInfo.getText());
+        List<WowClient> existsClient = wowClientRepository.getAllByTs(slackMessageInfo.getTs());
         for (WowClient wowClient : clientList) {
-            Optional<WowClient> existsClient = wowClientRepository.findByOrderCodeAndTs(wowClient.getOrderCode(), slackMessageInfo.getTs());
-            if (existsClient.isPresent()) {
-                saveClient(wowClient);
-                thereAreMatches = true;
-                log.debug("Заказ [" + wowClient.getOrderCode()+ "] был изменен пользователем Slack канала.");
+            for (int i = 0; i < existsClient.size(); i++) {
+                if (wowClient.getOrderCode().equals(existsClient.get(i).getOrderCode())) {
+                    System.out.println((wowClient));
+                    wowClient.setTs(existsClient.get(i).getTs());
+                    wowClient.setId(existsClient.get(i).getId());
+                    wowClient.setClientBundleStage(existsClient.get(i).getClientBundleStage());
+                    wowClient.setOrderStatus(existsClient.get(i).getOrderStatus());
+                    wowClientRepository.save(wowClient);
+                    thereAreMatches = true;
+                    existsClient.remove(wowClient);
+                    log.debug("Заказ [" + wowClient.getOrderCode() + "] был изменен пользователем Slack канала.");
+                }
+            }
+        }
+        if (!existsClient.isEmpty()) {
+            thereAreMatches = true;
+            for (WowClient wowClient : existsClient) {
+                wowClientRepository.deleteById(wowClient.getId());
+                log.debug("При изменении сообщения заказ [" + wowClient.getOrderCode() + "] был удален пользователем Slack канала.");
             }
         }
         if (thereAreMatches) sendMessageToTopic(EVENT_CHANGE_CLIENTS);
+
     }
 }

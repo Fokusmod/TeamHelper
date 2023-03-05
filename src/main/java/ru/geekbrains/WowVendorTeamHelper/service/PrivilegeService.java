@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.geekbrains.WowVendorTeamHelper.dto.PrivilegeDto;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.ResourceNotFoundException;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.Privilege;
 import ru.geekbrains.WowVendorTeamHelper.repository.PrivilegeRepository;
 import java.util.List;
@@ -30,7 +30,7 @@ public class PrivilegeService {
 
     public Privilege findById(Long privilegeId) {
         return privilegeRepository.findById(privilegeId).orElseThrow(() ->
-                new ResourceNotFoundException("Не удается найти привилегию с идентификатором: " + privilegeId));
+                new WWTHResourceNotFoundException("Не удается найти привилегию с идентификатором: " + privilegeId));
 
     }
 

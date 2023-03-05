@@ -1,20 +1,10 @@
-#oauth2:
-#  userAuthorizationUri: "https://eu:battle:net/oauth/authorize"
-#  accessTokenUri: "https://eu.battle.net/oauth/token"
-#  tokenName: "access_token"
-#  clientId: "28031be62ca84e78a9ea4fb18e818c4c"
-#  clientSecret: "Y5KW9l5l34ybu8zUovSj22wb58SxS7Fj"
+oauth2:
+  clientId: "28031be62ca84e78a9ea4fb18e818c4c"
+  clientSecret: "Y5KW9l5l34ybu8zUovSj22wb58SxS7Fj"
 
-# ??? ????????????? ?????????? ?????.
-
-#    oauth2.userAuthorizationUri=https://eu.battle.net/oauth/authorize
-#    oauth2.=https://eu.battle.net/oauth/token
-#    oauth2.tokenName=access_token
-#    oauth2.clientId=${WC_BLIZZARD_API_CLIENT_ID}
-#    oauth2.clientSecret=${WC_BLIZZARD_API_CLIENT_SECRET}
-
-
-#?????? ?? ??????? https://github.com/christopheml/wow-completionist
+jwt:
+  secret: "kfvdkfvnoeh981jt05jgimovi98rvgh913hg3g01n3okwedvn93h"
+  lifetime: "3600000"
 
 server:
   port: 3100

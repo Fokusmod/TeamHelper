@@ -1,5 +1,10 @@
-angular.module('index-app').controller('scheduleController', function ($scope, $http, $location, $localStorage, $rootScope) {
+angular.module('index-app').controller('scheduleController', function ($scope, $http, $location, $localStorage, $rootScope, messageService) {
 
+    const error_color = "#ffe6e6";
+    const warn_color = "#fff6e0";
+    const ok_color = "#e8fcdb";
+
+    $scope.displayMessage = messageService.displayMessage;
 
     $scope.selectFunction = function () {
         var select = 'background-color: #eff1f4; color:#00152a; cursor: pointer;';
