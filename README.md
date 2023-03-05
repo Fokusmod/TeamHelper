@@ -47,7 +47,7 @@ WowVendorTeamHelper
 
 Интеграция с Blizzard
 ==================
-На данный момент она полностью встроена в приложение поэтому дополнительных действий не требуется.
+На данный момент она полностью встроена в приложение, поэтому дополнительных действий не требуется.
 
 Интеграция со Slack
 =========================
@@ -62,7 +62,7 @@ WowVendorTeamHelper
 2. Настроить разрешения для приложения
 
 - На странице приложения выберите "OAuth & Permissions" в меню слева.
-- <p>Добавьте необходимые разрешения для вашего приложения в частности :
+- <p>Добавьте необходимые разрешения для вашего приложения, в частности :
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`channels:history`**
 
@@ -100,7 +100,7 @@ WowVendorTeamHelper
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`message.groups`**
 
-- Далее вам необходимо указал общедоступный URL-адрес приложения, сделать это можно
+- Далее вам необходимо указать общедоступный URL-адрес приложения, сделать это можно
   через [ngrok](https://dashboard.ngrok.com/get-started/setup)
 
 - После скачивания [ngrok](https://dashboard.ngrok.com/get-started/setup) и регистрации запустите его из командной
@@ -108,7 +108,7 @@ WowVendorTeamHelper
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`ngrok http 3100`**
 
-- Скопируйте строчку **`https://$your-url.eu.ngrok.io`** и вставьте поле Request URL на странице Event Subscriptions и добавьте
+- Скопируйте строчку **`https://$your-url.eu.ngrok.io`** и вставьте в поле Request URL на странице Event Subscriptions, добавьте
   энд-поинт slack/events
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`https://$your-url.eu.ngrok.io/slack/events`**
@@ -124,7 +124,7 @@ WowVendorTeamHelper
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`mvn package`**
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`java -jar target/WowVendorTeamHelper-0.0.1-SNAPSHOT.jar`**
-
+  
 Запуск дополнительных инструментов.
 =====================
 Для работы приложения требуется [Docker](https://www.docker.com/products/docker-desktop/).
