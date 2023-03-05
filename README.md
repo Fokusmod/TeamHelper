@@ -103,11 +103,10 @@ SLACK_SIGNING_SECRET: `${YOUR_SIGNING_SECRET}`
 - После скачивания [ngrok](https://dashboard.ngrok.com/get-started/setup) и регистрации запустите его из командной
   строки
 
-<div style="margin-left: 27px">
 
 `ngrok http 3100`
 
-</div>
+
 
 - Скопируйте строчку `https://$your-url.eu.ngrok.io` и вставьте поле Request URL на странице Event Subscriptions и добавьте
   энд-поинт slack/events
