@@ -64,7 +64,7 @@ WowVendorTeamHelper
 - На странице приложения выберите "OAuth & Permissions" в меню слева.
 - <p>Добавьте необходимые разрешения для вашего приложения в частности :
 
-  <h4>**`channels:history`**
+  <h5>**`channels:history`**
 
   <h4>**`channels:read`**
 
