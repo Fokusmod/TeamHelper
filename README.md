@@ -124,6 +124,17 @@ WowVendorTeamHelper
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`mvn package`**
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`java -jar target/WowVendorTeamHelper-0.0.1-SNAPSHOT.jar`**
+  
+Запуск дополнительных инструментов.
+=====================
+Для работы приложения требуется [Docker](https://www.docker.com/products/docker-desktop/).
+В командной строке запустите контейнер. (Вы должны находиться в директории приложения так как файл docker-compose.yaml находится там)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**`docker-compose up`**
+   
+Контейнер содержит в себе:
+* PostgreSql;
+* Redis;
 
 Основные возможности представлены в виде gif изображений.
 =============================
