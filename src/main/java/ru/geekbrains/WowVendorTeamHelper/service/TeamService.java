@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.geekbrains.WowVendorTeamHelper.dto.TeamDTO;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.Team;
+import ru.geekbrains.WowVendorTeamHelper.model.WowTeamRegion;
 import ru.geekbrains.WowVendorTeamHelper.repository.TeamRepository;
 
 import java.util.List;
@@ -50,8 +51,9 @@ public class TeamService {
 
     }
 
-    public void getTeamsByRegion() {
-
+    public List<Team> getTeamsByRegion(String region) {
+        WowTeamRegion wowTeamRegion = wowTeamRegionService.getByTitle(region.toUpperCase());
+        return repository.findByTeamRegion(wowTeamRegion);
     }
 
 

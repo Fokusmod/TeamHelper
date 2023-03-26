@@ -40,26 +40,31 @@ body {
     justify-content: center;
 }
 
+
 .footer_in_content {
+    border-left: #575757 1px solid;
     position: fixed;
-    display: none;
-    top: 92vh;
-    left: 10%;
-    margin-top: 30px;
-    width: 100%;
+    bottom: -100px;
+    left: 13.0%;
+    right: 0;
     height: 50px;
-    background: #00152a;
-    align-items: center;
-    justify-content: center;
-    transition: 0.9s ease;
+    background-color: #00152a;;
+    transition: bottom 0.5s ease-in-out;
+}
+.footer_in_content.visible {
+    bottom: 0;
 }
 
+
 .footer_text {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 15px;
     color: #f1f1f1;
     font-weight: bold;
     letter-spacing: 0.04em;
-
 }
 
 .title {
@@ -215,16 +220,15 @@ i {
     margin-left: 250px;
     height: 100%;
     width: auto;
-    background-color: #eff1f4;
+    background-color: #eff3ff;
 }
 
 .settings-container {
-    display: flex;
-    justify-content: space-between;
+    display: inline-flex;
+    justify-content: start;
     align-items: end;
     background-color: #00152a;
     width: 100%;
-
     height: 100px;
 }
 
@@ -241,7 +245,7 @@ i {
     color: #f3f3f3;
 
     font-size: 15px;
-    margin: 10px 10px 10px 10px;
+
 }
 
 .buttons {
@@ -251,15 +255,21 @@ i {
 }
 
 .settings_button {
+    margin-left: 5px;
+    padding: 2px 5px;
     text-align: center;
-    background-color: #00152a;
-    color: #f3f3f3;
-    font-size: 16px;
+    border-radius: 5px;
+    font-size: 17px;
     border: 1px #f3f3f3;
 }
+.settings_button:focus {
+    outline: none;
+}
+
 
 .settings_button:hover {
     cursor: pointer;
+    background-color: #73b3f6;
 }
 
 input:invalid:not(:placeholder-shown) {

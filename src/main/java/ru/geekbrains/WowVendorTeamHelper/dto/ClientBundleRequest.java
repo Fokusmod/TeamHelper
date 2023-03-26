@@ -2,7 +2,6 @@ package ru.geekbrains.WowVendorTeamHelper.dto;
 
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -10,9 +9,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class BundleRequest {
+public class ClientBundleRequest {
+
+    private Long id;
 
     private String title;
 
-    private List<String> bundleStages;
+    private List<BundleStageDto> stages;
+
 }

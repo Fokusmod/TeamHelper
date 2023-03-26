@@ -1,12 +1,12 @@
 package ru.geekbrains.WowVendorTeamHelper.dto;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import ru.geekbrains.WowVendorTeamHelper.model.BundleStage;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class BundleStageDto {
 
     private Long id;

@@ -9,8 +9,11 @@ import java.util.Optional;
 
 public interface WowClientRepository extends JpaRepository<WowClient,Long> {
 
+
     List<WowClient> getWowClientByOrderStatus(OrderStatus status);
     Optional<WowClient> findByOrderCodeAndTs(String code,String ts);
     Optional<WowClient> findByOrderCode(String code);
     List<WowClient> getAllByTs(String ts);
+
+    List<WowClient> getByBattleTag(String request);
 }

@@ -68,7 +68,6 @@ public class MessageService {
     }
 
     public void changeMessageMethod(MessageChangedEvent messageChangedEvent) {
-        if (messageChangedEvent.getMessage().getAttachments() == null) {
             log.info("Полученое Slack событие на изменение сообщения.");
             Optional<SlackMessageInfo> message = repository.findByTs(messageChangedEvent.getMessage().getTs());
             if (message.isPresent()) {
@@ -77,7 +76,6 @@ public class MessageService {
                 repository.save(slackMessageInfo);
                 wowClientService.changeWowClientFromSlack(slackMessageInfo);
             }
-        }
     }
 
     public void deleteMessageMethod(MessageDeletedEvent messageDeletedEvent) {

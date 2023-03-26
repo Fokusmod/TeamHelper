@@ -1,10 +1,14 @@
 package ru.geekbrains.WowVendorTeamHelper.dto;
 
-import lombok.Data;
+import lombok.*;
 import ru.geekbrains.WowVendorTeamHelper.model.Team;
 import ru.geekbrains.WowVendorTeamHelper.model.WowTeamRegion;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class TeamDTO {
     private String title;
     private WowTeamRegion region;

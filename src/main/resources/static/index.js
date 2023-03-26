@@ -56,6 +56,7 @@
     }
 
     function run($rootScope, $http, $localStorage, $location) {
+
         if ($localStorage.springWebUser) {
             if ($localStorage.springWebUser) {
                 $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.springWebUser.token;
@@ -77,6 +78,7 @@
 
 
 angular.module('index-app').controller('indexController', function ($rootScope, $scope, $http, $location, $localStorage) {
+
 
     $scope.tryToLogout = function () {
         $scope.clearUser();

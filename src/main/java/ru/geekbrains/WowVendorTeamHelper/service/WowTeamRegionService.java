@@ -22,7 +22,12 @@ public class WowTeamRegionService {
 
 
     public List<WowTeamRegion> getAllRegions() {
-       return repository.findAll();
+        return repository.findAll();
+    }
+
+    public WowTeamRegion getByTitle(String title) {
+        return repository.findByTitle(title)
+                .orElseThrow(() -> new WWTHResourceNotFoundException("Регион " + title + " не найден."));
     }
 
     public void addRegion(String title) {

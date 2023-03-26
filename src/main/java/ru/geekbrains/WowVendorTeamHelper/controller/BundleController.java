@@ -29,8 +29,6 @@ public class BundleController {
 
     }
 
-
-
     @DeleteMapping("/{id}")
     public void deleteBundle(@PathVariable Long id){
         bundleService.deleteBundle(id);

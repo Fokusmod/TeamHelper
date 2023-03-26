@@ -130,6 +130,7 @@ public class OrderParser {
                 wowClient = noParseClient(string[i]);
                 parseArmoryLink(string, wowClient);
                 checkBundle(string[i], wowClient);
+                checkTypeAndModeOrder(wowClient, string[i]);
                 list.add(wowClient);
             } else if (string[i].contains(ORDER_CODE_SYMBOL) && fields.length > CORRECT_FORMAT_COMMA) {
                 wowClient = new WowClient();
@@ -140,11 +141,13 @@ public class OrderParser {
                     parseArmoryLink(string, wowClient);
                     checkBundle(string[i], wowClient);
                     parseOriginInfo(string[i], wowClient);
+                    checkTypeAndModeOrder(wowClient, string[i]);
                     list.add(wowClient);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     wowClient = noParseClient(string[i]);
                     parseArmoryLink(string, wowClient);
                     checkBundle(string[i], wowClient);
+                    checkTypeAndModeOrder(wowClient, string[i]);
                     list.add(wowClient);
                 }
             } else if (!string[i].contains(DELIMITER) && !string[i].contains(PROTOCOL)
@@ -156,10 +159,190 @@ public class OrderParser {
                 wowClient = noParseClient(string[i]);
                 parseArmoryLink(string, wowClient);
                 checkBundle(string[i], wowClient);
+                checkTypeAndModeOrder(wowClient, string[i]);
                 list.add(wowClient);
             }
         }
         return list;
+    }
+
+    private void checkTypeAndModeOrder(WowClient wowClient, String info) {
+        setMode(wowClient, info);
+        setOrderType(wowClient, info);
+        checkOrderCount(wowClient, info);
+    }
+
+    private void setMode(WowClient wowClient, String order) {
+        String[] orderArray = order.split(",");
+        String mode = null;
+        for (int i = 0; i < orderArray.length; i++) {
+            String orderInfo = orderArray[i].toLowerCase().replace(" ", "");
+            if (orderInfo.contains("bundle")) {
+                break;
+            }
+            if (orderInfo.contains("normal") | orderInfo.contains("normalraid")) {
+                mode = "NM";
+                break;
+            } else if (orderInfo.contains("heroic") || orderInfo.contains("heroicraid") || orderInfo.contains("heroisch")) {
+                mode = "HC";
+                break;
+            } else if (orderInfo.contains("mythic") || orderInfo.contains("mythicraid") || orderInfo.contains("mythisch")) {
+                mode = "MYTH";
+                break;
+            }
+        }
+        wowClient.setMode(mode);
+    }
+
+    private void setOrderType(WowClient wowClient, String order) {
+        String[] orderArray = order.split(",");
+        String info = null;
+
+        for (int i = 0; i < orderArray.length; i++) {
+            String orderInfo = orderArray[i].toLowerCase().replace(" ", "");
+
+            if (orderInfo.contains("advanced-pl") || orderInfo.contains("advanced")) {
+                info = "Advanced";
+                break;
+            } else if (orderInfo.contains("premium-pl") || orderInfo.contains("premium")) {
+                info = "Premium";
+                break;
+            } else if (orderInfo.contains("deluxe")) {
+                info = "Deluxe";
+                break;
+            } else if (orderInfo.contains("last") || orderInfo.contains("lastboss")) {
+                info = "Last";
+                break;
+            } else if (orderInfo.contains("single")) {
+                info = "Single";
+                break;
+            } else if (orderInfo.contains("tier")) {
+                info = "Tier-token";
+                break;
+            } else if (orderInfo.contains("full-gear") || orderInfo.contains("fullgear")) {
+                info = "Full-gear";
+                break;
+            } else if (orderInfo.contains("glory")) {
+                info = "Glory";
+                break;
+            } else if (orderInfo.contains("bundle") || orderInfo.contains("%")) {
+                info = "Bundle";
+                break;
+            } else if (orderInfo.contains("weekly")) {
+                info = "Weekly";
+                break;
+            } else if (orderInfo.contains("pvepackage")) {
+                info = "Premium-package";
+                break;
+            } else if (orderInfo.contains("standard") || orderInfo.contains("bosses)")) {
+                info = checkCountBosses(order);
+                break;
+            }
+        }
+
+//        for (int i = 0; i < orderArray.length; i++) {
+//            String orderInfo = orderArray[i].toLowerCase().replace(" ", "");
+//            if (orderInfo.contains("%")) {
+//                checkAddService(wowClient);
+//                break;
+//            }
+//        }
+        wowClient.setOrderType(info);
+
+    }
+
+    private String checkCountBosses(String order) {
+        String[] orderInfo = order.split(",");
+        String standardInfo = null;
+        for (String s : orderInfo) {
+            if (s.contains("standard") || s.contains("bosses)")) {
+                standardInfo = s;
+                break;
+            }
+        }
+        if (standardInfo != null) {
+            String[] correctString = standardInfo.split("[()]");
+            for (int i = 0; i < correctString.length; i++) {
+                if (correctString[i].contains("standard") || correctString[i].contains("bosses")) {
+                    String regex = "\\d+";
+                    Pattern pattern = Pattern.compile(regex);
+                    Matcher matcher = pattern.matcher(correctString[i]);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    while (matcher.find()) {
+                        int num = Integer.parseInt(matcher.group());
+                        stringBuilder.append(num).append("/");
+                    }
+                    if (stringBuilder.length() != 0) {
+                        return stringBuilder.toString().trim().substring(0, stringBuilder.length() - 1);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private void checkOrderCount(WowClient wowClient, String info) {
+        Pattern pattern = Pattern.compile("x\\d+");
+        String[] orderArray = info.split(",");
+        for (String order : orderArray) {
+            Matcher matcher = pattern.matcher(order);
+            if (matcher.find()) {
+                String value = matcher.group();
+                System.out.println("Value " + value + " found");
+                wowClient.setOrderCount(value);
+            }
+        }
+    }
+
+    private void checkAddService(WowClient wowClient) {
+        String[] orderInfo = null;
+        StringBuilder service = new StringBuilder();
+
+        if (wowClient.getDiscountInfo() != null) {
+            orderInfo = wowClient.getDiscountInfo().toLowerCase().split("[()]");
+
+        } else {
+            return;
+        }
+        for (String s : orderInfo) {
+            if (s.contains("add")) {
+                if (s.contains("normaladvanced") || s.contains("advancednormal")) {
+                    service.append("Add Advanced NM ");
+                } else if (s.contains("heroicadvanced") || s.contains("advancedheroic")) {
+                    service.append("Add Anvanced HC ");
+
+                } else if (s.contains("mythicadvanced") || s.contains("advancedmythic")) {
+                    service.append("Add Anvanced MYTH ");
+
+                } else if (s.contains("normalpremium") || s.contains("premiumnormal")) {
+                    service.append("Add Premium NM ");
+
+                } else if (s.contains("heroicpremium") || s.contains("premiumheroic")) {
+                    service.append("Add Premium HC ");
+
+                } else if (s.contains("mythicpremium") || s.contains("premiummythic")) {
+                    service.append("Add Premium MYTH ");
+
+                } else if (s.contains("last") || s.contains("lastboss")) {
+                    service.append("Add Last ");
+
+                } else if (s.contains("single")) {
+                    service.append("Add Single ");
+
+                } else if (s.contains("glory")) {
+                    service.append("Add Glory ");
+
+                } else if (s.contains("normal")) {
+                    service.append("Add Normal ");
+
+                } else if (s.contains("heroic")) {
+                    service.append("Add Heroic ");
+                } else if (s.contains("mythic")) {
+                    service.append("Add Mythic ");
+                }
+            }
+        }
+        wowClient.setAddInfo(service.toString().trim());
     }
 
     private void parseOriginInfo(String strings, WowClient wowClient) {
@@ -176,14 +359,16 @@ public class OrderParser {
         String bundle = "bundle";
         String percentage = "%";
         String str = string.toLowerCase();
+        StringBuilder match = new StringBuilder();
 
         Pattern pattern = Pattern.compile("\\([^()]*?\\b\\w*?\\b\\s*\\([^()]*?\\d+%[^()]*?\\)[^()]*?\\)");
         Matcher matcher = pattern.matcher(string);
 
-        if (matcher.find()) {
-            String match = matcher.group();
-            wowClient.setDiscountInfo(match);
+        while (matcher.find()) {
+            match.append(matcher.group()).append(" ");
+
         }
+        wowClient.setDiscountInfo(match.toString().trim());
         if (str.contains(bundle) || str.contains(percentage)) {
             wowClient.setBundle("true");
             return;
@@ -200,12 +385,45 @@ public class OrderParser {
             wowClient = new WowClient();
             wowClient.setNoParseInfo(string);
             wowClient.setOrderCode(correctingOrderCode(fields));
+            setBattleTag(wowClient, fields);
         }
         return wowClient;
     }
 
+    private void setBattleTag(WowClient wowClient, String[] info) {
+        int startPosition = 0;
+        String battleTag = null;
+        for (int i = 0; i < info.length; i++) {
+            if (info[i].contains(BATTLE_TAG)) {
+                startPosition = i;
+                break;
+            }
+        }
+        if (startPosition != 0) {
+            String[] words = info[startPosition].split(" ");
+            for (int i = 0; i < words.length; i++) {
+                if (words[i].contains(BATTLE_TAG)) {
+                    battleTag = words[i];
+                    break;
+                }
+            }
+        }
+        if (battleTag != null) {
+            StringBuilder stringBuilder = new StringBuilder();
+            char[] battleTagChars = battleTag.toCharArray();
+            for (int i = battleTagChars.length - 1; i >= 0; i--) {
+                if (battleTagChars[i] != ' ') {
+                    stringBuilder.insert(0, battleTagChars[i]);
+                } else {
+                    break;
+                }
+            }
+            wowClient.setBattleTag(stringBuilder.toString());
+        }
+
+    }
+
     private String correctingOrderCode(String[] fields) {
-        System.out.println(Arrays.toString(fields));
         String orderCode = fields[fields.length - 1];
         char[] orderChars = orderCode.toCharArray();
         StringBuilder correctString = new StringBuilder();
@@ -294,6 +512,9 @@ public class OrderParser {
     }
 
     private void setSpecificBosses(String[] rows, WowClient wowClient) {
+        if (!wowClient.getService().toLowerCase().contains("single")) {
+            return;
+        }
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = MODE_SETTINGS + 1; i < rows.length; i++) {
             if (i == rows.length - 1) {

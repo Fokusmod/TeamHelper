@@ -12,4 +12,6 @@ public interface WowEventRepository extends JpaRepository<WowEvent,Long> {
     List<WowEvent> findByWowEventTypeTitle(String string);
 
     List<WowEvent> findByTeamTitleAndWowEventTypeTitle(String team, String type);
+
+    List<WowEvent> findByWowEventStatusTitle(String title);
 }
