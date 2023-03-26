@@ -30,18 +30,16 @@ CREATE TABLE bundle_with_bundle_stages
     foreign key (bundle_stage_id) references bundle_stages (id)
 );
 
---changeset WowVendorTeamHelper:create_clients
-CREATE TABLE client_stages
-(
-    id    bigserial primary key,
-    title varchar(100)
-);
 
 --changeset WowVendorTeamHelper:wow_clients
 CREATE TABLE wow_clients
 (
     id              bigserial primary key,
     bundle          varchar(10),
+    order_mode      varchar,
+    order_type      varchar,
+    add_info        varchar,
+    order_count     varchar,
     bundle_id       bigint,
     foreign key (bundle_id) references bundles (id),
     order_code      varchar(20),
@@ -68,9 +66,4 @@ CREATE TABLE wow_clients
     order_comments  text
 );
 
---changeset WowVendorTeamHelper:wow_clients_stage
-CREATE TABLE clients_bundle_stages
-(
-    client_id       bigint,
-    client_stage_id bigint
-);
+

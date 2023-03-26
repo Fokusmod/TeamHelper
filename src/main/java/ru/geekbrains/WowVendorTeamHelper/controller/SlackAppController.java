@@ -22,7 +22,7 @@ public class SlackAppController extends SlackAppServlet {
         this.messageService = messageService;
 
         app.event(MessageEvent.class, (payload, ctx) -> {
-            if (payload.getEvent().getChannel().equals("C04K26N5R70")) {
+            if (payload.getEvent().getChannel().equals("C0504RGHDJQ")) {
                 app.executorService().submit(() -> {
                     MessageEvent messageEvent = payload.getEvent();
                     if (messageEvent.getText().contains("===")) {

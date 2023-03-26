@@ -23,3 +23,9 @@ insert into bundle_with_bundle_stages
 values (1,1),
        (1,2);
 
+--changeset WowVendorTeamHelper:rework_order_statuses
+UPDATE order_statuses
+SET title = 'COMPLETE'
+WHERE title = 'READY';
+
+insert into order_statuses (title) values ('DEFINED')

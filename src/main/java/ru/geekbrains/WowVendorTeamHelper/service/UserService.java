@@ -90,8 +90,8 @@ public class UserService implements UserDetailsService {
             throw new ExceptionRedisBroken("Error connecting to Redis");
         }
 
-        if (!redisTemplate.hasKey(activationCode)) {
-            throw new ResourceNotFoundException("Registration data has not been saved in Redis");
+        if (Boolean.FALSE.equals(redisTemplate.hasKey(activationCode))) {
+            throw new WWTHResourceNotFoundException("Registration data has not been saved in Redis");
         }
 
         Map<String, Object> properties = new HashMap<>();
@@ -114,10 +114,10 @@ public class UserService implements UserDetailsService {
         }
 
         if (request == null) {
-            new ResourceNotFoundException("unable to load data from Redis");
+            throw new WWTHResourceNotFoundException("unable to load data from Redis");
         }
 
-        if (!userRepository.findByEmail(request.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(request.getEmail()).isEmpty()) {
             User newUser = new User();
             newUser.setEmail(request.getEmail());
             newUser.setUsername(request.getUsername());

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.WowVendorTeamHelper.dto.BundleRequest;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHBadRequestException;
 import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHResourceNotFoundException;
 import ru.geekbrains.WowVendorTeamHelper.model.Bundle;
 import ru.geekbrains.WowVendorTeamHelper.model.BundleStage;
@@ -34,7 +35,13 @@ public class BundleService {
     }
 
     public Bundle findByTitle(String title) {
-        return bundleRepository.findByTitle(title).orElseThrow(() -> new WWTHResourceNotFoundException("Bundle '" + title + "' не найден"));
+        return bundleRepository.findByTitle(title)
+                .orElseThrow(() -> new WWTHResourceNotFoundException("Bundle '" + title + "' не найден"));
+    }
+
+    public BundleStage getBundleStageByTitle(String title) {
+        return bundleStageRepository.findByTitle(title)
+                .orElseThrow(() -> new WWTHResourceNotFoundException("Этап '" + title + "' не найден"));
     }
 
     public void addNewBundle(BundleRequest bundleRequest) {
@@ -71,10 +78,14 @@ public class BundleService {
 
     @Transactional
     public void deleteBundle(Long id) {
-        Bundle bundle = findById(id);
-        List<BundleStage> stages = bundle.getStages();
-        bundleRepository.deleteById(id);
-        deleteBundleStagesByBundle(stages);
+       try {
+           Bundle bundle = findById(id);
+           List<BundleStage> stages = bundle.getStages();
+           bundleRepository.deleteById(id);
+           deleteBundleStagesByBundle(stages);
+       } catch (Exception e) {
+           throw new WWTHBadRequestException("На данный момент нельзя удалить бандл так как он всё еще используется!");
+       }
     }
 
     private void deleteBundleStagesByBundle(List<BundleStage> stages) {

@@ -26,15 +26,24 @@ public class WowClient {
     @Column(name = "bundle")
     private String bundle;
 
+    @Column(name = "order_mode")
+    private String mode;
+
+    @Column(name = "order_type")
+    private String orderType;
+
+    @Column(name = "add_info")
+    private String addInfo;
+
+    @Column(name = "order_count")
+    private String orderCount;
+
     @OneToOne
     @JoinColumn(name = "bundle_id", referencedColumnName = "id")
     private Bundle bundleType;
 
-    @ManyToMany
-    @JoinTable(name = "clients_bundle_stages",
-            joinColumns = @JoinColumn(name = "client_id"),
-            inverseJoinColumns = @JoinColumn(name = "client_stage_id"))
-    private List<ClientStage> clientBundleStage;
+    @OneToMany(mappedBy = "client")
+    private List<ClientsBundleStages> clientsBundleStages;
     @NaturalId(mutable = true)
     @Column(name = "order_code")
     private String orderCode;
@@ -116,6 +125,8 @@ public class WowClient {
     public int hashCode() {
         return Objects.hash(orderCode);
     }
+
+
 
 }
 

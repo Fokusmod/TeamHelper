@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Главная страница</title>
     <link rel="stylesheet" href="../style1.css">
     <link rel="stylesheet" href="clientList/clientList.css">
+    <link rel="stylesheet" href="schedule/schedule.css">
 </head>
 <body>
 
@@ -12,57 +13,343 @@
 <div ng-show="isUserLoggedIn()">
     <div id="container" class="content-container">
         <div class="settings-container">
-            <div class="client-item" ng-click="setVisibleClientPage()">
+            <div class="client-item" style="margin-left: 2.5%" ng-click="setClientPage()">
                 <div class="item">
                     <label>Клиенты</label>
                     <div class="ball">99</div>
                 </div>
             </div>
-            <div class="client-item" ng-click="setVisibleWaitList()">
+            <div class="client-item" ng-click="setActiveEventPage()">
+                <div class="item">
+                    <label>Активные события</label>
+                </div>
+            </div>
+            <div class="client-item" style="margin-left: 12.5%;margin-right: 12.5%;">
+                <div class="item">
+                    <input ng-model="findInput" class="find-input" placeholder="ID, Battle-tag or Order-code">
+                    <div class="find-div" ng-click="showFindResult()"><i class="fa-solid fa-magnifying-glass"></i></div>
+                </div>
+            </div>
+            <div class="client-item" ng-click="showAddNewOrder()">
+                <div class="item">
+                    <label>Добавить заказ</label>
+                </div>
+            </div>
+            <div class="client-item" ng-click="setAllEventsPage()">
+                <div class="item">
+                    <label>Все события</label>
+                </div>
+            </div>
+            <div class="client-item" ng-click="setWaitListPage()">
                 <div class="item">
                     <label>Лист ожидания</label>
                     <div class="ball">99</div>
                 </div>
             </div>
         </div>
-
+        <!--        //Новые клиенты-->
         <div id="client-list" class="page">
-            <div id="{{order.id}}" class="new-client" ng-repeat="order in orderClient" ng-click="additionalPanel(order)">
+            <div id="{{order.id}}" class="new-client" ng-repeat="order in orderClient">
                 <div class="client-content">
-                    <div class="order-id-container">{{order.id}}</div>
+                    <div class="id-content">
+                        <div class="order-id-container">ID:{{order.id}}</div>
+                        <div class="add-info" ng-class="{'normal-container': order.mode.toLowerCase().indexOf('nm') > -1,
+                                                         'heroic-container': order.mode.toLowerCase().indexOf('hc') > -1,
+                                                         'mythic-container': order.mode.toLowerCase().indexOf('myth') > -1,
+                                                         'glory-container': order.orderType.toLowerCase().indexOf('glory') > -1,
+                                                         'bundle-container': order.orderType.toLowerCase().indexOf('bundle') > -1,
+                                                         'weekly-container': order.orderType.toLowerCase().indexOf('weekly') > -1,
+                                                         'advanced': order.orderType.toLowerCase().indexOf('advanced') > -1,
+                                                         'premium' : order.orderType.toLowerCase().indexOf('premium') > -1,
+                                                         'deluxe' : order.orderType.toLowerCase().indexOf('deluxe') > -1,
+                                                         'package-container': order.orderType.toLowerCase().indexOf('premium-package') > -1,
+                                                         'full-container': order.orderType.toLowerCase().indexOf('full-gear') > -1}">
+
+                                                        <span ng-switch="order.orderType.toLowerCase()">
+                                                          <span ng-switch-when="bundle">
+                                                            <i class="fa fa-star"></i>
+                                                          </span>
+                                                          <span ng-switch-when="premium-package">
+                                                            <i class="fa-solid fa-gem"></i>
+                                                          </span>
+                                                          <span ng-switch-when="advanced">
+                                                            <i class="fa fa-crown"></i>
+                                                          </span>
+                                                          <span ng-switch-when="premium">
+                                                            <i class="fa fa-crown"></i>
+                                                          </span>
+                                                          <span ng-switch-when="full-gear">
+                                                            <i class="fa-solid fa-shield-halved"></i>
+                                                          </span>
+                                                          <span ng-switch-when="deluxe">
+                                                               <i class="fa-solid fa-sack-dollar"></i>
+                                                          </span>
+                                                        </span>
+                            {{order.mode}} {{order.orderType}}
+                        </div>
+                        <div class="count" ng-if="order.orderCount.length > 0">{{order.orderCount}}</div>
+                    </div>
+
                     <div class="separator"></div>
                     <div class="order">
-                        <div class="order-info">
-                            {{order.game}} {{order.service}} {{order.discountInfo}} {{order.region}} {{order.playingType}} {{order.boostMode}}
+                        <div class="order-info" ng-click="additionalPanel(order, 'client-list')">
+                            {{order.game}} {{order.service}} {{order.discountInfo}} {{order.region}}
+                            {{order.playingType}} {{order.boostMode}}
                             {{order.noParseInfo}} {{order.specificBosses}} {{order.orderDateTime}}
                         </div>
-                        <div class="order-info">
-                            {{order.characterClass}} {{order.blizzardApiClass}} {{order.fraction}} {{order.nickname}} {{order.realm}}
+                        <div class="order-info" ng-click="additionalPanel(order, 'client-list')"
+                             style="border-bottom: 1px silver solid; padding-bottom: 5px">
+                            {{order.characterClass}} {{order.blizzardApiClass}} {{order.fraction}} {{order.nickname}}
+                            {{order.realm}}
                             {{order.battleTag}} {{order.orderCode}}
                         </div>
-                        <div class="order-info"><a href="{{order.armoryLink}}" target="_blank">{{order.armoryLink}}</a></div>
-                        <div class="order-info">Статус заказа: {{order.orderStatus.title}}</div>
+                        <div class="other-info" style="padding-top: 5px">
+                            <div class="status-info" ng-click="additionalPanel(order, 'client-list')">Статус заказа:
+                                <span class="status-container"><span class="status-color"></span>{{order.orderStatus.title}}</span>
+                            </div>
+                            <div class="armory-info"><a href="{{order.armoryLink}}"
+                                                        target="_blank">{{order.armoryLink}}</a></div>
+                        </div>
+
+                        <div style="border-top: 1px silver solid; padding-top: 0px" class="bundle-stages"
+                             ng-if="order.clientsBundleStages.length > 0">
+                            <div class="status-info">Бандл статус:
+                                <div class="bundle-status" ng-repeat="stages in order.clientsBundleStages" ng-class="{'normal-container': stages.bundleStage.title.toLowerCase().indexOf('normal') > -1,
+                                                               'heroic-container': stages.bundleStage.title.toLowerCase().indexOf('heroic') > -1,
+                                                               'mythic-container': stages.bundleStage.title.toLowerCase().indexOf('mythic') > -1}">
+                                    <div class="client-stage">{{stages.bundleStage.title}}</div>
+                                    <span class="status-container" style="top: 0px"><span class="status-color"></span>{{stages.orderStatus.title}}</span>
+                                </div>
+                                <button class="change-bundle-btn" ng-click="changeBundle(order.id)"><i
+                                        class="fa-solid fa-pen-to-square"></i>Изменить
+                                </button>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="separator"></div>
                     <div class="order-buttons-container">
-                        <button class="send-button" ng-click="sendOrder()">Отправить<i class="fas fa-angle-double-right" aria-hidden="true"></i></button>
+                        <button class="send-button"><i class="fa-solid fa-hourglass-start"></i>Вэйт-лист</button>
+                        <button class="send-button" ng-click="sendOrder(order,'client-list')">Отправить<i class="fas fa-angle-double-right" aria-hidden="true"></i></button>
+                        <button class="select-bundle" ng-click="setBundle(order.id)">Выбрать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--        //Активные события-->
+        <div id="active-events" class="page">
+            <div ng-repeat="active in activeEvents | orderBy:['-eventDate', '-startedAt']">
+                <div class="event-timer" ng-class="{'timer-left': active.timeLeft.includes('Старт'),
+                                                    'timer-over': active.timeLeft.includes('Рейд')}">{{active.timeLeft}}</div>
+                <div id="{{active.id}}" class="event-with-client-content" >
+                    <div id="active-id" class="event-data">{{active.id}}</div>
+                    <div id="active-type" class="event-data">{{active.wowEventType.title}}</div>
+                    <div id="active-team" class="event-data">{{active.team.title}}</div>
+                    <div id="active-count" class="event-data">{{active.clientList.length}} клиентов</div>
+                    <div id="active-date" class="event-data">{{active.eventDate}}</div>
+                    <div id="active-time" class="event-data">{{active.startedAt}}</div>
+                </div>
+            </div>
+
+        </div>
+        <!--        //Все события-->
+        <div id="all-events" class="page">
+            <div id="{{event.id}}" class="event-with-client-content" ng-repeat="event in eventsWithClient | orderBy:['eventDate', 'startedAt']">
+                <div id="id" class="event-data">{{event.id}}</div>
+                <div id="type" class="event-data">{{event.wowEventType.title}}</div>
+                <div id="team" class="event-data">{{event.team.title}}</div>
+                <div id="count" class="event-data">{{event.clientList.length}} клиентов</div>
+                <div id="date" class="event-data">{{event.eventDate}}</div>
+                <div id="time" class="event-data">{{event.startedAt}}</div>
+            </div>
+        </div>
+
+
+        <!--        //Лист ожидания-->
+        <div id="wait-list" class="page">
+            <h1>Wait List</h1>
+        </div>
+
+        <div id="find-list" class="page">
+            <div class="result-container">
+                <span id="result-span" class="result-span"></span>
+                <div class="cancel-result" ng-click="closeFindResult()"><i
+                        class="fa-sharp fa-regular fa-circle-xmark"></i></div>
+            </div>
+            <div id="{{result.id}}" class="new-client" ng-repeat="result in result">
+                <div class="client-content">
+                    <div class="id-content">
+                        <div class="order-id-container">ID:{{result.id}}</div>
+                        <div class="add-info" ng-class="{'normal-container': result.mode.toLowerCase().indexOf('nm') > -1,
+                                                         'heroic-container': result.mode.toLowerCase().indexOf('hc') > -1,
+                                                         'mythic-container': result.mode.toLowerCase().indexOf('myth') > -1,
+                                                         'glory-container': result.orderType.toLowerCase().indexOf('glory') > -1,
+                                                         'bundle-container': result.orderType.toLowerCase().indexOf('bundle') > -1,
+                                                         'weekly-container': result.orderType.toLowerCase().indexOf('weekly') > -1,
+                                                         'advanced': result.orderType.toLowerCase().indexOf('advanced') > -1,
+                                                         'premium' : result.orderType.toLowerCase().indexOf('premium') > -1,
+                                                         'deluxe' : result.orderType.toLowerCase().indexOf('deluxe') > -1,
+                                                         'package-container': result.orderType.toLowerCase().indexOf('premium-package') > -1,
+                                                         'full-container': result.orderType.toLowerCase().indexOf('full-gear') > -1}">
+
+                                                        <span ng-switch="result.orderType.toLowerCase()">
+                                                          <span ng-switch-when="bundle">
+                                                            <i class="fa fa-star"></i>
+                                                          </span>
+                                                          <span ng-switch-when="premium-package">
+                                                            <i class="fa-solid fa-gem"></i>
+                                                          </span>
+                                                          <span ng-switch-when="advanced">
+                                                            <i class="fa fa-crown"></i>
+                                                          </span>
+                                                          <span ng-switch-when="premium">
+                                                            <i class="fa fa-crown"></i>
+                                                          </span>
+                                                          <span ng-switch-when="full-gear">
+                                                            <i class="fa-solid fa-shield-halved"></i>
+                                                          </span>
+                                                          <span ng-switch-when="deluxe">
+                                                               <i class="fa-solid fa-sack-dollar"></i>
+                                                          </span>
+                                                        </span>
+                            {{result.mode}} {{result.orderType}}
+                        </div>
+                        <div class="count" ng-if="result.orderCount.length > 0">{{result.orderCount}}</div>
+                    </div>
+
+                    <div class="separator"></div>
+                    <div class="order">
+
+                        <div class="order-info" ng-click="additionalPanel(result, 'find-list')">
+                            {{result.game}} {{result.service}} {{result.discountInfo}} {{result.region}}
+                            {{result.playingType}} {{result.boostMode}}
+                            {{result.noParseInfo}} {{result.specificBosses}} {{result.orderDateTime}}
+                        </div>
+                        <div class="order-info" ng-click="additionalPanel(result, 'find-list')"
+                             style="border-bottom: 1px silver solid; padding-bottom: 5px">
+                            {{result.characterClass}} {{result.blizzardApiClass}} {{result.fraction}}
+                            {{result.nickname}}
+                            {{result.realm}}
+                            {{result.battleTag}} {{result.orderCode}}
+                        </div>
+                        <div class="other-info" style="padding-top: 5px">
+                            <div class="status-info" ng-click="additionalPanel(result, 'find-list')">Статус заказа:
+                                <span class="status-container"><span class="status-color"></span>{{result.orderStatus.title}}</span>
+                            </div>
+                            <div class="armory-info"><a href="{{result.armoryLink}}"
+                                                        target="_blank">{{result.armoryLink}}</a></div>
+                        </div>
+
+                        <div style="border-top: 1px silver solid; padding-top: 0px" class="bundle-stages"
+                             ng-if="result.clientsBundleStages.length > 0">
+                            <div class="status-info">Бандл статус:
+                                <div class="bundle-status" ng-repeat="stages in result.clientsBundleStages" ng-class="{'normal-container': stages.bundleStage.title.toLowerCase().indexOf('normal') > -1,
+                                                               'heroic-container': stages.bundleStage.title.toLowerCase().indexOf('heroic') > -1,
+                                                               'mythic-container': stages.bundleStage.title.toLowerCase().indexOf('mythic') > -1}">
+                                    <div class="client-stage">{{stages.bundleStage.title}}</div>
+                                    <span class="status-container" style="top: 0px"><span class="status-color"></span>{{stages.orderStatus.title}}</span>
+                                </div>
+                                <button class="change-bundle-btn" ng-click="changeBundle(result.id)"><i
+                                        class="fa-solid fa-pen-to-square"></i>Изменить
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="separator"></div>
+                    <div class="order-buttons-container">
+                        <button class="send-button"><i class="fa-solid fa-hourglass-start"></i>Вэйт-лист</button>
+                        <button class="send-button" ng-click="sendOrder(result, 'find-list')">Отправить<i class="fas fa-angle-double-right"
+                                                                                       aria-hidden="true"></i></button>
+                        <button class="select-bundle" ng-click="setBundle(result.id)">Выбрать</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="wait-list" class="page">
-            <h1>Wait List</h1>
+    </div>
+</div>
+
+
+<div class="overlay">
+    <div class="settings-bundle">
+        <div class="settings-bundle-container">
+            <div style="background-color: #0057a1; padding-top: 30px;">
+                <span style="color: white" class="settings-title">Выберите тип бандла</span>
+                <select class="settings-selector" name="bundle-selected" id="bundle-selected"
+                        ng-model="bundles.selectedBundle"
+                        ng-options="bundle.title for bundle in bundles.availableOptions"
+                        ng-change="getBundleStages(bundles.selectedBundle)">
+                </select>
+                <span class="add-bundle-btn" ng-click="createBundle()"><i class="fa-regular fa-square-plus"></i></span>
+                <span class="add-bundle-btn" ng-click="deleteBundle(bundles.selectedBundle)"><i
+                        class="fa-solid fa-trash"></i></span>
+            </div>
+            <div style="margin-top: 15px; display: flex; flex-direction: column; align-items: flex-start;">
+                <span class="settings-title">Доступные этапы</span>
+                <div class="stage" ng-repeat="stage in stages">{{stage.title}}</div>
+            </div>
+            <div class="settings-buttons">
+                <button class="settings-btn" ng-click="saveBundleButton()">Сохранить</button>
+                <button class="settings-btn" ng-click="cancelBundleButton()">Отмена</button>
+            </div>
+
         </div>
 
 
     </div>
 </div>
 
-<!--<div>-->
-<!--    <div id="footer" class="footer_in_content">-->
-<!--        <div class="footer_text">WowVendorTeamHelper</div>-->
-<!--    </div>-->
-<!--</div>-->
+<div class="overlay" style="background-color: transparent">
+    <div class="settings-bundle">
+        <div class="settings-bundle-container">
+            <div style="background-color: #0057a1; padding-top: 30px;">
+                <span style="color: white" class="settings-title">Создайте бандл</span>
+            </div>
+            <div id="add-content" style="margin-top: 15px; display: grid;">
+                <label class="note"><i class="fa-solid fa-circle-info"></i>Примечание: На данный момент установлено ограничение на название этапов:
+                    Heroic Raid, Normal Raid, Mythic Raid. Для заказов которые имеют х2, x5 устанавливать 2 Heroic Raid или 5 Normal Raid этапов не нужно.
+                </label>
+                <label class="settings-add-title">Введите название</label>
+                <input class="add-input" type="text" id="input-name-bundle" placeholder="Введите название бандла"
+                       required>
+                <label class="settings-add-title" style="margin-top: 10px">Введите название этапа</label>
+                <input class="add-input" type="text" placeholder="Название этапа" required>
+                <div class="add-more" ng-click="addMoreInput()">Еще</div>
+            </div>
+            <div class="settings-buttons">
+                <button class="settings-btn" ng-click="sendCreateBundle()">Добавить</button>
+                <button class="settings-btn" ng-click="cancelAddBundleButton()">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="overlay-new-order">
+    <div class="add-new-order">
+        <div class="settings-bundle-container">
+            <div style="background-color: #0057a1; padding-top: 30px;">
+                <span style="color: white" class="settings-title">Добавьте заказ</span>
+            </div>
+            <div id="add-order" style="margin-top: 15px; display: grid;">
+                <label class="settings-add-title">Введите новый заказ</label>
+                <textarea ng-model="textareaText" ng-change="autoResizeTextarea()"
+                          class="add-order-textarea"></textarea>
+                <span class="info-span">При добавлении стороннего заказа убедитесь что вы дописали символьный
+                    разделитель "===" на новой строке. Без него заказ не будет добавлен.</span>
+            </div>
+            <div class="settings-buttons">
+                <button class="settings-btn" ng-click="saveNewOrder()">Добавить</button>
+                <button class="settings-btn" ng-click="cancelNewOrder()">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <footer id="footer" class="footer_in_content">
+        <div class="footer_text">WowVendorTeamHelper</div>
+    </footer>
+</div>
 
 

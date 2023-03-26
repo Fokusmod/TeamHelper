@@ -8,51 +8,43 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
     <script src="https://kit.fontawesome.com/63828237af.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="schedule/schedule.css">
+    <link rel="stylesheet" href="clientList/clientList.css">
 </head>
 <body>
 <div id="schedule" class="content-container">
     <div class="settings-container">
-        <div class="filters">
-            <div class="settings-item ">
-                <select onfocus="selectFunction()" name="team-selected" id="team-selected" ng-model="selectedTeam"
+        <div class="client-item" style="margin-left: 40px">
+            <div class="item">
+                <label>Состав:</label>
+                <select name="team-selected" id="team-selected" ng-model="selectedTeam"
                         ng-options="team.title for team in teams"
                         ng-change="filterByTeamAndType()" class="settings_button">
-                    <option value=''>Фильтр команд</option>
                 </select>
             </div>
-            <div class="settings-item">
-                <select onfocus="selectFunction()" name="type-selected" id="type-selected" ng-model="selectedType"
+        </div>
+        <div class="client-item">
+            <div class="item">
+                <label>Сложность:</label>
+                <select name="type-selected" id="type-selected" ng-model="selectedType"
                         ng-options="type.title for type in eventType"
                         ng-change="filterByTeamAndType()" class="settings_button">
-                    <option class="option" value=''>Фильтр событий</option>
                 </select>
             </div>
         </div>
-
-        <div class="settings-item">
-            <select class="settings_button" ng-change="chooseScheduleForm()" ng-model="selectedScheduleForm">
-                <option value=''>Добавить расписание</option>
-                <option>вручную</option>
-                <option>текстом</option>
-            </select>
+        <div style="margin-left: 73%;display: block; position: absolute; top: 15px" class="client-item">
+            <label style="margin-left: 10px;">Добавить расписание</label>
+            <div class="item" style="margin-top: 10px;">
+                <button class="settings_button" ng-click="getTextForm()"><i class="fa-solid fa-clipboard-list"
+                                                                            style="font-size: 18px; margin-right: 5px"></i>Списком
+                </button>
+                <button class="settings_button" ng-click="getTableForm()"><i class="fa-solid fa-calendar-week"
+                                                                             style="font-size: 18px; margin-right: 5px"></i>Одиночное
+                </button>
+            </div>
         </div>
     </div>
-
-    <div class="event-top-label">
-        <div class="horizontal-separator"></div>
-        <div class="event-label">
-            <div class="event-data">id</div>
-            <div class="event-data">type</div>
-            <div class="event-data">team</div>
-            <div class="event-data">date</div>
-            <div class="event-data">time</div>
-            <div class="event-data">control</div>
-        </div>
-        <div class="horizontal-separator"></div>
-    </div>
-
-    <div class="events">
-        <div id="{{event.id}}" class="event-content" ng-repeat="event in events">
+    <div class="page" style="display: block">
+        <div id="{{event.id}}" class="event-content" ng-repeat="event in events | orderBy:['eventDate', 'startedAt']">
             <div id="id" class="event-data">{{event.id}}</div>
             <div id="type" class="event-data">{{event.wowEventType.title}}</div>
             <div id="team" class="event-data">{{event.team.title}}</div>
@@ -66,56 +58,63 @@
     </div>
 
 
-    <div id="schedule-table-form" class="modal-wrapper">
-        <div class="schedule-form">
-            <div class="schedule-div">
-                <label class="schedule-form-label" for="event-type">Тип события</label>
-                <label class="schedule-form-label" for="event-team">Команда</label>
-                <label class="schedule-form-label" for="event-date">Дата</label>
-                <label class="schedule-form-label" for="event-time">Время старта</label>
-            </div>
-            <div id="event" class="add-schedule-list">
-                <select name="type-selected" id="event-type" ng-model="listSelectedType"
-                        ng-options="listType.title for listType in listEventType"
-                        class="selector-scheduleList">
-                </select>
-                <select name="type-selected" id="event-team" ng-model="listTeamSelected"
-                        ng-options="list.title for list in listTeams"
-                        class="selector-scheduleList">
-                </select>
-                <input id="event-date" class="input-schedule" type="text" placeholder="18.01.23">
-                <input id="event-time" class="input-schedule" type="text" placeholder="21:00 МСК / 19:00 CET">
-            </div>
-            <div id="button" class="addEventButton" ng-click="addEvent()">
-                <!--<div class="icon"><i class="fa fa-plus-square-o" aria-hidden="true"></i></div>-->
-                <label class="schedule-form-label">Еще</label>
-            </div>
-            <div class="control">
-                <button type="submit" class="button_in_schedule_form" ng-click="createScheduleList()">Добавить расписание</button>
-                <button class="button_in_schedule_form" ng-click="cancelScheduleList()">Отменить</button>
+    <div class="overlay-new-order" id="single">
+        <div class="add-new-order" id="single-form">
+            <div class="settings-bundle-container">
+                <div style="background-color: #0057a1; padding-top: 30px;">
+                    <span style="color: white" class="settings-title">Добавьте расписание</span>
+                </div>
+                    <div class="schedule-div">
+                        <label class="schedule-form-label" for="event-type">Тип события</label>
+                        <label class="schedule-form-label" for="event-team">Команда</label>
+                        <label class="schedule-form-label" for="event-date">Дата</label>
+                        <label class="schedule-form-label" for="event-time">Время старта</label>
+                    </div>
+                    <div id="event" class="add-schedule-list">
+                        <select name="type-selected" id="event-type" ng-model="listSelectedType"
+                                ng-options="listType.title for listType in listEventType"
+                                class="selector-scheduleList">
+                        </select>
+                        <select name="type-selected" id="event-team" ng-model="listTeamSelected"
+                                ng-options="list.title for list in listTeams"
+                                class="selector-scheduleList">
+                        </select>
+                        <input id="event-date" class="input-schedule" type="text" placeholder="18.01.23">
+                        <input id="event-time" class="input-schedule" type="text" placeholder="21:00 МСК / 19:00 CET">
+                    </div>
+                    <div id="button" class="addEventButton" ng-click="addEvent()">
+                        <label class="schedule-form-label">Еще</label>
+                    </div>
+
+                <div class="settings-buttons">
+                    <button class="settings-btn" ng-click="createScheduleList()">Добавить расписание</button>
+                    <button class="settings-btn" ng-click="cancelScheduleList()">Отмена</button>
+                </div>
             </div>
         </div>
-        <div class="overlay"></div>
-
     </div>
 
 
-    <div id="schedule-text-form" class="modal-wrapper">
-        <div class="schedule-form">
-            <div class="label_in_schedule_form">Расписание</div>
-            <textarea id="text-events" class="input-text-schedule" placeholder="
-1 Вариант1 Команда1 18.01.23 19:00 МСК / 17:00 CET
-2 Вариант2 Команда2 18.01.23 21:00 МСК / 19:00 CET
-......"
-            ></textarea>
-            <div class="notaBene">!Обратите внимание: ввод допускается только английской раскладкой</div>
-            <div class="control">
-                <button type="submit" class="button_in_schedule_form" ng-click="getTextSchedule()">Добавить расписание</button>
-                <button class="button_in_schedule_form" ng-click="closeTextField()">Отменить</button>
+    <div class="overlay-new-order" id="list">
+        <div class="add-new-order" id="list-form">
+            <div class="settings-bundle-container">
+                <div style="background-color: #0057a1; padding-top: 30px;">
+                    <span style="color: white" class="settings-title">Добавьте расписание</span>
+                </div>
+                <div id="add-order" style="margin-top: 15px; display: grid;">
+                    <label class="settings-add-title">Внесите список событий</label>
+                    <textarea id="text-events" class="input-text-schedule"></textarea>
+                    <span class="info-span"><i class="fa-solid fa-circle-exclamation"></i>Ввод допускается только английской раскладкой</span>
+                </div>
+                <div class="settings-buttons">
+                    <button class="settings-btn" ng-click="getTextSchedule()">Добавить расписание</button>
+                    <button class="settings-btn" ng-click="closeTextField()">Отмена</button>
+                </div>
             </div>
         </div>
-        <div class="overlay"></div>
     </div>
+
+
     <div class="footer_in_content">
         <div class="footer_text">WowVendorTeamHelper</div>
     </div>

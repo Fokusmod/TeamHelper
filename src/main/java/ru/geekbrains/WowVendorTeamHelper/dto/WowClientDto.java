@@ -5,9 +5,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ru.geekbrains.WowVendorTeamHelper.model.Bundle;
+import ru.geekbrains.WowVendorTeamHelper.model.ClientsBundleStages;
 import ru.geekbrains.WowVendorTeamHelper.model.OrderStatus;
 import ru.geekbrains.WowVendorTeamHelper.model.WowClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,9 +23,17 @@ public class WowClientDto {
 
     private String bundle;
 
+    private String mode;
+
+    private String orderType;
+
+    private String addInfo;
+
+    private String orderCount;
+
     private Bundle bundleType;
 
-    private List<ClientStageDto> clientBundleStage;
+    private List<ClientsBundleStagesDto> clientsBundleStages;
 
     private String orderCode;
 
@@ -70,8 +80,16 @@ public class WowClientDto {
     public WowClientDto(WowClient wowClient) {
         this.id = wowClient.getId();
         this.bundle = wowClient.getBundle();
+        this.mode = wowClient.getMode();
+        this.orderType = wowClient.getOrderType();
+        this.addInfo = wowClient.getAddInfo();
+        this.orderCount = wowClient.getOrderCount();
         this.bundleType = wowClient.getBundleType();
-        this.clientBundleStage = wowClient.getClientBundleStage().stream().map(ClientStageDto::new).collect(Collectors.toList());
+        if (!(wowClient.getClientsBundleStages() == null)) {
+            this.clientsBundleStages = wowClient.getClientsBundleStages().stream().map(ClientsBundleStagesDto::new).collect(Collectors.toList());
+        } else {
+            this.clientsBundleStages = new ArrayList<>();
+        }
         this.orderCode = wowClient.getOrderCode();
         this.battleTag = wowClient.getBattleTag();
         this.fraction = wowClient.getFraction();

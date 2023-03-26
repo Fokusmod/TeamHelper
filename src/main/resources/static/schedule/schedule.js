@@ -6,29 +6,24 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
 
     $scope.displayMessage = messageService.displayMessage;
 
-    $scope.selectFunction = function () {
-        var select = 'background-color: #eff1f4; color:#00152a; cursor: pointer;';
-        document.getElementById('team-selected').style.cssText=select;
-        document.getElementById('type-selected').style.cssText=select;
-    };
 
     $scope.getTeamsForSettings = function () {
-        $http.get("http://localhost:3100/teams/all")
+        $http.get("http://localhost:3100/teams")
             .then(function succesCallback(responce) {
                 responce.data.push({title: 'select-all'})
                 $scope.teams = responce.data;
-/*                $scope.selectedTeam = $scope.teams[$scope.teams.length - 1];*/
+                $scope.selectedTeam = $scope.teams[$scope.teams.length - 1];
             }, function failCallback(responce) {
 
             })
     };
 
     $scope.getEventTypeForSettings = function () {
-        $http.get("http://localhost:3100/eventType/all")
+        $http.get("http://localhost:3100/event-type")
             .then(function succesCallback(responce) {
                 responce.data.push({title: 'select-all'})
                 $scope.eventType = responce.data;
-/*                $scope.selectedType = $scope.eventType[$scope.eventType.length - 1];*/
+                $scope.selectedType = $scope.eventType[$scope.eventType.length - 1];
             }, function failCallback(responce) {
 
             })
@@ -36,7 +31,7 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
 
 
     $scope.getTeams = function () {
-        $http.get("http://localhost:3100/teams/all")
+        $http.get("http://localhost:3100/teams")
             .then(function successCallback(responce) {
                 $scope.listTeams = responce.data;
                 $scope.listTeamSelected = $scope.listTeams[0];
@@ -46,7 +41,7 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
     };
 
     $scope.getEventType = function () {
-        $http.get("http://localhost:3100/eventType/all")
+        $http.get("http://localhost:3100/event-type")
             .then(function succesCallback(responce) {
                 $scope.listEventType = responce.data;
                 $scope.listSelectedType = $scope.listEventType[$scope.listEventType.length - 2];
@@ -82,7 +77,7 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
     }
 
     $scope.onlyTeamSchedule = function (selectedTeam) {
-        $http.get("http://localhost:3100/events/byTeam/" + selectedTeam)
+        $http.get("http://localhost:3100/events/by-team/" + selectedTeam)
             .then(function successCallback(responce) {
                 $scope.events = responce.data;
                 return $scope.events;
@@ -92,7 +87,7 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
     }
 
     $scope.onlyTypeSchedule = function (selectedType) {
-        $http.get("http://localhost:3100/events/byType/" + selectedType)
+        $http.get("http://localhost:3100/events/by-type/" + selectedType)
             .then(function successCallback(responce) {
                 $scope.events = responce.data;
                 return $scope.events;
@@ -102,7 +97,7 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
     }
 
     $scope.defaultSchedule = function () {
-        $http.get("http://localhost:3100/events/all")
+        $http.get("http://localhost:3100/events")
             .then(function succesCallback(responce) {
                 $scope.events = responce.data;
                 return $scope.events;
@@ -121,8 +116,6 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
 
     $scope.cancelScheduleList = function () {
         $scope.clearScheduleList();
-        var div = document.getElementById('schedule-table-form');
-        div.style.display = 'none';
     }
 
     $scope.clearScheduleList = function () {
@@ -134,6 +127,17 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
         for (let i = 0; i < 2; i++) {
             let l = document.getElementsByClassName('input-schedule')[i].value = '';
         }
+
+        var overlay = document.getElementById("single");
+        var settingsBundle = document.getElementById("single-form");
+        overlay.classList.add('hide')
+        settingsBundle.classList.add("zoomOut")
+        setTimeout(function () {
+            overlay.classList.remove("show")
+            overlay.classList.remove("hide")
+            settingsBundle.classList.remove("zoomIn")
+            settingsBundle.classList.remove("zoomOut")
+        }, 350);
     }
 
 
@@ -164,61 +168,55 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
     }
 
     $scope.postScheduleList = function (content) {
-        console.log(content)
-        $http.post("http://localhost:3100/events/createList", content)
+        $http.post("http://localhost:3100/events/create-list", content)
             .then(function succesCallback(responce) {
-                alert("События успешно добавлены")
+                messageService.displayMessage("События были добавлены.", ok_color)
                 $scope.defaultSchedule();
                 $scope.filterByTeamAndType();
             }, function failCallback(responce) {
-                alert("Что то пошло не так")
+                messageService.displayMessage(responce.message, error_color)
             })
-        var div = document.getElementById('schedule-table-form');
-        div.style.display = 'none';
+        $scope.clearScheduleList();
     }
 
     $scope.postScheduleText = function (content) {
-        $http.post("http://localhost:3100/events/createText", content)
+        $http.post("http://localhost:3100/events/create-text", content)
             .then(function succesCallback(responce) {
-                alert("События успешно добавлены")
+                console.log(responce)
+                messageService.displayMessage("События успешно добавлены.", ok_color)
                 $scope.defaultSchedule();
                 $scope.filterByTeamAndType();
             }, function failCallback(responce) {
-                alert("Что то пошло не так")
+                messageService.displayMessage(responce.message, error_color)
             })
-        var div = document.getElementById('schedule-text-form');
-        div.style.display = 'none';
+        $scope.closeTextField();
     }
 
 
     $scope.getTableForm = function () {
-        const div = document.getElementById('schedule-table-form');
-        const another = document.getElementById('schedule-text-form');
-        if (another.style.display === 'block') {
-            another.style.display = 'none'
-            $scope.clearTextField()
-        }
-        div.style.display = 'block';
+        var overlay = document.getElementById("single");
+        var settingsBundle = document.getElementById("single-form");
+        console.log(overlay)
+        overlay.classList.add('show')
+        settingsBundle.classList.add("zoomIn");
     };
 
-    $scope.chooseScheduleForm = function () {
-        let scheduleForm = $scope.selectedScheduleForm;
-        if (scheduleForm === 'вручную') {
-            $scope.getTableForm();
-        }
-        if (scheduleForm === 'текстом') {
-        $scope.getTextForm();
-        }
+
+    $scope.formData = {
+        availableOptions: [
+            'Вручную',
+            'Текстом'
+        ],
+        selectedOption: 'Текстом'
     };
+
 
     $scope.getTextForm = function () {
-        var div = document.getElementById('schedule-text-form');
-        const another = document.getElementById('schedule-table-form');
-        if (another.style.display === 'block') {
-            another.style.display = 'none'
-            $scope.clearScheduleList();
-        }
-        div.style.display = 'block';
+        var overlay = document.getElementById("list");
+        var settingsBundle = document.getElementById("list-form");
+        console.log(overlay)
+        overlay.classList.add('show')
+        settingsBundle.classList.add("zoomIn")
     };
 
 
@@ -228,9 +226,17 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
     }
 
     $scope.closeTextField = function () {
-        const textForm = document.getElementById("schedule-text-form");
-        textForm.style.display = 'none';
         $scope.clearTextField();
+        var overlay = document.getElementById("list");
+        var settingsBundle = document.getElementById("list-form");
+        overlay.classList.add('hide')
+        settingsBundle.classList.add("zoomOut")
+        setTimeout(function () {
+            overlay.classList.remove("show")
+            overlay.classList.remove("hide")
+            settingsBundle.classList.remove("zoomIn")
+            settingsBundle.classList.remove("zoomOut")
+        }, 350);
     }
 
     $scope.getTextSchedule = function () {
@@ -303,7 +309,7 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
 
 
         $scope.changeEventById = function (eventId, content) {
-            $http.put("http://localhost:3100/events/changeList/" + eventId, content)
+            $http.put("http://localhost:3100/events/change-list/" + eventId, content)
                 .then(function successCallback(responce) {
                     selectNodes.team.replaceWith(newTeamNode)
                     selectNodes.type.replaceWith(newTypeNode)
@@ -342,8 +348,13 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
         const changeButton = elementsDiv.change;
         const newButton = document.createElement('button')
         newButton.id = 'change'
-        newButton.className = "fa fa-floppy-o fa-2 safe_icon_button "
-     /*   newButton.textContent = <i class="fa fa-floppy-o" aria-hidden="true"></i>*/
+
+        newButton.classList.add("icon_button");
+        const icon = document.createElement("i");
+        icon.classList.add("fa-solid", "fa-check");
+        newButton.appendChild(icon);
+
+        /*   newButton.textContent = <i class="fa fa-floppy-o" aria-hidden="true"></i>*/
         newButton.onclick = function () {
             const eventId = elements.id.textContent
             $scope.changeAcceptButton(eventId);
@@ -415,7 +426,7 @@ angular.module('index-app').controller('scheduleController', function ($scope, $
     $scope.deleteEvent = function (eventId) {
         $http.delete("http://localhost:3100/events/delete/" + eventId)
             .then(function succesCallback(responce) {
-               alert("Событие " + eventId + " было удалено.")
+                alert("Событие " + eventId + " было удалено.")
                 window.location.reload()
             }, function failCallback(responce) {
                 alert("wrong")

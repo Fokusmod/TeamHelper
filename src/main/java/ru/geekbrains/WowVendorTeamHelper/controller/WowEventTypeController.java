@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/eventType")
+@RequestMapping("/event-type")
 public class WowEventTypeController {
 
     private final WowEventTypeService wowEventTypeService;
 
-    @GetMapping("/all")
+    @GetMapping
     public List<WowEventTypeDTO> getAll () {
         return wowEventTypeService.getAllTypes().stream().map(WowEventTypeDTO::new).collect(Collectors.toList());
     }
@@ -39,7 +39,7 @@ public class WowEventTypeController {
         return new ResponseEntity(wowEventTypeService.changeType(request), HttpStatus.OK);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public ResponseEntity<WowEventTypeDTO> deleteType(@PathVariable Long id) {
         return new ResponseEntity(wowEventTypeService.deleteType(id), HttpStatus.OK);
     }

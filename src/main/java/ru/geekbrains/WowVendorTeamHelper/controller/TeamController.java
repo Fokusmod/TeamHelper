@@ -29,23 +29,29 @@ public class TeamController {
     private final WowTeamRegionService regionService;
 
 
-    @GetMapping("/all")
+    @GetMapping
     public List<TeamDTO> getTeams (){
         return teamService.getAllTeams().stream().map(TeamDTO::new).collect(Collectors.toList());
     }
 
-    @GetMapping("/wowRegions")
+    @GetMapping("/{region}")
+    public List<TeamDTO> getRegionTeams(@PathVariable String region) {
+        return teamService.getTeamsByRegion(region).stream().map(TeamDTO::new).collect(Collectors.toList());
+    }
+
+
+    @GetMapping("/wow-regions")
     public List<WowTeamRegionDto> getTeamsRegions () {
         return regionService.getAllRegions().stream().map(WowTeamRegionDto::new).collect(Collectors.toList());
     }
 
-    @PutMapping("/wowRegions")
+    @PutMapping("/wow-regions")
     public ResponseEntity<WowTeamRegionDto> changeRegion(@RequestBody RegionRequest request) {
         WowTeamRegionDto dto = regionService.changeRegion(request);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @DeleteMapping("/wowRegions/{id}")
+    @DeleteMapping("/wow-regions/{id}")
     public ResponseEntity<WowTeamRegionDto> getTeamsRegions (@PathVariable Long id) {
         WowTeamRegionDto dto = regionService.deleteRegion(id);
         return new ResponseEntity<>(dto, HttpStatus.OK);

@@ -17,7 +17,6 @@ import java.util.Set;
 @Entity
 @Setter
 @Getter
-@ToString
 @NoArgsConstructor
 @Table(name = "bundles")
 public class Bundle {
@@ -51,3 +50,4 @@ public class Bundle {
     }
 
 }
+
