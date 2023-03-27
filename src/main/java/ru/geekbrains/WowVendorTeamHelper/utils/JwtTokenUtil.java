@@ -57,7 +57,6 @@ public class JwtTokenUtil {
         return getClaimFromToken(token, (Function<Claims, List<String>>) claims -> claims.get("roles", List.class));
     }
 
-    // при использовании метода проверять список на null, так как у нового пользователя нет привелегий
     public List<String> getPrivileges(String token) {
         return getClaimFromToken(token, (Function<Claims, List<String>>) claims -> claims.get("privileges", List.class));
     }

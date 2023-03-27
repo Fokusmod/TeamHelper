@@ -22,6 +22,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), e.getMessage()),
                 HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler
+    public ResponseEntity<AppError> catchForbiddenException(WWTHForbiddenException e) {
+        log.error(e.getMessage(), e);
+        return new ResponseEntity<>(new AppError(HttpStatus.FORBIDDEN.value(), e.getMessage()),
+                HttpStatus.FORBIDDEN);
+    }
 
     @ExceptionHandler
     public ResponseEntity<AppError> catchErrorException(WWTHErrorException e) {
@@ -30,11 +36,4 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
-
-    @ExceptionHandler
-    public ResponseEntity<?> handleExceptionRedisBroken(ExceptionRedisBroken e) {
-        log.error(e.getMessage());
-        return new ResponseEntity<>(new AppError(HttpStatus.SERVICE_UNAVAILABLE.value(), e.getMessage()), HttpStatus.SERVICE_UNAVAILABLE);
-    }
 }

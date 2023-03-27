@@ -17,22 +17,22 @@ public class DateTimeController {
 
     private final DateService dateService;
 
-    @GetMapping("/currentTime")
+    @GetMapping("/current/time")
     public List<String> getCurrentTime () {
         return dateService.getTimeMscAndCET();
     }
 
-    @GetMapping("/currentDateWeek")
+    @GetMapping("/current/date-week")
     public List<String> getCurrentWeek () {
         return dateService.getCurrentWeek();
     }
 
-    @GetMapping("/nextDateWeek/{count}")
+    @GetMapping("/next/date-week/{count}")
     public List<String> getNextWeek (@PathVariable int count) {
         return dateService.getNextWeek(count);
     }
 
-    @GetMapping("/prevDateWeek/{count}")
+    @GetMapping("/prev/date-week/{count}")
     public List<String> getPrevWeek (@PathVariable int count) {
         return dateService.getPrevWeek(count);
     }

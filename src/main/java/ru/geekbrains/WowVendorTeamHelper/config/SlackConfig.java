@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SlackConfig {
 
-    //TODO Поменять на переменные окружения.
     @Bean
     public AppConfig loadSingleWorkspaceAppConfig() {
         return AppConfig.builder()

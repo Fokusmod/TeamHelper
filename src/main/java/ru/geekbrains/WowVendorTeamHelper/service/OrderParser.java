@@ -239,16 +239,7 @@ public class OrderParser {
                 break;
             }
         }
-
-//        for (int i = 0; i < orderArray.length; i++) {
-//            String orderInfo = orderArray[i].toLowerCase().replace(" ", "");
-//            if (orderInfo.contains("%")) {
-//                checkAddService(wowClient);
-//                break;
-//            }
-//        }
         wowClient.setOrderType(info);
-
     }
 
     private String checkCountBosses(String order) {
@@ -294,56 +285,6 @@ public class OrderParser {
         }
     }
 
-    private void checkAddService(WowClient wowClient) {
-        String[] orderInfo = null;
-        StringBuilder service = new StringBuilder();
-
-        if (wowClient.getDiscountInfo() != null) {
-            orderInfo = wowClient.getDiscountInfo().toLowerCase().split("[()]");
-
-        } else {
-            return;
-        }
-        for (String s : orderInfo) {
-            if (s.contains("add")) {
-                if (s.contains("normaladvanced") || s.contains("advancednormal")) {
-                    service.append("Add Advanced NM ");
-                } else if (s.contains("heroicadvanced") || s.contains("advancedheroic")) {
-                    service.append("Add Anvanced HC ");
-
-                } else if (s.contains("mythicadvanced") || s.contains("advancedmythic")) {
-                    service.append("Add Anvanced MYTH ");
-
-                } else if (s.contains("normalpremium") || s.contains("premiumnormal")) {
-                    service.append("Add Premium NM ");
-
-                } else if (s.contains("heroicpremium") || s.contains("premiumheroic")) {
-                    service.append("Add Premium HC ");
-
-                } else if (s.contains("mythicpremium") || s.contains("premiummythic")) {
-                    service.append("Add Premium MYTH ");
-
-                } else if (s.contains("last") || s.contains("lastboss")) {
-                    service.append("Add Last ");
-
-                } else if (s.contains("single")) {
-                    service.append("Add Single ");
-
-                } else if (s.contains("glory")) {
-                    service.append("Add Glory ");
-
-                } else if (s.contains("normal")) {
-                    service.append("Add Normal ");
-
-                } else if (s.contains("heroic")) {
-                    service.append("Add Heroic ");
-                } else if (s.contains("mythic")) {
-                    service.append("Add Mythic ");
-                }
-            }
-        }
-        wowClient.setAddInfo(service.toString().trim());
-    }
 
     private void parseOriginInfo(String strings, WowClient wowClient) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -373,9 +314,7 @@ public class OrderParser {
             wowClient.setBundle("true");
             return;
         }
-
         wowClient.setBundle("false");
-
     }
 
     private WowClient noParseClient(String string) {

@@ -7,13 +7,8 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 @SpringBootApplication
 @ServletComponentScan
 public class WowVendorTeamHelperApplication {
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(WowVendorTeamHelperApplication.class, args);
 	}
-
-
-
 
 }

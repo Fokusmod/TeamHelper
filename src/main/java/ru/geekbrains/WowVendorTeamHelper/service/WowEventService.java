@@ -40,8 +40,6 @@ public class WowEventService {
 
     private final String CHANGE_EVENT = "EVENT";
 
-    private final Object MONITOR = new Object();
-
 
     public List<WowEvent> getAllEvents() {
         return wowEventRepository.findAll();
