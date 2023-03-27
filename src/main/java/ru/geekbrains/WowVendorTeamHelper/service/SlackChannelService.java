@@ -34,13 +34,10 @@ public class SlackChannelService {
     private final SlackChannelRepository slackChannelRepository;
     private final SlackChannelDestinationRepository slackChannelDestinationRepository;
 
-    //Получение всех доступных каналов.
+
     public List<SlackChannel> getAllSlackChannels() {
         return slackChannelRepository.findAll();
     }
-
-    //Метод добавление нового канала. Включает проверку на существование такого канала в рабочем простарнстве и проверку на
-    //дубль.
     public ResponseEntity<?> addingNewChannel(SlackChannelRequest request) {
         ResponseEntity<?> responseEntity = findSlackChannel(request);
         if (responseEntity.getStatusCode().value() == HttpStatus.OK.value()) {
@@ -52,7 +49,6 @@ public class SlackChannelService {
         }
     }
 
-    //Метод поиска канала
     private ResponseEntity<?> findSlackChannel(SlackChannelRequest request) {
         ConversationsListRequest conversationsListRequest = ConversationsListRequest
                 .builder()
@@ -80,7 +76,6 @@ public class SlackChannelService {
         }
     }
 
-    //Метод добавления канала в бд
     public ResponseEntity<?> createChannel(SlackChannelResponse response) {
         Optional<SlackChannel> slackChannel = slackChannelRepository.findByChannelId(response.getChannelId());
         if (slackChannel.isEmpty()) {
@@ -118,7 +113,6 @@ public class SlackChannelService {
             }
         }
     }
-    //Удаление канала из бд
     public ResponseEntity<?> deleteChannel(SlackChannelRequest request) {
         ResponseEntity<?> slackChannel = findByChannelId(request);
         if (slackChannel.getStatusCodeValue() == HttpStatus.OK.value()) {
@@ -131,7 +125,6 @@ public class SlackChannelService {
         return slackChannel;
     }
 
-    //Поиск канала по SlackChannelRequest
     public ResponseEntity<?> findByChannelId(SlackChannelRequest request) {
         Optional<SlackChannel> slackChannel = slackChannelRepository.findByChannelId(request.getChannelId());
         if (slackChannel.isPresent()) {
@@ -142,7 +135,6 @@ public class SlackChannelService {
         }
     }
 
-    //Изменение канала по SlackChannelRequest
     public ResponseEntity<?> changeSlackChannelDestination(SlackChannelRequest request) {
         ResponseEntity<?> responseEntity = findByChannelId(request);
         if (responseEntity.getStatusCode().value() == HttpStatus.OK.value()) {

@@ -17,7 +17,7 @@ public class RoleController {
 
     private final RoleMapper roleMapper;
 
-    @GetMapping()
+    @GetMapping
     public List<RoleDto> getAllRole() {
         return roleService.getAllRoles().stream().map(roleMapper::toDto).collect(Collectors.toList());
     }

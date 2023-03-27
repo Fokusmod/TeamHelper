@@ -18,9 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.WowVendorTeamHelper.dto.*;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.AppError;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.WWTHResourceNotFoundException;
-import ru.geekbrains.WowVendorTeamHelper.exeptions.ExceptionRedisBroken;
+import ru.geekbrains.WowVendorTeamHelper.exeptions.*;
 import ru.geekbrains.WowVendorTeamHelper.mapper.UserMapper;
 import ru.geekbrains.WowVendorTeamHelper.model.Role;
 import ru.geekbrains.WowVendorTeamHelper.model.Status;
@@ -71,50 +69,36 @@ public class UserService implements UserDetailsService {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getTitle())).collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> saveUserToCacheFromDto(RegistrationRequest request) {
-
+    public void saveUserToCacheFromDto(RegistrationRequest request) {
         if (findByEmail(request.getEmail()) != null) {
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пользователь с таким " +
-                    "Е-mail " + request.getEmail() + " уже зарегистрирован."), HttpStatus.BAD_REQUEST);
+            throw new WWTHBadRequestException("Пользователь с таким Е-mail " + request.getEmail() + " уже зарегистрирован.");
         } else if (findByUsername(request.getUsername()) != null) {
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пользователь с таким " +
-                    "Username " + request.getUsername() + " уже зарегистрирован."), HttpStatus.BAD_REQUEST);
+            throw new WWTHBadRequestException("Пользователь с таким Username " + request.getUsername() + " уже зарегистрирован.");
         }
-
         String activationCode = request.getEmail() + "_" + UUID.randomUUID();
-
         try {
             redisTemplate.opsForValue().set(activationCode, request);
-        } catch (
-                RedisConnectionFailureException redisException) {
-            throw new ExceptionRedisBroken("Error connecting to Redis");
+        } catch (RedisConnectionFailureException redisException) {
+            log.error("Connecting error to Redis");
         }
-
         if (Boolean.FALSE.equals(redisTemplate.hasKey(activationCode))) {
-            throw new WWTHResourceNotFoundException("Registration data has not been saved in Redis");
+            log.debug("Регистрационные данные не были сохранены в Redis");
         }
-
         Map<String, Object> properties = new HashMap<>();
         properties.put("activationUrl", activationUrl);
         properties.put("activationCode", activationCode);
-
         mailService.sendHtmlMessage(request.getEmail(), "Подтверждение регистрации!", "mail-activation.html", properties);
-
-        return new ResponseEntity<>("Вам отправили письмо, для подверждения регистации нажмите кнопку подтвердить", HttpStatus.OK);
     }
 
     public boolean createUser(String activatedCode) {
-
-        RegistrationRequest request;
-
+        RegistrationRequest request = null;
         try {
             request = (RegistrationRequest) redisTemplate.opsForValue().get(activatedCode);
         } catch (RuntimeException e) {
-             throw new ExceptionRedisBroken("Error connecting to Redis");
+            log.error("Connecting error to Redis");
         }
-
         if (request == null) {
-            throw new WWTHResourceNotFoundException("unable to load data from Redis");
+            log.debug("unable to load data from Redis");
         }
 
         if (userRepository.findByEmail(request.getEmail()).isEmpty()) {
@@ -149,7 +133,7 @@ public class UserService implements UserDetailsService {
 
         User user = findByEmail(requestChangePassword.getEmail());
 
-        if(user == null) {
+        if (user == null) {
             throw new WWTHResourceNotFoundException("Пользователь с email: " + requestChangePassword.getEmail() + ", не найден.");
         }
 
@@ -188,11 +172,10 @@ public class UserService implements UserDetailsService {
             userRepository.delete(user);
         }
         mailService.sendHtmlMessage(user.getEmail(), subject, template, new HashMap<>());
-
         return true;
     }
 
-    public ResponseEntity<?> authenticationUser(JwtRequest authRequest) {
+    public JwtResponse authenticationUser(JwtRequest authRequest) {
         User user;
         if (findByEmail(authRequest.getLogin()) != null) {
             user = findByEmail(authRequest.getLogin());
@@ -202,17 +185,17 @@ public class UserService implements UserDetailsService {
             throw new WWTHResourceNotFoundException("Пользователя с таким логином " + authRequest.getLogin() + " не существует");
         }
         if (user.getStatus().getTitle().equals(NOT_APPROVED)) {
-            return new ResponseEntity<>(new AppError(HttpStatus.FORBIDDEN.value(), "Авторизация прошла успешно, но аккаунт " + authRequest.getLogin() + " не был одобрен со стороны администрации."), HttpStatus.FORBIDDEN);
+            throw new WWTHForbiddenException("Авторизация прошла успешно, но аккаунт " + authRequest.getLogin() + " не был одобрен со стороны администрации.");
         }
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getLogin(), authRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(), "Неправильный логин или пароль. Проверьте правильность учётных данных."), HttpStatus.UNAUTHORIZED);
+            throw new WWTHBadRequestException("Неправильный логин или пароль. Проверьте правильность учётных данных.");
         }
         UserDetails userDetails = loadUserByUsername(user.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails, user);
         log.info("Пользователь с логином " + authRequest.getLogin() + " был авторизован: ");
-        return ResponseEntity.ok(new JwtResponse(token));
+        return new JwtResponse(token);
     }
 
     public List<UserDto> findUsersByStatus(String status) {
@@ -235,7 +218,7 @@ public class UserService implements UserDetailsService {
         }
 
         User user = findByEmail(requestEmail.getEmail());
-        if(user == null) {
+        if (user == null) {
             throw new WWTHResourceNotFoundException("Пользователь с email: " + requestEmail.getEmail() + ", не найден.");
         }
         return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);

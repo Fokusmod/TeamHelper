@@ -163,8 +163,6 @@ public class WowClientService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     public void setCharacterClass(WowClient wowClient) {

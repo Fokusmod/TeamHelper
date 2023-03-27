@@ -42,15 +42,6 @@ public class TeamService {
         }
     }
 
-
-    public void deleteTeam() {
-
-    }
-
-    public void changeTeam() {
-
-    }
-
     public List<Team> getTeamsByRegion(String region) {
         WowTeamRegion wowTeamRegion = wowTeamRegionService.getByTitle(region.toUpperCase());
         return repository.findByTeamRegion(wowTeamRegion);
